@@ -1,6 +1,7 @@
 package ru.yegorr.musicstore.entity;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "musician")
@@ -19,6 +20,9 @@ public class MusicianEntity {
     @Lob
     @Column(name = "image")
     private byte[] image;
+
+    @OneToMany(mappedBy = "musician")
+    private List<AlbumEntity> albums;
 
     public MusicianEntity() {
     }
@@ -53,5 +57,13 @@ public class MusicianEntity {
 
     public void setImage(byte[] image) {
         this.image = image;
+    }
+
+    public List<AlbumEntity> getAlbums() {
+        return albums;
+    }
+
+    public void setAlbums(List<AlbumEntity> albums) {
+        this.albums = albums;
     }
 }
