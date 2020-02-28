@@ -2,6 +2,7 @@ package ru.yegorr.musicstore.entity;
 
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "track")
@@ -27,6 +28,12 @@ public class TrackEntity {
     @ManyToOne
     @JoinColumn(name = "album_id")
     private AlbumEntity album;
+
+    @ManyToMany
+    @JoinTable(name = "track_genre",
+            joinColumns = @JoinColumn("track_id"),
+            inverseJoinColumns = @JoinColumn("genre_id"))
+    private List<GenreEntity> genres;
 
     public TrackEntity() {
     }
@@ -77,5 +84,13 @@ public class TrackEntity {
 
     public void setAlbum(AlbumEntity album) {
         this.album = album;
+    }
+
+    public List<GenreEntity> getGenres() {
+        return genres;
+    }
+
+    public void setGenres(List<GenreEntity> genres) {
+        this.genres = genres;
     }
 }
