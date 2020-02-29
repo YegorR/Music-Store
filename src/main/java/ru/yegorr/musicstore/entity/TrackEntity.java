@@ -31,8 +31,8 @@ public class TrackEntity {
 
     @ManyToMany
     @JoinTable(name = "track_genre",
-            joinColumns = @JoinColumn("track_id"),
-            inverseJoinColumns = @JoinColumn("genre_id"))
+            joinColumns = @JoinColumn(name = "track_id"),
+            inverseJoinColumns = @JoinColumn(name = "genre_id"))
     private List<GenreEntity> genres;
 
     public TrackEntity() {
