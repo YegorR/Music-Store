@@ -1,6 +1,7 @@
 package ru.yegorr.musicstore.entity;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "user_account")
@@ -24,6 +25,9 @@ public class UserEntity {
 
     @Column(name = "is_admin", nullable = false)
     private Boolean isAdmin;
+
+    @OneToMany(mappedBy = "user")
+    private List<PlaylistEntity> playlists;
 
     public UserEntity() {
     }
@@ -74,5 +78,13 @@ public class UserEntity {
 
     public void setAdmin(Boolean admin) {
         isAdmin = admin;
+    }
+
+    public List<PlaylistEntity> getPlaylists() {
+        return playlists;
+    }
+
+    public void setPlaylists(List<PlaylistEntity> playlists) {
+        this.playlists = playlists;
     }
 }

@@ -17,6 +17,10 @@ public class PlaylistEntity {
     @Column(name = "image")
     private byte[] image;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
+
     public PlaylistEntity() {
     }
 
@@ -42,5 +46,13 @@ public class PlaylistEntity {
 
     public void setImage(byte[] image) {
         this.image = image;
+    }
+
+    public UserEntity getUser() {
+        return user;
+    }
+
+    public void setUser(UserEntity user) {
+        this.user = user;
     }
 }
