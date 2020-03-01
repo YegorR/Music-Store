@@ -1,6 +1,7 @@
 package ru.yegorr.musicstore.entity;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "playlist")
@@ -20,6 +21,10 @@ public class PlaylistEntity {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private UserEntity user;
+
+    @OneToMany(mappedBy = "playlistTrackId.playlist")
+    @OrderBy("playlistTrackId.order")
+    private List<PlaylistTrackEntity> tracks;
 
     public PlaylistEntity() {
     }
@@ -54,5 +59,13 @@ public class PlaylistEntity {
 
     public void setUser(UserEntity user) {
         this.user = user;
+    }
+
+    public List<PlaylistTrackEntity> getTracks() {
+        return tracks;
+    }
+
+    public void setTracks(List<PlaylistTrackEntity> tracks) {
+        this.tracks = tracks;
     }
 }
