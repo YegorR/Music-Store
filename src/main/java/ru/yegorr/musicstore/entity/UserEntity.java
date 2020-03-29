@@ -46,6 +46,12 @@ public class UserEntity {
             inverseJoinColumns = @JoinColumn(name = "musician_id"))
     private List<MusicianEntity> subscriptions;
 
+    @ManyToMany
+    @JoinTable(name = "subscription_notification",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "album_id"))
+    private List<AlbumEntity> releaseAlbums;
+
     public UserEntity() {
     }
 
@@ -135,5 +141,13 @@ public class UserEntity {
 
     public void setSubscriptions(List<MusicianEntity> subscriptions) {
         this.subscriptions = subscriptions;
+    }
+
+    public List<AlbumEntity> getReleaseAlbums() {
+        return releaseAlbums;
+    }
+
+    public void setReleaseAlbums(List<AlbumEntity> releaseAlbums) {
+        this.releaseAlbums = releaseAlbums;
     }
 }

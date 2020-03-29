@@ -35,6 +35,9 @@ public class AlbumEntity {
     @OneToMany(mappedBy = "album")
     private List<ReviewEntity> reviews;
 
+    @ManyToMany(mappedBy = "releaseAlbums")
+    private List<UserEntity> subscribers;
+
     public AlbumEntity() {
     }
 
@@ -100,5 +103,13 @@ public class AlbumEntity {
 
     public void setReviews(List<ReviewEntity> reviews) {
         this.reviews = reviews;
+    }
+
+    public List<UserEntity> getSubscribers() {
+        return subscribers;
+    }
+
+    public void setSubscribers(List<UserEntity> subscribers) {
+        this.subscribers = subscribers;
     }
 }
