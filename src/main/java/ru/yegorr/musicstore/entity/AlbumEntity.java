@@ -32,6 +32,9 @@ public class AlbumEntity {
     @OneToMany(mappedBy = "album")
     private List<TrackEntity> tracks;
 
+    @OneToMany(mappedBy = "album")
+    private List<ReviewEntity> reviews;
+
     public AlbumEntity() {
     }
 
@@ -89,5 +92,13 @@ public class AlbumEntity {
 
     public void setTracks(List<TrackEntity> albums) {
         this.tracks = albums;
+    }
+
+    public List<ReviewEntity> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<ReviewEntity> reviews) {
+        this.reviews = reviews;
     }
 }
