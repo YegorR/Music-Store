@@ -12,14 +12,14 @@ public class TrackEntity {
     @Column(name = "track_id")
     private Long trackId;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "track_name", nullable = false)
     private String name;
 
     @Lob
     @Column(name = "audio", nullable = false)
     private byte[] audio;
 
-    @Column(name = "order")
+    @Column(name = "track_order")
     private Integer order;
 
     @Column(name = "plays_number")
