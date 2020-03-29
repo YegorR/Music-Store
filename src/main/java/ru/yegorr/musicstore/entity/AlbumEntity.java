@@ -30,7 +30,7 @@ public class AlbumEntity {
     private MusicianEntity musician;
 
     @OneToMany(mappedBy = "album")
-    private List<TrackEntity> albums;
+    private List<TrackEntity> tracks;
 
     public AlbumEntity() {
     }
@@ -83,11 +83,11 @@ public class AlbumEntity {
         this.musician = musician;
     }
 
-    public List<TrackEntity> getAlbums() {
-        return albums;
+    public List<TrackEntity> getTracks() {
+        return tracks;
     }
 
-    public void setAlbums(List<TrackEntity> albums) {
-        this.albums = albums;
+    public void setTracks(List<TrackEntity> albums) {
+        this.tracks = albums;
     }
 }
