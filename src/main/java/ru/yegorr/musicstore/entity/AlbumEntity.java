@@ -12,11 +12,11 @@ public class AlbumEntity {
     @Column(name = "album_id")
     private Long albumId;
 
-    @Column(name = "name", nullable = false, length = 64)
+    @Column(name = "album_name", nullable = false, length = 64)
     private String name;
 
-    @Column(name = "release_year", nullable = false)
-    private Date releaseYear;
+    @Column(name = "release_date", nullable = false)
+    private Date releaseDate;
 
     @Column(name = "cover")
     @Lob
@@ -51,12 +51,12 @@ public class AlbumEntity {
         this.name = name;
     }
 
-    public Date getReleaseYear() {
-        return releaseYear;
+    public Date getReleaseDate() {
+        return releaseDate;
     }
 
-    public void setReleaseYear(Date releaseYear) {
-        this.releaseYear = releaseYear;
+    public void setReleaseDate(Date releaseYear) {
+        this.releaseDate = releaseYear;
     }
 
     public byte[] getCover() {
