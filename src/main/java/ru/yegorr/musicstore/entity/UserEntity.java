@@ -40,6 +40,12 @@ public class UserEntity {
     @OrderBy("addingTime")
     private List<FavouriteEntity> favourite;
 
+    @ManyToMany
+    @JoinTable(name = "subscription",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "musician_id"))
+    private List<MusicianEntity> subscriptions;
+
     public UserEntity() {
     }
 
@@ -121,5 +127,13 @@ public class UserEntity {
 
     public void setFavourite(List<FavouriteEntity> favourite) {
         this.favourite = favourite;
+    }
+
+    public List<MusicianEntity> getSubscriptions() {
+        return subscriptions;
+    }
+
+    public void setSubscriptions(List<MusicianEntity> subscriptions) {
+        this.subscriptions = subscriptions;
     }
 }

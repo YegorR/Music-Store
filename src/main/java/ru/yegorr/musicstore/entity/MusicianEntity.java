@@ -24,6 +24,9 @@ public class MusicianEntity {
     @OneToMany(mappedBy = "musician")
     private List<AlbumEntity> albums;
 
+    @ManyToMany(mappedBy = "subscriptions")
+    private List<UserEntity> subscribers;
+
     public MusicianEntity() {
     }
 
@@ -65,5 +68,13 @@ public class MusicianEntity {
 
     public void setAlbums(List<AlbumEntity> albums) {
         this.albums = albums;
+    }
+
+    public List<UserEntity> getSubscribers() {
+        return subscribers;
+    }
+
+    public void setSubscribers(List<UserEntity> subscribers) {
+        this.subscribers = subscribers;
     }
 }
