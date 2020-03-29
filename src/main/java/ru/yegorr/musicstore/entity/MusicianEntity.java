@@ -11,10 +11,10 @@ public class MusicianEntity {
     @Column(name = "musician_id")
     private Long musicianId;
 
-    @Column(name = "name", nullable = false, length = 64)
+    @Column(name = "musician_name", nullable = false, length = 64)
     private String name;
 
-    @Column(name = "description", length = 4096)
+    @Column(name = "musician_description", length = 4096)
     private String description;
 
     @Lob
