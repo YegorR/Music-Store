@@ -11,11 +11,11 @@ public class PlaylistEntity {
     @Column(name = "playlist_id")
     private Long playlistId;
 
-    @Column(name = "name")
+    @Column(name = "playlist_name")
     private String name;
 
     @Lob
-    @Column(name = "image")
+    @Column(name = "playlist_image")
     private byte[] image;
 
     @ManyToOne
