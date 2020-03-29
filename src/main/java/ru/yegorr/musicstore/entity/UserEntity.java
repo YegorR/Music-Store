@@ -36,6 +36,10 @@ public class UserEntity {
     @OrderBy("playTime")
     private List<HistoryEntity> history;
 
+    @OneToMany(mappedBy = "user")
+    @OrderBy("addingTime")
+    private List<FavouriteEntity> favourite;
+
     public UserEntity() {
     }
 
@@ -109,5 +113,13 @@ public class UserEntity {
 
     public void setHistory(List<HistoryEntity> history) {
         this.history = history;
+    }
+
+    public List<FavouriteEntity> getFavourite() {
+        return favourite;
+    }
+
+    public void setFavourite(List<FavouriteEntity> favourite) {
+        this.favourite = favourite;
     }
 }
