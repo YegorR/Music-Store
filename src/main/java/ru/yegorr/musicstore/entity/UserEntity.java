@@ -32,6 +32,10 @@ public class UserEntity {
     @OneToMany(mappedBy = "user")
     private List<ReviewEntity> reviews;
 
+    @OneToMany(mappedBy = "user")
+    @OrderBy("playTime")
+    private List<HistoryEntity> history;
+
     public UserEntity() {
     }
 
@@ -97,5 +101,13 @@ public class UserEntity {
 
     public void setReviews(List<ReviewEntity> reviews) {
         this.reviews = reviews;
+    }
+
+    public List<HistoryEntity> getHistory() {
+        return history;
+    }
+
+    public void setHistory(List<HistoryEntity> history) {
+        this.history = history;
     }
 }
