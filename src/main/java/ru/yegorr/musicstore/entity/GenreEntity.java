@@ -11,14 +11,14 @@ public class GenreEntity {
     @Column(name = "genre_id")
     private Long genreId;
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "genre_name", nullable = false)
     private String name;
 
-    @Column(name = "description")
+    @Column(name = "genre_description")
     private String description;
 
     @Lob
-    @Column(name = "image")
+    @Column(name = "genre_image")
     private byte[] image;
 
     @ManyToMany
