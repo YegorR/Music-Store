@@ -22,8 +22,8 @@ public class PlaylistEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
-    @OneToMany(mappedBy = "playlistTrackId.playlist")
-    @OrderBy("playlistTrackId.order")
+    @OneToMany(mappedBy = "playlist")
+    @OrderBy("order")
     private List<PlaylistTrackEntity> tracks;
 
     public PlaylistEntity() {
