@@ -9,8 +9,8 @@ import ru.yegorr.musicstore.exception.ApplicationException;
 
 @ControllerAdvice
 public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
-    @ExceptionHandler(ApplicationException.class)
-    protected ResponseEntity<?> handleApplicationException(ApplicationException ex) {
+    @ExceptionHandler(Exception.class)
+    protected ResponseEntity<?> handleApplicationException(Exception ex) {
         ResponseDto response = new ResponseDto();
         response.setCode(500);
         response.setError("Something wrong on the server");
