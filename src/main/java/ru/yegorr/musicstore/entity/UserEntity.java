@@ -18,10 +18,10 @@ public class UserEntity {
     private String nickname;
 
     @Column(name = "salt", nullable = false, length = 64)
-    private String salt;
+    private byte[] salt;
 
     @Column(name = "password", nullable = false)
-    private String password;
+    private byte[] password;
 
     @Column(name = "is_admin", nullable = false)
     private Boolean isAdmin;
@@ -79,19 +79,19 @@ public class UserEntity {
         this.nickname = nickname;
     }
 
-    public String getSalt() {
+    public byte[] getSalt() {
         return salt;
     }
 
-    public void setSalt(String salt) {
+    public void setSalt(byte[] salt) {
         this.salt = salt;
     }
 
-    public String getPassword() {
+    public byte[] getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
+    public void setPassword(byte[] password) {
         this.password = password;
     }
 
