@@ -1,38 +1,36 @@
 package ru.yegorr.musicstore.entity;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.util.Objects;
 
 @Entity
 @Table(name = "playlist_track")
 public class PlaylistTrackEntity {
-    @EmbeddedId
-    private PlaylistTrackId playlistTrackId;
 
-    @MapsId("playlistId")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "playlist_track_id")
+    private Long id;
+
     @ManyToOne
     @JoinColumn(name = "playlist_id")
     private PlaylistEntity playlist;
 
-    @MapsId("trackId")
     @ManyToOne
     @JoinColumn(name = "track_id")
     private TrackEntity track;
 
-    @MapsId("order")
     @Column(name = "order")
     private Integer order;
 
     public PlaylistTrackEntity() {
     }
 
-    public PlaylistTrackId getPlaylistTrackId() {
-        return playlistTrackId;
+    public Long getId() {
+        return id;
     }
 
-    public void setPlaylistTrackId(PlaylistTrackId playlistTrackId) {
-        this.playlistTrackId = playlistTrackId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public PlaylistEntity getPlaylist() {
@@ -57,57 +55,5 @@ public class PlaylistTrackEntity {
 
     public void setOrder(Integer order) {
         this.order = order;
-    }
-
-    @Embeddable
-    public static class PlaylistTrackId implements Serializable {
-
-        private Long playlistId;
-
-        private Long trackId;
-
-        private Integer order;
-
-        public PlaylistTrackId() {
-        }
-
-        public Long getPlaylistId() {
-            return playlistId;
-        }
-
-        public void setPlaylistId(Long playlist) {
-            this.playlistId = playlist;
-        }
-
-        public Long getTrackId() {
-            return trackId;
-        }
-
-        public void setTrackId(Long trackId) {
-            this.trackId = trackId;
-        }
-
-        public Integer getOrder() {
-            return order;
-        }
-
-        public void setOrder(Integer order) {
-            this.order = order;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            PlaylistTrackId that = (PlaylistTrackId) o;
-            return Objects.equals(playlistId, that.playlistId) &&
-                    Objects.equals(trackId, that.trackId) &&
-                    Objects.equals(order, that.order);
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(playlistId, trackId, order);
-        }
     }
 }
