@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.yegorr.musicstore.dto.ResponseDto;
 import ru.yegorr.musicstore.dto.UserLoginDto;
 import ru.yegorr.musicstore.dto.UserRegistrationDto;
 import ru.yegorr.musicstore.exception.ApplicationException;
@@ -22,7 +23,10 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> register(UserRegistrationDto userRegistration) throws ApplicationException {
         authService.register(userRegistration);
-        return ResponseEntity.status(200).body("Not working");
+        ResponseDto response = new ResponseDto();
+        response.setCode(200);
+        response.setBody("OK");
+        return ResponseEntity.status(200).body(response);
     }
 
     @PostMapping("/login")
