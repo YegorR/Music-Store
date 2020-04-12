@@ -1,6 +1,6 @@
 package ru.yegorr.musicstore.dto;
 
-public class UserRegistrationDto {
+public class RegistrationDto {
     private String email;
 
     private String nickname;

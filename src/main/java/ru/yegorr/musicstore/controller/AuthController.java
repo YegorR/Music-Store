@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import ru.yegorr.musicstore.dto.ResponseDto;
 import ru.yegorr.musicstore.dto.LoginDto;
-import ru.yegorr.musicstore.dto.UserRegistrationDto;
+import ru.yegorr.musicstore.dto.RegistrationDto;
 import ru.yegorr.musicstore.exception.ApplicationException;
 import ru.yegorr.musicstore.service.AuthService;
 
@@ -24,7 +24,7 @@ public class AuthController {
     @PostMapping(value = "/register",
             consumes = "application/json",
             produces = "application/json")
-    public ResponseEntity<?> register(@RequestBody UserRegistrationDto userRegistration) throws ApplicationException {
+    public ResponseEntity<?> register(@RequestBody RegistrationDto userRegistration) throws ApplicationException {
         authService.register(userRegistration);
         ResponseDto response = new ResponseDto();
         response.setCode(200);

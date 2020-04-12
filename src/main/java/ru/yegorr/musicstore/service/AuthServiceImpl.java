@@ -3,7 +3,7 @@ package ru.yegorr.musicstore.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yegorr.musicstore.dto.LoginDto;
-import ru.yegorr.musicstore.dto.UserRegistrationDto;
+import ru.yegorr.musicstore.dto.RegistrationDto;
 import ru.yegorr.musicstore.entity.UserEntity;
 import ru.yegorr.musicstore.exception.ApplicationException;
 import ru.yegorr.musicstore.exception.UserIsAlreadyExistsException;
@@ -27,7 +27,7 @@ public class AuthServiceImpl implements AuthService{
     }
 
     @Override
-    public void register(UserRegistrationDto userRegistration) throws ApplicationException {
+    public void register(RegistrationDto userRegistration) throws ApplicationException {
         if (userRepository.countAllByEmail(userRegistration.getEmail()) != 0) {
             throw new UserIsAlreadyExistsException("User with this email already exists");
         }
