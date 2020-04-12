@@ -35,7 +35,7 @@ public class AuthController {
     @PostMapping(value = "/login",
             consumes = "application/json",
             produces = "application/json")
-    public ResponseEntity<?> login(UserLoginDto userLogin) throws ApplicationException {
+    public ResponseEntity<?> login(@RequestBody UserLoginDto userLogin) throws ApplicationException {
         String token = authService.login(userLogin);
         ResponseDto response = new ResponseDto();
         response.setCode(200);
