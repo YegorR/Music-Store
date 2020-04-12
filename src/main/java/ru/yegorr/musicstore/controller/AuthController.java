@@ -3,6 +3,8 @@ package ru.yegorr.musicstore.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.yegorr.musicstore.dto.ResponseDto;
 import ru.yegorr.musicstore.dto.UserLoginDto;
@@ -20,8 +22,10 @@ public class AuthController {
         this.authService = authService;
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<?> register(UserRegistrationDto userRegistration) throws ApplicationException {
+    @PostMapping(value = "/register",
+            consumes = "application/json",
+            produces = "application/json")
+    public ResponseEntity<?> register(@RequestBody UserRegistrationDto userRegistration) throws ApplicationException {
         authService.register(userRegistration);
         ResponseDto response = new ResponseDto();
         response.setCode(200);
