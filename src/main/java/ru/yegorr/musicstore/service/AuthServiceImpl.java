@@ -7,13 +7,19 @@ import ru.yegorr.musicstore.dto.UserRegistrationDto;
 import ru.yegorr.musicstore.entity.UserEntity;
 import ru.yegorr.musicstore.exception.ApplicationException;
 import ru.yegorr.musicstore.exception.UserIsAlreadyExistsException;
+import ru.yegorr.musicstore.exception.WrongLoginOrPasswordException;
 import ru.yegorr.musicstore.repository.UserRepository;
+
+import java.util.Arrays;
 
 @Service
 public class AuthServiceImpl implements AuthService{
 
     private final UserRepository userRepository;
+
     private final PasswordHashGenerator hashGenerator = new PasswordHashGenerator();
+
+    private final TokenHandler tokenHandler = new TokenHandler();
 
     @Autowired
     public AuthServiceImpl(UserRepository userRepository) {
@@ -43,6 +49,15 @@ public class AuthServiceImpl implements AuthService{
 
     @Override
     public String login(UserLoginDto userLogin) throws ApplicationException {
-        return "";
+        UserEntity user = userRepository.findByEmail(userLogin.getEmail());
+        if (user == null) {
+            throw new WrongLoginOrPasswordException("Wrong login or password");
+        }
+
+        byte[] hashPassword = hashGenerator.generateHash(userLogin.getPassword(), user.getSalt());
+        if (!Arrays.equals(hashPassword, user.getPassword())) {
+            throw new WrongLoginOrPasswordException("Wrong login or password");
+        }
+        return tokenHandler.getToken(user.getUserId());
     }
 }
