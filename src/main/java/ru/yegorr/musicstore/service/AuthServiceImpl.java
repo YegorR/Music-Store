@@ -3,6 +3,7 @@ package ru.yegorr.musicstore.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yegorr.musicstore.dto.LoginDto;
+import ru.yegorr.musicstore.dto.LoginResponseDto;
 import ru.yegorr.musicstore.dto.RegistrationDto;
 import ru.yegorr.musicstore.entity.UserEntity;
 import ru.yegorr.musicstore.exception.ApplicationException;
@@ -13,7 +14,7 @@ import ru.yegorr.musicstore.repository.UserRepository;
 import java.util.Arrays;
 
 @Service
-public class AuthServiceImpl implements AuthService{
+public class AuthServiceImpl implements AuthService {
 
     private final UserRepository userRepository;
 
@@ -48,7 +49,7 @@ public class AuthServiceImpl implements AuthService{
     }
 
     @Override
-    public String login(LoginDto userLogin) throws ApplicationException {
+    public LoginResponseDto login(LoginDto userLogin) throws ApplicationException {
         UserEntity user = userRepository.findByEmail(userLogin.getEmail());
         if (user == null) {
             throw new WrongLoginOrPasswordException("Wrong login or password");
@@ -58,6 +59,15 @@ public class AuthServiceImpl implements AuthService{
         if (!Arrays.equals(hashPassword, user.getPassword())) {
             throw new WrongLoginOrPasswordException("Wrong login or password");
         }
-        return tokenHandler.getToken(user.getUserId());
+
+        String token = tokenHandler.getToken(user.getUserId());
+
+        LoginResponseDto loginResponseDto = new LoginResponseDto();
+        loginResponseDto.setId(user.getUserId());
+        loginResponseDto.setNickname(user.getNickname());
+        loginResponseDto.setToken(token);
+        loginResponseDto.setAdmin(user.getAdmin());
+
+        return loginResponseDto;
     }
 }

@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import ru.yegorr.musicstore.dto.LoginResponseDto;
 import ru.yegorr.musicstore.dto.ResponseDto;
 import ru.yegorr.musicstore.dto.LoginDto;
 import ru.yegorr.musicstore.dto.RegistrationDto;
@@ -36,7 +37,7 @@ public class AuthController {
             consumes = "application/json",
             produces = "application/json")
     public ResponseEntity<?> login(@RequestBody LoginDto userLogin) throws ApplicationException {
-        String token = authService.login(userLogin);
+        LoginResponseDto token = authService.login(userLogin);
         ResponseDto response = new ResponseDto();
         response.setCode(200);
         response.setBody(token);
