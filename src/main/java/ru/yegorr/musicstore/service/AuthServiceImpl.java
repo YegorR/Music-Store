@@ -2,7 +2,7 @@ package ru.yegorr.musicstore.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.yegorr.musicstore.dto.UserLoginDto;
+import ru.yegorr.musicstore.dto.LoginDto;
 import ru.yegorr.musicstore.dto.UserRegistrationDto;
 import ru.yegorr.musicstore.entity.UserEntity;
 import ru.yegorr.musicstore.exception.ApplicationException;
@@ -48,7 +48,7 @@ public class AuthServiceImpl implements AuthService{
     }
 
     @Override
-    public String login(UserLoginDto userLogin) throws ApplicationException {
+    public String login(LoginDto userLogin) throws ApplicationException {
         UserEntity user = userRepository.findByEmail(userLogin.getEmail());
         if (user == null) {
             throw new WrongLoginOrPasswordException("Wrong login or password");

@@ -1,6 +1,6 @@
 package ru.yegorr.musicstore.dto;
 
-public class UserLoginDto {
+public class LoginDto {
     private String email;
 
     private byte[] password;
