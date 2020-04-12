@@ -37,10 +37,10 @@ public class AuthController {
             consumes = "application/json",
             produces = "application/json")
     public ResponseEntity<?> login(@RequestBody LoginDto userLogin) throws ApplicationException {
-        LoginResponseDto token = authService.login(userLogin);
+        LoginResponseDto loginResponse = authService.login(userLogin);
         ResponseDto response = new ResponseDto();
         response.setCode(200);
-        response.setBody(token);
+        response.setBody(loginResponse);
         return ResponseEntity.status(200).body(response);
     }
 }
