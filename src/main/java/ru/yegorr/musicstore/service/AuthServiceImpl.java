@@ -2,6 +2,7 @@ package ru.yegorr.musicstore.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import ru.yegorr.musicstore.controller.ActualUserInformation;
 import ru.yegorr.musicstore.dto.LoginDto;
 import ru.yegorr.musicstore.dto.LoginResponseDto;
 import ru.yegorr.musicstore.dto.RegistrationDto;
@@ -9,9 +10,11 @@ import ru.yegorr.musicstore.entity.UserEntity;
 import ru.yegorr.musicstore.exception.ApplicationException;
 import ru.yegorr.musicstore.exception.UserIsAlreadyExistsException;
 import ru.yegorr.musicstore.exception.WrongLoginOrPasswordException;
+import ru.yegorr.musicstore.exception.WrongTokenException;
 import ru.yegorr.musicstore.repository.UserRepository;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -69,5 +72,24 @@ public class AuthServiceImpl implements AuthService {
         loginResponseDto.setAdmin(user.getAdmin());
 
         return loginResponseDto;
+    }
+
+    @Override
+    public ActualUserInformation check(String token) throws ApplicationException {
+        Long id = tokenHandler.checkToken(token);
+        if (id == null) {
+            throw new WrongTokenException("Wrong token");
+        }
+
+        Optional<UserEntity> userOptional = userRepository.findById(id);
+        if (userOptional.isEmpty()) {
+            throw new WrongTokenException("Wrong token");
+        }
+
+        ActualUserInformation userInformation = new ActualUserInformation();
+        userInformation.setUserId(id);
+        userInformation.setAdmin(userOptional.get().getAdmin());
+
+        return userInformation;
     }
 }
