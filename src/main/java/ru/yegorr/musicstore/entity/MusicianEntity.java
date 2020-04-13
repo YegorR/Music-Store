@@ -22,6 +22,7 @@ public class MusicianEntity {
     private byte[] image;
 
     @OneToMany(mappedBy = "musician")
+    @OrderBy("releaseDate")
     private List<AlbumEntity> albums;
 
     @ManyToMany(mappedBy = "subscriptions")
