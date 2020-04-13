@@ -1,7 +1,6 @@
 package ru.yegorr.musicstore.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.yegorr.musicstore.dto.MusicianDto;
 import ru.yegorr.musicstore.dto.MusicianResponseDto;
@@ -11,7 +10,7 @@ import ru.yegorr.musicstore.exception.ForbiddenException;
 import ru.yegorr.musicstore.service.AuthService;
 import ru.yegorr.musicstore.service.MusicianService;
 
-@Controller
+@RestController
 public class MusicianController {
 
     private final MusicianService musicianService;
