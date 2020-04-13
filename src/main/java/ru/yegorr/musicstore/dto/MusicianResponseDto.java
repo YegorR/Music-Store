@@ -1,5 +1,6 @@
 package ru.yegorr.musicstore.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MusicianResponseDto {
@@ -9,9 +10,9 @@ public class MusicianResponseDto {
 
     private String description;
 
-    private List<AlbumDescriptionDto> albums;
+    private List<AlbumDescriptionDto> albums = new ArrayList<>();
 
-    private List<AlbumDescriptionDto> singles;
+    private List<AlbumDescriptionDto> singles = new ArrayList<>();
 
     public Long getId() {
         return id;
