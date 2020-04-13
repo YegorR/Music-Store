@@ -1,5 +1,6 @@
 package ru.yegorr.musicstore.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.yegorr.musicstore.dto.MusicianDto;
@@ -17,6 +18,7 @@ public class MusicianController {
 
     private final AuthService authService;
 
+    @Autowired
     public MusicianController(MusicianService musicianService, AuthService authService) {
         this.authService = authService;
         this.musicianService = musicianService;
