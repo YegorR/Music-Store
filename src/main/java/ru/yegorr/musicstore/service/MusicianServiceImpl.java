@@ -73,6 +73,11 @@ public class MusicianServiceImpl implements MusicianService {
         musicianResponseDto.setName(entity.getName());
 
         List<AlbumEntity> albumsAndSingles = entity.getAlbums();
+
+        if (albumsAndSingles == null) {
+            return musicianResponseDto;
+        }
+        
         List<AlbumDescriptionDto> albums = new ArrayList<>();
         List<AlbumDescriptionDto> singles = new ArrayList<>();
 
