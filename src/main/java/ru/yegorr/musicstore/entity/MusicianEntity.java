@@ -17,7 +17,6 @@ public class MusicianEntity {
     @Column(name = "musician_description", length = 4096)
     private String description;
 
-    @Lob
     @Column(name = "image")
     private byte[] image;
 
