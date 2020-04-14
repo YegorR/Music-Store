@@ -16,11 +16,11 @@ public class MusicianController {
 
     private final MusicianService musicianService;
 
-    private final AuthService authService;
+    private final UserChecker userChecker;
 
     @Autowired
-    public MusicianController(MusicianService musicianService, AuthService authService) {
-        this.authService = authService;
+    public MusicianController(MusicianService musicianService, UserChecker userChecker) {
+        this.userChecker = userChecker;
         this.musicianService = musicianService;
     }
 
@@ -29,8 +29,7 @@ public class MusicianController {
             produces = "application/json")
     public ResponseEntity<?> createMusician(@RequestBody MusicianDto musicianDto,
                                             @RequestHeader("Authorization") String token) throws ApplicationException {
-        ActualUserInformation userInformation = authService.check(token);
-        if (!userInformation.getAdmin()) {
+        if (!userChecker.isAdmin(token)) {
             throw new ForbiddenException("You have no rights to do this");
         }
 
@@ -44,8 +43,21 @@ public class MusicianController {
     }
 
     @PutMapping("/musician/{musicianId}")
-    public ResponseEntity<?> changeMusician() {
-        return null;
+    public ResponseEntity<?> changeMusician(@RequestBody MusicianDto musicianDto,
+                                            @PathVariable("musicianId") Long musicianId,
+                                            @RequestHeader("Authorization") String token) throws ApplicationException {
+        if (!userChecker.isAdmin(token)) {
+            throw new ForbiddenException("You have no rights to do this");
+        }
+
+        MusicianResponseDto musicianResponseDto = musicianService.changeMusician(musicianId, musicianDto.getName(),
+                musicianDto.getDescription());
+
+        ResponseDto responseDto = new ResponseDto();
+        responseDto.setBody(musicianDto);
+        responseDto.setCode(200);
+        return ResponseEntity.status(200).body(responseDto);
+
     }
 
     @DeleteMapping("/musician/{musicianId}")
