@@ -61,8 +61,17 @@ public class MusicianController {
     }
 
     @DeleteMapping("/musician/{musicianId}")
-    public ResponseEntity<?> deleteMusician() {
-        return null;
+    public ResponseEntity<?> deleteMusician(@PathVariable("musicianId") Long musicianId,
+                                            @RequestHeader("Authorization") String token) throws ApplicationException {
+        if (!userChecker.isAdmin(token)) {
+            throw new ForbiddenException("You have not rights to do this");
+        }
+
+        musicianService.deleteMusician(musicianId);
+
+        ResponseDto responseDto = new ResponseDto();
+        responseDto.setCode(200);
+        return ResponseEntity.status(200).body(responseDto);
     }
 
     @GetMapping("/musician/{musicianId}")
