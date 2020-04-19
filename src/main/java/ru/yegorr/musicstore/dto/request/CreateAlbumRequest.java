@@ -13,8 +13,6 @@ public class CreateAlbumRequest {
 
     private boolean isSingle;
 
-    private Long musicianId;
-
     private List<Track> tracks;
 
     public static class Track {
@@ -51,14 +49,6 @@ public class CreateAlbumRequest {
 
     public void setSingle(boolean single) {
         isSingle = single;
-    }
-
-    public Long getMusicianId() {
-        return musicianId;
-    }
-
-    public void setMusicianId(Long musicianId) {
-        this.musicianId = musicianId;
     }
 
     public List<Track> getTracks() {

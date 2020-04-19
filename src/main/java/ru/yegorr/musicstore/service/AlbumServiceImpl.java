@@ -27,8 +27,8 @@ public class AlbumServiceImpl implements AlbumService {
     private AlbumRepository albumRepository;
 
     @Override
-    public AlbumResponseDto createAlbum(CreateAlbumRequest createAlbumRequest) throws ApplicationException {
-        if (!musicianRepository.existsById(createAlbumRequest.getMusicianId())) {
+    public AlbumResponseDto createAlbum(CreateAlbumRequest createAlbumRequest, Long musicianId) throws ApplicationException {
+        if (!musicianRepository.existsById(musicianId)) {
             throw new ResourceIsNotFoundException("The musician is not exists");
         }
 
@@ -36,7 +36,7 @@ public class AlbumServiceImpl implements AlbumService {
         album.setName(createAlbumRequest.getName());
         album.setReleaseDate(createAlbumRequest.getReleaseDate());
         MusicianEntity musician = new MusicianEntity();
-        musician.setMusicianId(createAlbumRequest.getMusicianId());
+        musician.setMusicianId(musicianId);
         album.setMusician(musician);
         album.setSingle(createAlbumRequest.isSingle());
 
