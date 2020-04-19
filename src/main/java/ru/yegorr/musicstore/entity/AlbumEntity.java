@@ -19,7 +19,6 @@ public class AlbumEntity {
     private LocalDate releaseDate;
 
     @Column(name = "cover")
-    @Lob
     private byte[] cover;
 
     @Column(name = "is_single")
