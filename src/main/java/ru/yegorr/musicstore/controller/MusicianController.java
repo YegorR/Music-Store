@@ -11,6 +11,7 @@ import ru.yegorr.musicstore.exception.ForbiddenException;
 import ru.yegorr.musicstore.service.MusicianService;
 
 @RestController
+@RequestMapping("/musician")
 public class MusicianController {
 
     private final MusicianService musicianService;
@@ -23,9 +24,7 @@ public class MusicianController {
         this.musicianService = musicianService;
     }
 
-    @PostMapping(path = "/musician",
-            consumes = "application/json",
-            produces = "application/json")
+    @PostMapping(consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> createMusician(@RequestBody MusicianDto musicianDto,
                                             @RequestHeader("Authorization") String token) throws ApplicationException {
         if (!userChecker.isAdmin(token)) {
@@ -38,7 +37,7 @@ public class MusicianController {
         return ResponseBuilder.getBuilder().code(201).body(musicianResponseDto).getResponseEntity();
     }
 
-    @PutMapping("/musician/{musicianId}")
+    @PutMapping("/{musicianId}")
     public ResponseEntity<?> changeMusician(@RequestBody MusicianDto musicianDto,
                                             @PathVariable("musicianId") Long musicianId,
                                             @RequestHeader("Authorization") String token) throws ApplicationException {
@@ -53,7 +52,7 @@ public class MusicianController {
 
     }
 
-    @DeleteMapping("/musician/{musicianId}")
+    @DeleteMapping("/{musicianId}")
     public ResponseEntity<?> deleteMusician(@PathVariable("musicianId") Long musicianId,
                                             @RequestHeader("Authorization") String token) throws ApplicationException {
         if (!userChecker.isAdmin(token)) {
@@ -65,7 +64,7 @@ public class MusicianController {
         return ResponseBuilder.getBuilder().code(200).getResponseEntity();
     }
 
-    @GetMapping("/musician/{musicianId}")
+    @GetMapping("/{musicianId}")
     public ResponseEntity<?> getMusician(@PathVariable("musicianId") Long musicianId,
                                          @RequestHeader("Authorization") String token) throws ApplicationException {
         userChecker.getUserId(token);
