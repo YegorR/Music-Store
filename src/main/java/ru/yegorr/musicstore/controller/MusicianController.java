@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.yegorr.musicstore.dto.MusicianDto;
 import ru.yegorr.musicstore.dto.MusicianResponseDto;
+import ru.yegorr.musicstore.dto.response.ResponseBuilder;
 import ru.yegorr.musicstore.dto.response.ResponseDto;
 import ru.yegorr.musicstore.exception.ApplicationException;
 import ru.yegorr.musicstore.exception.ForbiddenException;
@@ -35,10 +36,7 @@ public class MusicianController {
         MusicianResponseDto musicianResponseDto =
                 musicianService.createMusician(musicianDto.getName(), musicianDto.getDescription());
 
-        ResponseDto responseDto = new ResponseDto();
-        responseDto.setBody(musicianResponseDto);
-        responseDto.setCode(201);
-        return ResponseEntity.status(201).body(responseDto);
+        return ResponseBuilder.getBuilder().code(201).body(musicianResponseDto).getResponseEntity();
     }
 
     @PutMapping("/musician/{musicianId}")
@@ -52,10 +50,7 @@ public class MusicianController {
         MusicianResponseDto musicianResponseDto = musicianService.changeMusician(musicianId, musicianDto.getName(),
                 musicianDto.getDescription());
 
-        ResponseDto responseDto = new ResponseDto();
-        responseDto.setBody(musicianDto);
-        responseDto.setCode(200);
-        return ResponseEntity.status(200).body(responseDto);
+        return ResponseBuilder.getBuilder().body(musicianDto).code(200).getResponseEntity();
 
     }
 
@@ -68,9 +63,7 @@ public class MusicianController {
 
         musicianService.deleteMusician(musicianId);
 
-        ResponseDto responseDto = new ResponseDto();
-        responseDto.setCode(200);
-        return ResponseEntity.status(200).body(responseDto);
+        return ResponseBuilder.getBuilder().code(200).getResponseEntity();
     }
 
     @GetMapping("/musician/{musicianId}")
