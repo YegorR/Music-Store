@@ -1,9 +1,7 @@
-package ru.yegorr.musicstore.dto;
+package ru.yegorr.musicstore.dto.request;
 
-public class RegistrationDto {
+public class LoginDto {
     private String email;
-
-    private String nickname;
 
     private byte[] password;
 
@@ -13,14 +11,6 @@ public class RegistrationDto {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getNickname() {
-        return nickname;
-    }
-
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
     }
 
     public byte[] getPassword() {

@@ -1,6 +1,6 @@
 package ru.yegorr.musicstore.service;
 
-import ru.yegorr.musicstore.dto.MusicianResponseDto;
+import ru.yegorr.musicstore.dto.response.MusicianResponseDto;
 import ru.yegorr.musicstore.exception.ApplicationException;
 
 public interface MusicianService {

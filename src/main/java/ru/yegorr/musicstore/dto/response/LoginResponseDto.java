@@ -1,4 +1,4 @@
-package ru.yegorr.musicstore.dto;
+package ru.yegorr.musicstore.dto.response;
 
 public class LoginResponseDto {
     private String token;

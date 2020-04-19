@@ -1,4 +1,4 @@
-package ru.yegorr.musicstore.dto;
+package ru.yegorr.musicstore.dto.request;
 
 public class MusicianDto {
     private String name;

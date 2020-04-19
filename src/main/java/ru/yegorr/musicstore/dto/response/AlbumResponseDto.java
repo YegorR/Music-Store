@@ -1,4 +1,4 @@
-package ru.yegorr.musicstore.dto;
+package ru.yegorr.musicstore.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 

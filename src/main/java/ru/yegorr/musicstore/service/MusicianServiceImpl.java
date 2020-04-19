@@ -2,8 +2,8 @@ package ru.yegorr.musicstore.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.yegorr.musicstore.dto.AlbumDescriptionDto;
-import ru.yegorr.musicstore.dto.MusicianResponseDto;
+import ru.yegorr.musicstore.dto.response.AlbumDescriptionDto;
+import ru.yegorr.musicstore.dto.response.MusicianResponseDto;
 import ru.yegorr.musicstore.entity.AlbumEntity;
 import ru.yegorr.musicstore.entity.MusicianEntity;
 import ru.yegorr.musicstore.exception.ApplicationException;

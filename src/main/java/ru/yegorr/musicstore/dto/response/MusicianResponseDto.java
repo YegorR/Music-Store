@@ -1,4 +1,6 @@
-package ru.yegorr.musicstore.dto;
+package ru.yegorr.musicstore.dto.response;
+
+import ru.yegorr.musicstore.dto.response.AlbumDescriptionDto;
 
 import java.util.ArrayList;
 import java.util.List;
