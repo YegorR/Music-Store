@@ -51,6 +51,7 @@ public class AlbumServiceImpl implements AlbumService {
             trackEntity.setName(track.getName());
             trackEntity.setAlbum(album);
             trackEntity.setOrder(order++);
+            trackEntity.setPlaysNumber(0);
             tracks.add(trackEntity);
             trackRepository.save(trackEntity);
         }
