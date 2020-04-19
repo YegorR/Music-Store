@@ -2,7 +2,7 @@ package ru.yegorr.musicstore.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.yegorr.musicstore.dto.request.CreateAlbumRequest;
+import ru.yegorr.musicstore.dto.request.CreateAlbumRequestDto;
 import ru.yegorr.musicstore.dto.response.AlbumResponseDto;
 import ru.yegorr.musicstore.dto.response.MusicianBriefResponseDto;
 import ru.yegorr.musicstore.dto.response.TrackBriefResponseDto;
@@ -27,7 +27,7 @@ public class AlbumServiceImpl implements AlbumService {
     private AlbumRepository albumRepository;
 
     @Override
-    public AlbumResponseDto createAlbum(CreateAlbumRequest createAlbumRequest, Long musicianId) throws ApplicationException {
+    public AlbumResponseDto createAlbum(CreateAlbumRequestDto createAlbumRequest, Long musicianId) throws ApplicationException {
         if (!musicianRepository.existsById(musicianId)) {
             throw new ResourceIsNotFoundException("The musician is not exists");
         }
@@ -44,7 +44,7 @@ public class AlbumServiceImpl implements AlbumService {
 
         List<TrackEntity> tracks = new ArrayList<>();
         int order = 0;
-        for (CreateAlbumRequest.Track track: createAlbumRequest.getTracks()) {
+        for (CreateAlbumRequestDto.Track track: createAlbumRequest.getTracks()) {
             TrackEntity trackEntity = new TrackEntity();
             trackEntity.setName(track.getName());
             trackEntity.setAlbum(album);
