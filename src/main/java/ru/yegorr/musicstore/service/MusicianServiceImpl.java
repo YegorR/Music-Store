@@ -2,6 +2,7 @@ package ru.yegorr.musicstore.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.yegorr.musicstore.dto.response.AlbumDescriptionDto;
 import ru.yegorr.musicstore.dto.response.MusicianResponseDto;
 import ru.yegorr.musicstore.entity.AlbumEntity;
@@ -24,6 +25,7 @@ public class MusicianServiceImpl implements MusicianService {
         this.musicianRepository = musicianRepository;
     }
 
+    @Transactional
     @Override
     public MusicianResponseDto createMusician(String name, String description) throws ApplicationException {
         MusicianEntity musician = new MusicianEntity();
@@ -34,6 +36,7 @@ public class MusicianServiceImpl implements MusicianService {
         return translateEntityToDto(musician);
     }
 
+    @Transactional
     @Override
     public MusicianResponseDto changeMusician(Long id, String name, String description) throws ApplicationException {
         if (!musicianRepository.existsById(id)) {
@@ -49,6 +52,7 @@ public class MusicianServiceImpl implements MusicianService {
         return translateEntityToDto(musician);
     }
 
+    @Transactional
     @Override
     public void deleteMusician(Long id) throws ApplicationException {
         if (!musicianRepository.existsById(id)) {
@@ -57,6 +61,7 @@ public class MusicianServiceImpl implements MusicianService {
         musicianRepository.deleteById(id);
     }
 
+    @Transactional
     @Override
     public MusicianResponseDto getMusician(Long id) throws ApplicationException {
         Optional<MusicianEntity> musician = musicianRepository.findById(id);

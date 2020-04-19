@@ -2,6 +2,7 @@ package ru.yegorr.musicstore.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.yegorr.musicstore.controller.ActualUserInformation;
 import ru.yegorr.musicstore.dto.request.LoginDto;
 import ru.yegorr.musicstore.dto.response.LoginResponseDto;
@@ -31,6 +32,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Transactional
     public void register(RegistrationDto userRegistration) throws ApplicationException {
         if (userRepository.countAllByEmail(userRegistration.getEmail()) != 0) {
             throw new UserIsAlreadyExistsException("User with this email already exists");
@@ -52,6 +54,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Transactional
     public LoginResponseDto login(LoginDto userLogin) throws ApplicationException {
         UserEntity user = userRepository.findByEmail(userLogin.getEmail());
         if (user == null) {
@@ -75,6 +78,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    @Transactional
     public ActualUserInformation check(String token) throws ApplicationException {
         Long id = tokenHandler.checkToken(token);
         if (id == null) {
