@@ -30,6 +30,7 @@ public class AlbumEntity {
     private MusicianEntity musician;
 
     @OneToMany(mappedBy = "album")
+    @OrderBy("order")
     private List<TrackEntity> tracks;
 
     @OneToMany(mappedBy = "album")
