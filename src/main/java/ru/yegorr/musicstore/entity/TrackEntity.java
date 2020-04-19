@@ -15,7 +15,7 @@ public class TrackEntity {
     @Column(name = "track_name", nullable = false)
     private String name;
 
-    @Column(name = "audio", nullable = false)
+    @Column(name = "audio")
     private byte[] audio;
 
     @Column(name = "track_order")
