@@ -5,10 +5,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.yegorr.musicstore.dto.MusicianDto;
 import ru.yegorr.musicstore.dto.MusicianResponseDto;
-import ru.yegorr.musicstore.dto.ResponseDto;
+import ru.yegorr.musicstore.dto.response.ResponseDto;
 import ru.yegorr.musicstore.exception.ApplicationException;
 import ru.yegorr.musicstore.exception.ForbiddenException;
-import ru.yegorr.musicstore.service.AuthService;
 import ru.yegorr.musicstore.service.MusicianService;
 
 @RestController

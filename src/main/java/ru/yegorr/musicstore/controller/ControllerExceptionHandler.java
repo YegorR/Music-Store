@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import ru.yegorr.musicstore.dto.ResponseDto;
+import ru.yegorr.musicstore.dto.response.ResponseDto;
 import ru.yegorr.musicstore.exception.ClientException;
 
 
