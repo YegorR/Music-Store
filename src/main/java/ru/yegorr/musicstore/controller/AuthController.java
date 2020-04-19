@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import ru.yegorr.musicstore.dto.LoginResponseDto;
-import ru.yegorr.musicstore.dto.response.ResponseDto;
+import ru.yegorr.musicstore.dto.response.ResponseBuilder;
 import ru.yegorr.musicstore.dto.LoginDto;
 import ru.yegorr.musicstore.dto.RegistrationDto;
 import ru.yegorr.musicstore.exception.ApplicationException;
@@ -27,10 +27,8 @@ public class AuthController {
             produces = "application/json")
     public ResponseEntity<?> register(@RequestBody RegistrationDto userRegistration) throws ApplicationException {
         authService.register(userRegistration);
-        ResponseDto response = new ResponseDto();
-        response.setCode(200);
-        response.setBody("OK");
-        return ResponseEntity.status(200).body(response);
+
+        return ResponseBuilder.getBuilder().code(200).body("OK").getResponseEntity();
     }
 
     @PostMapping(value = "/login",
@@ -38,9 +36,7 @@ public class AuthController {
             produces = "application/json")
     public ResponseEntity<?> login(@RequestBody LoginDto userLogin) throws ApplicationException {
         LoginResponseDto loginResponse = authService.login(userLogin);
-        ResponseDto response = new ResponseDto();
-        response.setCode(200);
-        response.setBody(loginResponse);
-        return ResponseEntity.status(200).body(response);
+
+        return ResponseBuilder.getBuilder().code(200).body(loginResponse).getResponseEntity();
     }
 }
