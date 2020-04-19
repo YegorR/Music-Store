@@ -66,9 +66,10 @@ public class MusicianController {
     }
 
     @GetMapping("/musician/{musicianId}")
-    public ResponseEntity<?> getMusician() {
-        return null;
+    public ResponseEntity<?> getMusician(@PathVariable("musicianId") Long musicianId,
+                                         @RequestHeader("Authorization") String token) throws ApplicationException {
+        userChecker.getUserId(token);
+        MusicianResponseDto musicianResponseDto = musicianService.getMusician(musicianId);
+        return ResponseBuilder.getBuilder().code(200).body(musicianResponseDto).getResponseEntity();
     }
-
-
 }
