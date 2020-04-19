@@ -4,7 +4,7 @@ import org.springframework.http.ResponseEntity;
 
 public class ResponseBuilder {
 
-    private ResponseDto response;
+    private final ResponseDto response = new ResponseDto();
 
     public static ResponseBuilder getBuilder() {
         return new ResponseBuilder();
@@ -27,5 +27,37 @@ public class ResponseBuilder {
 
     public ResponseEntity<?> getResponseEntity() {
         return ResponseEntity.status(response.getCode()).body(response);
+    }
+}
+
+class ResponseDto {
+    private int code;
+
+    private Object body;
+
+    private String error;
+
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
+    }
+
+    public Object getBody() {
+        return body;
+    }
+
+    public void setBody(Object body) {
+        this.body = body;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public void setError(String error) {
+        this.error = error;
     }
 }
