@@ -1,9 +1,7 @@
 package ru.yegorr.musicstore.entity;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.sql.Timestamp;
-import java.util.Objects;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "history")
@@ -23,7 +21,7 @@ public class HistoryEntity {
     private TrackEntity track;
 
     @Column(name = "play_time")
-    private Timestamp playTime;
+    private LocalDateTime playTime;
 
     public HistoryEntity() {
     }
@@ -52,11 +50,11 @@ public class HistoryEntity {
         this.track = track;
     }
 
-    public Timestamp getPlayTime() {
+    public LocalDateTime getPlayTime() {
         return playTime;
     }
 
-    public void setPlayTime(Timestamp playTime) {
+    public void setPlayTime(LocalDateTime playTime) {
         this.playTime = playTime;
     }
 }

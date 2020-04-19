@@ -1,7 +1,7 @@
 package ru.yegorr.musicstore.entity;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "review",
@@ -26,7 +26,7 @@ public class ReviewEntity {
     private String text;
 
     @Column(name = "review_time", nullable = false)
-    private Timestamp review_time;
+    private LocalDateTime review_time;
 
     public ReviewEntity() {
     }
@@ -71,11 +71,11 @@ public class ReviewEntity {
         this.text = text;
     }
 
-    public Timestamp getReview_time() {
+    public LocalDateTime getReview_time() {
         return review_time;
     }
 
-    public void setReview_time(Timestamp review_time) {
+    public void setReview_time(LocalDateTime review_time) {
         this.review_time = review_time;
     }
 }

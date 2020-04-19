@@ -1,7 +1,7 @@
 package ru.yegorr.musicstore.entity;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -16,7 +16,7 @@ public class AlbumEntity {
     private String name;
 
     @Column(name = "release_date", nullable = false)
-    private Date releaseDate;
+    private LocalDate releaseDate;
 
     @Column(name = "cover")
     @Lob
@@ -57,11 +57,11 @@ public class AlbumEntity {
         this.name = name;
     }
 
-    public Date getReleaseDate() {
+    public LocalDate getReleaseDate() {
         return releaseDate;
     }
 
-    public void setReleaseDate(Date releaseYear) {
+    public void setReleaseDate(LocalDate releaseYear) {
         this.releaseDate = releaseYear;
     }
 

@@ -2,7 +2,7 @@ package ru.yegorr.musicstore.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class AlbumDescriptionDto {
     private Long id;
@@ -10,7 +10,7 @@ public class AlbumDescriptionDto {
     private String name;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
-    private Date releaseDate;
+    private LocalDate releaseDate;
 
     private Boolean isSingle;
 
@@ -30,11 +30,11 @@ public class AlbumDescriptionDto {
         this.name = name;
     }
 
-    public Date getReleaseDate() {
+    public LocalDate getReleaseDate() {
         return releaseDate;
     }
 
-    public void setReleaseDate(Date releaseDate) {
+    public void setReleaseDate(LocalDate releaseDate) {
         this.releaseDate = releaseDate;
     }
 
