@@ -77,7 +77,6 @@ public class AlbumServiceImpl implements AlbumService {
             TrackBriefResponseDto track = new TrackBriefResponseDto();
             track.setId(trackEntity.getTrackId());
             track.setFavourite(false);
-            track.setPlaysNumber(0);
             track.setPlaysNumber(trackEntity.getPlaysNumber());
             track.setName(trackEntity.getName());
             tracks.add(track);
