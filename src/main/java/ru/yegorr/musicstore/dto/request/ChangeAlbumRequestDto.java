@@ -12,7 +12,7 @@ public class ChangeAlbumRequestDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDate releaseDate;
 
-    private boolean isSingle;
+    private boolean single;
 
     private List<Track> tracks = new ArrayList<>();
 
@@ -33,11 +33,11 @@ public class ChangeAlbumRequestDto {
     }
 
     public boolean isSingle() {
-        return isSingle;
+        return single;
     }
 
     public void setSingle(boolean single) {
-        isSingle = single;
+        this.single = single;
     }
 
     public List<Track> getTracks() {

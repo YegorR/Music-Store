@@ -12,7 +12,7 @@ public class AlbumDescriptionDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDate releaseDate;
 
-    private Boolean isSingle;
+    private Boolean single;
 
     public Long getId() {
         return id;
@@ -39,10 +39,10 @@ public class AlbumDescriptionDto {
     }
 
     public Boolean getSingle() {
-        return isSingle;
+        return single;
     }
 
     public void setSingle(Boolean single) {
-        isSingle = single;
+        this.single = single;
     }
 }

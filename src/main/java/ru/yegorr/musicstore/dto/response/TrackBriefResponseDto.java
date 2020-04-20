@@ -7,7 +7,7 @@ public class TrackBriefResponseDto {
 
     private int playsNumber;
 
-    private boolean isFavourite;
+    private boolean favourite;
 
     public Long getId() {
         return id;
@@ -34,10 +34,10 @@ public class TrackBriefResponseDto {
     }
 
     public boolean isFavourite() {
-        return isFavourite;
+        return favourite;
     }
 
     public void setFavourite(boolean favourite) {
-        isFavourite = favourite;
+        this.favourite = favourite;
     }
 }
