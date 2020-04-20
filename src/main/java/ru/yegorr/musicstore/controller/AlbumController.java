@@ -16,12 +16,12 @@ public class AlbumController {
 
     private final UserChecker userChecker;
 
-    private final AlbumService albumRepository;
+    private final AlbumService albumService;
 
     @Autowired
-    public AlbumController(UserChecker userChecker, AlbumService albumRepository) {
+    public AlbumController(UserChecker userChecker, AlbumService albumService) {
         this.userChecker = userChecker;
-        this.albumRepository = albumRepository;
+        this.albumService = albumService;
     }
 
     @PostMapping("/musician/{musicianId}/album")
@@ -32,7 +32,7 @@ public class AlbumController {
             throw new ForbiddenException("You have not rights for this");
         }
 
-        AlbumResponseDto response = albumRepository.createAlbum(request, musicianId);
+        AlbumResponseDto response = albumService.createAlbum(request, musicianId);
         return ResponseBuilder.getBuilder().body(response).code(201).getResponseEntity();
     }
 
@@ -44,7 +44,15 @@ public class AlbumController {
             throw new ForbiddenException("You have not rights for this");
         }
 
-        AlbumResponseDto response = albumRepository.changeAlbum(request, albumId);
+        AlbumResponseDto response = albumService.changeAlbum(request, albumId);
+        return ResponseBuilder.getBuilder().body(response).code(200).getResponseEntity();
+    }
+
+    @GetMapping("/album/{albumId}")
+    public ResponseEntity<?> getAlbum(@PathVariable("albumId") Long albumId,
+                                      @RequestHeader("Authorization") String token) throws ApplicationException {
+        userChecker.getUserId(token);
+        AlbumResponseDto response = albumService.getAlbum(albumId);
         return ResponseBuilder.getBuilder().body(response).code(200).getResponseEntity();
     }
 }
