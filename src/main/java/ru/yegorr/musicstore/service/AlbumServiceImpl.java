@@ -107,7 +107,13 @@ public class AlbumServiceImpl implements AlbumService {
         return translateEntityToDto(album);
     }
 
-
+    @Override
+    @Transactional
+    public AlbumResponseDto getAlbum(Long albumId) throws ApplicationException {
+        AlbumEntity album = albumRepository.findById(albumId)
+                .orElseThrow(() -> new ResourceIsNotFoundException("The album is not exist"));
+        return translateEntityToDto(album);
+    }
 
     private AlbumResponseDto translateEntityToDto(AlbumEntity entity) { //TODO Add version for favourite
         AlbumResponseDto dto = new AlbumResponseDto();
