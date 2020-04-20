@@ -3,6 +3,7 @@ package ru.yegorr.musicstore.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.yegorr.musicstore.dto.request.ChangeAlbumRequestDto;
 import ru.yegorr.musicstore.dto.request.CreateAlbumRequestDto;
 import ru.yegorr.musicstore.dto.response.AlbumResponseDto;
 import ru.yegorr.musicstore.dto.response.MusicianBriefResponseDto;
@@ -18,6 +19,7 @@ import ru.yegorr.musicstore.repository.TrackRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AlbumServiceImpl implements AlbumService {
@@ -46,7 +48,7 @@ public class AlbumServiceImpl implements AlbumService {
 
         List<TrackEntity> tracks = new ArrayList<>();
         int order = 0;
-        for (CreateAlbumRequestDto.Track track: createAlbumRequest.getTracks()) {
+        for (CreateAlbumRequestDto.Track track : createAlbumRequest.getTracks()) {
             TrackEntity trackEntity = new TrackEntity();
             trackEntity.setName(track.getName());
             trackEntity.setAlbum(album);
@@ -61,6 +63,52 @@ public class AlbumServiceImpl implements AlbumService {
         return translateEntityToDto(album);
     }
 
+    @Override
+    @Transactional
+    public AlbumResponseDto changeAlbum(ChangeAlbumRequestDto changeAlbumRequest, Long albumId) throws ApplicationException {
+        Optional<AlbumEntity> albumOptional = albumRepository.findById(albumId);
+        if (albumOptional.isEmpty()) {
+            throw new ResourceIsNotFoundException("The album is not exists");
+        }
+        AlbumEntity album = albumOptional.get();
+
+        album.setName(changeAlbumRequest.getName());
+        album.setReleaseDate(changeAlbumRequest.getReleaseDate());
+        album.setSingle(changeAlbumRequest.isSingle());
+
+        List<TrackEntity> oldTracks = album.getTracks();
+        List<TrackEntity> newTracks = new ArrayList<>();
+
+        int order = 0;
+        for (ChangeAlbumRequestDto.Track track : changeAlbumRequest.getTracks()) {
+            Long id = track.getId();
+            TrackEntity trackEntity;
+            if (id == null) {
+                trackEntity = new TrackEntity();
+                trackEntity.setPlaysNumber(0);
+            } else {
+                Optional<TrackEntity> trackEntityOptional = trackRepository.findById(id);
+                if (trackEntityOptional.isEmpty()) {
+                    throw new ResourceIsNotFoundException(String.format("The track %d is not exist", id));
+                }
+                trackEntity = trackEntityOptional.get();
+                oldTracks.removeIf(oldTrack -> oldTrack.getTrackId().equals(id));
+            }
+            trackEntity.setName(track.getName());
+            trackEntity.setAlbum(album);
+            trackEntity.setOrder(order++);
+            newTracks.add(trackEntity);
+        }
+        trackRepository.deleteAll(oldTracks);
+        trackRepository.saveAll(newTracks);
+        album.setTracks(newTracks);
+        album = albumRepository.save(album);
+
+        return translateEntityToDto(album);
+    }
+
+
+
     private AlbumResponseDto translateEntityToDto(AlbumEntity entity) { //TODO Add version for favourite
         AlbumResponseDto dto = new AlbumResponseDto();
         dto.setId(entity.getAlbumId());
@@ -74,7 +122,7 @@ public class AlbumServiceImpl implements AlbumService {
         dto.setMusician(musician);
 
         List<TrackBriefResponseDto> tracks = new ArrayList<>();
-        for (TrackEntity trackEntity: entity.getTracks()) {
+        for (TrackEntity trackEntity : entity.getTracks()) {
             TrackBriefResponseDto track = new TrackBriefResponseDto();
             track.setId(trackEntity.getTrackId());
             track.setFavourite(false);
