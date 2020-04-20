@@ -1,5 +1,7 @@
 package ru.yegorr.musicstore.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class TrackBriefResponseDto {
     private Long id;
 
@@ -7,6 +9,7 @@ public class TrackBriefResponseDto {
 
     private int playsNumber;
 
+    @JsonProperty("isFavourite")
     private boolean isFavourite;
 
     public Long getId() {
