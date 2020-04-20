@@ -3,6 +3,7 @@ package ru.yegorr.musicstore.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.yegorr.musicstore.dto.request.ChangeAlbumRequestDto;
 import ru.yegorr.musicstore.dto.request.CreateAlbumRequestDto;
 import ru.yegorr.musicstore.dto.response.AlbumResponseDto;
 import ru.yegorr.musicstore.dto.response.ResponseBuilder;
@@ -33,5 +34,17 @@ public class AlbumController {
 
         AlbumResponseDto response = albumRepository.createAlbum(request, musicianId);
         return ResponseBuilder.getBuilder().body(response).code(201).getResponseEntity();
+    }
+
+    @PutMapping("/album/{albumId}")
+    public ResponseEntity<?> changeAlbum(@RequestBody ChangeAlbumRequestDto request,
+                                         @PathVariable("albumId") Long albumId,
+                                         @RequestHeader("Authorization") String token) throws ApplicationException {
+        if (!userChecker.isAdmin(token)) {
+            throw new ForbiddenException("You have not rights for this");
+        }
+
+        AlbumResponseDto response = albumRepository.changeAlbum(request, albumId);
+        return ResponseBuilder.getBuilder().body(response).code(200).getResponseEntity();
     }
 }
