@@ -1,7 +1,6 @@
 package ru.yegorr.musicstore.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -15,7 +14,6 @@ public class AlbumResponseDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDate releaseDate;
 
-    @JsonProperty("isSingle")
     private boolean isSingle;
 
     private MusicianBriefResponseDto musician;
