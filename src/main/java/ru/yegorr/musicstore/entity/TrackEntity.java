@@ -16,6 +16,7 @@ public class TrackEntity {
     private String name;
 
     @Column(name = "audio")
+    @Basic(fetch = FetchType.LAZY)
     private byte[] audio;
 
     @Column(name = "track_order")
