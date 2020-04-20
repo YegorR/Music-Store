@@ -55,4 +55,14 @@ public class AlbumController {
         AlbumResponseDto response = albumService.getAlbum(albumId);
         return ResponseBuilder.getBuilder().body(response).code(200).getResponseEntity();
     }
+
+    @DeleteMapping("album/{albumId}")
+    public ResponseEntity<?> deleteAlbum(@PathVariable("albumId") Long albumId,
+                                         @RequestHeader("Authorization") String token) throws ApplicationException {
+        if (!userChecker.isAdmin(token)) {
+            throw new ForbiddenException("You have not rights for this");
+        }
+        albumService.deleteAlbum(albumId);
+        return ResponseBuilder.getBuilder().code(200).getResponseEntity();
+    }
 }
