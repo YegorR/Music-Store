@@ -9,4 +9,6 @@ public interface AlbumService {
     AlbumResponseDto createAlbum(CreateAlbumRequestDto createAlbumRequest, Long musicianId) throws ApplicationException;
 
     AlbumResponseDto changeAlbum(ChangeAlbumRequestDto changeAlbumRequest, Long albumId) throws ApplicationException;
+
+    AlbumResponseDto getAlbum(Long albumId) throws ApplicationException;
 }
