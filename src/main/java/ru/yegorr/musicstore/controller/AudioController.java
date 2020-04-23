@@ -23,7 +23,7 @@ public class AudioController {
     }
 
     @PutMapping(path = "/track/{trackId}/audio",
-            consumes = "audio/mp3")
+            consumes = {"audio/mp3", "multipart/form-data"})
     public ResponseEntity<?> unloadAudio(@RequestParam("audio") MultipartFile audio, @PathVariable Long trackId,
                                          @RequestHeader("Authorization") String token) throws ApplicationException {
         if (!userChecker.isAdmin(token)) {
