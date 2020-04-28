@@ -3,15 +3,15 @@ package ru.yegorr.musicstore.dto.response;
 public class TrackResponseDto {
     private Long id;
 
-    private Long name;
+    private String name;
 
     private Long albumId;
 
-    private Long albumName;
+    private String albumName;
 
     private Long musicianId;
 
-    private Long musicianName;
+    private String musicianName;
 
     public Long getId() {
         return id;
@@ -21,11 +21,11 @@ public class TrackResponseDto {
         this.id = id;
     }
 
-    public Long getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(Long name) {
+    public void setName(String name) {
         this.name = name;
     }
 
@@ -37,11 +37,11 @@ public class TrackResponseDto {
         this.albumId = albumId;
     }
 
-    public Long getAlbumName() {
+    public String getAlbumName() {
         return albumName;
     }
 
-    public void setAlbumName(Long albumName) {
+    public void setAlbumName(String albumName) {
         this.albumName = albumName;
     }
 
@@ -53,11 +53,11 @@ public class TrackResponseDto {
         this.musicianId = musicianId;
     }
 
-    public Long getMusicianName() {
+    public String getMusicianName() {
         return musicianName;
     }
 
-    public void setMusicianName(Long musicianName) {
+    public void setMusicianName(String musicianName) {
         this.musicianName = musicianName;
     }
 }
