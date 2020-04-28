@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.yegorr.musicstore.dto.response.ResponseBuilder;
+import ru.yegorr.musicstore.dto.response.TrackResponseDto;
 import ru.yegorr.musicstore.exception.ApplicationException;
 import ru.yegorr.musicstore.exception.ForbiddenException;
 import ru.yegorr.musicstore.exception.ResourceIsNotFoundException;
@@ -45,5 +46,14 @@ public class AudioController {
             throw new ResourceIsNotFoundException("The audio is not exist for this track");
         }
         return ResponseEntity.ok(audio);
+    }
+
+    @GetMapping(path = "/track/{trackId}")
+    public ResponseEntity<?> getTrackInfo(@PathVariable Long trackId, @RequestHeader("Authorization") String token)
+        throws ApplicationException {
+        userChecker.getUserId(token);
+
+        TrackResponseDto trackResponseDto = trackService.getTrackInfo(trackId);
+        return ResponseBuilder.getBuilder().body(trackResponseDto).code(200).getResponseEntity();
     }
 }
