@@ -124,6 +124,22 @@ public class AlbumServiceImpl implements AlbumService {
         albumRepository.deleteById(albumId);
     }
 
+    @Override
+    @Transactional
+    public byte[] getCover(Long albumId) throws ApplicationException {
+        return albumRepository.findById(albumId).
+                orElseThrow(() -> new ResourceIsNotFoundException("The album is not exists")).
+                getCover();
+    }
+
+    @Override
+    @Transactional
+    public void saveCover(Long albumId, byte[] cover) throws ApplicationException {
+        albumRepository.findById(albumId).
+                orElseThrow(() -> new ResourceIsNotFoundException("The album is not exists")).
+                setCover(cover);
+    }
+
     private AlbumResponseDto translateEntityToDto(AlbumEntity entity) { //TODO Add version for favourite
         AlbumResponseDto dto = new AlbumResponseDto();
         dto.setId(entity.getAlbumId());
