@@ -19,6 +19,7 @@ public class AlbumEntity {
     private LocalDate releaseDate;
 
     @Column(name = "cover")
+    @Basic(fetch = FetchType.LAZY)
     private byte[] cover;
 
     @Column(name = "is_single")
