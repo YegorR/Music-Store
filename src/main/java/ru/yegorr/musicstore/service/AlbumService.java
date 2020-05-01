@@ -13,4 +13,8 @@ public interface AlbumService {
     AlbumResponseDto getAlbum(Long albumId) throws ApplicationException;
 
     void deleteAlbum(Long albumId) throws ApplicationException;
+
+    byte[] getCover(Long albumId) throws ApplicationException;
+
+    void saveCover(Long albumId, byte[] cover) throws ApplicationException;
 }
