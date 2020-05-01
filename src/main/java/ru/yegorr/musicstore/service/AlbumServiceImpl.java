@@ -3,6 +3,7 @@ package ru.yegorr.musicstore.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import ru.yegorr.musicstore.dto.request.ChangeAlbumRequestDto;
 import ru.yegorr.musicstore.dto.request.CreateAlbumRequestDto;
 import ru.yegorr.musicstore.dto.response.AlbumResponseDto;
@@ -17,6 +18,7 @@ import ru.yegorr.musicstore.repository.AlbumRepository;
 import ru.yegorr.musicstore.repository.MusicianRepository;
 import ru.yegorr.musicstore.repository.TrackRepository;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -134,10 +136,14 @@ public class AlbumServiceImpl implements AlbumService {
 
     @Override
     @Transactional
-    public void saveCover(Long albumId, byte[] cover) throws ApplicationException {
-        albumRepository.findById(albumId).
-                orElseThrow(() -> new ResourceIsNotFoundException("The album is not exists")).
-                setCover(cover);
+    public void saveCover(Long albumId, MultipartFile cover) throws ApplicationException {
+        try {
+            albumRepository.findById(albumId).
+                    orElseThrow(() -> new ResourceIsNotFoundException("The album is not exists")).
+                    setCover(cover.getBytes());
+        } catch (IOException ex) {
+            throw new ApplicationException("Something wrong", ex);
+        }
     }
 
     private AlbumResponseDto translateEntityToDto(AlbumEntity entity) { //TODO Add version for favourite

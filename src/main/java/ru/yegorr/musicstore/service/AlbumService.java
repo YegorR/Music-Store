@@ -1,5 +1,6 @@
 package ru.yegorr.musicstore.service;
 
+import org.springframework.web.multipart.MultipartFile;
 import ru.yegorr.musicstore.dto.request.ChangeAlbumRequestDto;
 import ru.yegorr.musicstore.dto.request.CreateAlbumRequestDto;
 import ru.yegorr.musicstore.dto.response.AlbumResponseDto;
@@ -16,5 +17,5 @@ public interface AlbumService {
 
     byte[] getCover(Long albumId) throws ApplicationException;
 
-    void saveCover(Long albumId, byte[] cover) throws ApplicationException;
+    void saveCover(Long albumId, MultipartFile cover) throws ApplicationException;
 }
