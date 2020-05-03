@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class AlbumServiceImpl implements AlbumService {
@@ -144,6 +145,12 @@ public class AlbumServiceImpl implements AlbumService {
         } catch (IOException ex) {
             throw new ApplicationException("Something wrong", ex);
         }
+    }
+
+    @Override
+    public List<AlbumResponseDto> searchAlbums(String query) throws ApplicationException {
+        List<AlbumEntity> albums = albumRepository.findAllByNameContainingIgnoreCase(query);
+        return albums.stream().map(this::translateEntityToDto).collect(Collectors.toList());
     }
 
     private AlbumResponseDto translateEntityToDto(AlbumEntity entity) { //TODO Add version for favourite
