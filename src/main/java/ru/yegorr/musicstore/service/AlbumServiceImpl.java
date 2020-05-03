@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.yegorr.musicstore.dto.request.ChangeAlbumRequestDto;
 import ru.yegorr.musicstore.dto.request.CreateAlbumRequestDto;
 import ru.yegorr.musicstore.dto.response.AlbumResponseDto;
+import ru.yegorr.musicstore.dto.response.BriefAlbumDescriptionDto;
 import ru.yegorr.musicstore.dto.response.MusicianBriefResponseDto;
 import ru.yegorr.musicstore.dto.response.TrackBriefResponseDto;
 import ru.yegorr.musicstore.entity.AlbumEntity;
@@ -148,9 +149,24 @@ public class AlbumServiceImpl implements AlbumService {
     }
 
     @Override
-    public List<AlbumResponseDto> searchAlbums(String query) throws ApplicationException {
+    public List<BriefAlbumDescriptionDto> searchAlbums(String query) throws ApplicationException {
         List<AlbumEntity> albums = albumRepository.findAllByNameContainingIgnoreCase(query);
-        return albums.stream().map(this::translateEntityToDto).collect(Collectors.toList());
+        return albums.stream().map(this::translateEntityToBriefDto).collect(Collectors.toList());
+    }
+
+    private BriefAlbumDescriptionDto translateEntityToBriefDto(AlbumEntity entity) {
+        BriefAlbumDescriptionDto dto = new BriefAlbumDescriptionDto();
+        dto.setId(entity.getAlbumId());
+        dto.setName(entity.getName());
+        dto.setReleaseDate(entity.getReleaseDate());
+        dto.setSingle(entity.getSingle());
+
+        MusicianBriefResponseDto musician = new MusicianBriefResponseDto();
+        musician.setId(entity.getMusician().getMusicianId());
+        musician.setName(entity.getMusician().getName());
+        dto.setMusician(musician);
+
+        return dto;
     }
 
     private AlbumResponseDto translateEntityToDto(AlbumEntity entity) { //TODO Add version for favourite

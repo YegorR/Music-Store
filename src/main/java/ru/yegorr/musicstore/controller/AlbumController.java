@@ -7,6 +7,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.yegorr.musicstore.dto.request.ChangeAlbumRequestDto;
 import ru.yegorr.musicstore.dto.request.CreateAlbumRequestDto;
 import ru.yegorr.musicstore.dto.response.AlbumResponseDto;
+import ru.yegorr.musicstore.dto.response.BriefAlbumDescriptionDto;
 import ru.yegorr.musicstore.dto.response.ResponseBuilder;
 import ru.yegorr.musicstore.exception.ApplicationException;
 import ru.yegorr.musicstore.exception.ForbiddenException;
@@ -101,7 +102,7 @@ public class AlbumController {
         if (query.isEmpty()) {
             throw new ApplicationException("No query");
         }
-        List<AlbumResponseDto> response = albumService.searchAlbums(query);
+        List<BriefAlbumDescriptionDto> response = albumService.searchAlbums(query);
         return ResponseBuilder.getBuilder().code(200).body(response).getResponseEntity();
     }
 }

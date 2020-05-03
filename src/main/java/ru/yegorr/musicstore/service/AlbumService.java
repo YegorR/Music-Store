@@ -4,6 +4,7 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.yegorr.musicstore.dto.request.ChangeAlbumRequestDto;
 import ru.yegorr.musicstore.dto.request.CreateAlbumRequestDto;
 import ru.yegorr.musicstore.dto.response.AlbumResponseDto;
+import ru.yegorr.musicstore.dto.response.BriefAlbumDescriptionDto;
 import ru.yegorr.musicstore.exception.ApplicationException;
 
 import java.util.List;
@@ -21,5 +22,5 @@ public interface AlbumService {
 
     void saveCover(Long albumId, MultipartFile cover) throws ApplicationException;
 
-    List<AlbumResponseDto> searchAlbums(String query) throws ApplicationException;
+    List<BriefAlbumDescriptionDto> searchAlbums(String query) throws ApplicationException;
 }
