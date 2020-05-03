@@ -13,6 +13,7 @@ import ru.yegorr.musicstore.exception.ForbiddenException;
 import ru.yegorr.musicstore.service.AlbumService;
 
 import java.util.Base64;
+import java.util.List;
 
 @RestController
 public class AlbumController {
@@ -89,5 +90,18 @@ public class AlbumController {
 
         byte[] cover = albumService.getCover(albumId);
         return ResponseEntity.ok(Base64.getEncoder().encodeToString(cover));
+    }
+
+    @GetMapping(path = "albums")
+    public ResponseEntity<?> search(@RequestParam("query") String query,
+                                    @RequestHeader("Authorization") String token) throws ApplicationException {
+        userChecker.getUserId(token);
+
+        query = query.strip();
+        if (query.isEmpty()) {
+            throw new ApplicationException("No query");
+        }
+        List<AlbumResponseDto> response = albumService.searchAlbums(query);
+        return ResponseBuilder.getBuilder().code(200).body(response).getResponseEntity();
     }
 }
