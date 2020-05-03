@@ -6,6 +6,8 @@ import ru.yegorr.musicstore.dto.request.CreateAlbumRequestDto;
 import ru.yegorr.musicstore.dto.response.AlbumResponseDto;
 import ru.yegorr.musicstore.exception.ApplicationException;
 
+import java.util.List;
+
 public interface AlbumService {
     AlbumResponseDto createAlbum(CreateAlbumRequestDto createAlbumRequest, Long musicianId) throws ApplicationException;
 
@@ -18,4 +20,6 @@ public interface AlbumService {
     byte[] getCover(Long albumId) throws ApplicationException;
 
     void saveCover(Long albumId, MultipartFile cover) throws ApplicationException;
+
+    List<AlbumResponseDto> searchAlbums(String query) throws ApplicationException;
 }
