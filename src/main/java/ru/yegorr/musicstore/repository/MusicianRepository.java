@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 import ru.yegorr.musicstore.entity.MusicianEntity;
 
 import java.util.List;
-import java.util.Map;
 
 @Repository
 public interface MusicianRepository extends JpaRepository<MusicianEntity, Long> {
