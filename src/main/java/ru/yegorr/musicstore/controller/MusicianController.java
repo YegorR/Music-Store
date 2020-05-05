@@ -10,8 +10,9 @@ import ru.yegorr.musicstore.exception.ApplicationException;
 import ru.yegorr.musicstore.exception.ForbiddenException;
 import ru.yegorr.musicstore.service.MusicianService;
 
+import java.util.Map;
+
 @RestController
-@RequestMapping("/musician")
 public class MusicianController {
 
     private final MusicianService musicianService;
@@ -24,7 +25,7 @@ public class MusicianController {
         this.musicianService = musicianService;
     }
 
-    @PostMapping(consumes = "application/json", produces = "application/json")
+    @PostMapping(path = "/musician", consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> createMusician(@RequestBody MusicianDto musicianDto,
                                             @RequestHeader("Authorization") String token) throws ApplicationException {
         if (!userChecker.isAdmin(token)) {
@@ -37,7 +38,7 @@ public class MusicianController {
         return ResponseBuilder.getBuilder().code(201).body(musicianResponseDto).getResponseEntity();
     }
 
-    @PutMapping("/{musicianId}")
+    @PutMapping("/musician/{musicianId}")
     public ResponseEntity<?> changeMusician(@RequestBody MusicianDto musicianDto,
                                             @PathVariable("musicianId") Long musicianId,
                                             @RequestHeader("Authorization") String token) throws ApplicationException {
@@ -52,7 +53,7 @@ public class MusicianController {
 
     }
 
-    @DeleteMapping("/{musicianId}")
+    @DeleteMapping("/musician/{musicianId}")
     public ResponseEntity<?> deleteMusician(@PathVariable("musicianId") Long musicianId,
                                             @RequestHeader("Authorization") String token) throws ApplicationException {
         if (!userChecker.isAdmin(token)) {
@@ -64,11 +65,26 @@ public class MusicianController {
         return ResponseBuilder.getBuilder().code(200).getResponseEntity();
     }
 
-    @GetMapping("/{musicianId}")
+    @GetMapping("/musician/{musicianId}")
     public ResponseEntity<?> getMusician(@PathVariable("musicianId") Long musicianId,
                                          @RequestHeader("Authorization") String token) throws ApplicationException {
         userChecker.getUserId(token);
         MusicianResponseDto musicianResponseDto = musicianService.getMusician(musicianId);
         return ResponseBuilder.getBuilder().code(200).body(musicianResponseDto).getResponseEntity();
+    }
+
+    @GetMapping("/musicians")
+    public ResponseEntity<?> getMusiciansCountByLetter(
+            @RequestParam(value = "abc", defaultValue = "false") String isAbc,
+            @RequestHeader("Authorization") String token) throws ApplicationException {
+        if (!userChecker.isAdmin(token)) {
+            throw new ForbiddenException("You hve not rights to do this");
+        }
+        if (!isAbc.equals("true")) {
+            throw new ApplicationException("Wrong method using");
+        }
+
+        Map<String, Integer> result = musicianService.getMusicianCountByAbc();
+        return ResponseBuilder.getBuilder().code(200).body(result).getResponseEntity();
     }
 }
