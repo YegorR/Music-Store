@@ -9,11 +9,10 @@ import ru.yegorr.musicstore.entity.AlbumEntity;
 import ru.yegorr.musicstore.entity.MusicianEntity;
 import ru.yegorr.musicstore.exception.ApplicationException;
 import ru.yegorr.musicstore.exception.ResourceIsNotFoundException;
+import ru.yegorr.musicstore.repository.MusicianAbcCount;
 import ru.yegorr.musicstore.repository.MusicianRepository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class MusicianServiceImpl implements MusicianService {
@@ -69,6 +68,16 @@ public class MusicianServiceImpl implements MusicianService {
             throw new ResourceIsNotFoundException("The musician is not exists");
         }
         return translateEntityToDto(musician.get());
+    }
+
+    @Override
+    public Map<String, Integer> getMusicianCountByAbc() throws ApplicationException {
+        List<MusicianAbcCount> counts = musicianRepository.getMusicianCountByAbc();
+        Map<String, Integer> result = new LinkedHashMap<>();
+        for (MusicianAbcCount count: counts) {
+            result.put(count.getLetter(), count.getCount());
+        }
+        return result;
     }
 
     private MusicianResponseDto translateEntityToDto(MusicianEntity entity) {
