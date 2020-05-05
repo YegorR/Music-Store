@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface MusicianRepository extends JpaRepository<MusicianEntity, Long> {
     List<MusicianEntity> findAllByNameContainingIgnoreCase(String search);
+
+    int countAllByNameStartingWithIgnoreCase(String letter);
 }
