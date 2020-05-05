@@ -13,8 +13,8 @@ public interface MusicianRepository extends JpaRepository<MusicianEntity, Long> 
     List<MusicianEntity> findAllByNameContainingIgnoreCase(String search);
 
 
-    @Query("SELECT SUBSTRING(musician.name, 1, 1), COUNT(musician) " +
+    @Query("SELECT SUBSTRING(musician.name, 1, 1) as letter, COUNT(musician) as count " +
             "FROM MusicianEntity musician " +
             "GROUP BY SUBSTRING(musician.name, 1, 1)")
-    Map<String, Integer> getMusicianCountByAbc();
+    List<MusicianAbcCount> getMusicianCountByAbc();
 }
