@@ -17,4 +17,6 @@ public interface MusicianRepository extends JpaRepository<MusicianEntity, Long> 
             "GROUP BY SUBSTRING(musician.name, 1, 1)" +
             "ORDER BY SUBSTRING(musician.name, 1, 1)")
     List<MusicianAbcCount> getMusicianCountByAbc();
+
+    List<MusicianEntity> findAllByNameStartingWithIgnoreCase(String letter);
 }
