@@ -77,27 +77,25 @@ public class MusicianController {
 
     @GetMapping("/musicians")
     public ResponseEntity<?> getMusiciansCountByLetter(
-            @RequestParam(value = "abc", defaultValue = "false") String isAbc,
-            @RequestHeader("Authorization") String token) throws ApplicationException {
-        if (!userChecker.isAdmin(token)) {
-            throw new ForbiddenException("You hve not rights to do this");
-        }
-        if (!isAbc.equals("true")) {
-            throw new ApplicationException("Wrong method using");
-        }
-
-        Map<String, Integer> result = musicianService.getMusicianCountByAbc();
-        return ResponseBuilder.getBuilder().code(200).body(result).getResponseEntity();
-    }
-
-    @GetMapping("/musicians")
-    public ResponseEntity<?> getMusiciansByLetter(
-            @RequestParam(value = "letter") String letter,
+            @RequestParam(value = "abc", required = false) String isAbc,
+            @RequestParam(value = "letter", required = false) String letter,
             @RequestHeader("Authorization") String token) throws ApplicationException {
         if (!userChecker.isAdmin(token)) {
             throw new ForbiddenException("You have not rights to do this");
         }
-        List<MusicianLetterResponseDto> result = musicianService.getMusiciansByLetter(letter);
-        return ResponseBuilder.getBuilder().code(200).body(result).getResponseEntity();
+        if (((isAbc == null)&&(letter == null))||((isAbc != null)&&(letter != null))) {
+            throw new ForbiddenException("Wrong method using");
+        }
+        if (isAbc != null) {
+            if (!isAbc.equals("true")) {
+                throw new ApplicationException("Wrong method using");
+            }
+
+            Map<String, Integer> result = musicianService.getMusicianCountByAbc();
+            return ResponseBuilder.getBuilder().code(200).body(result).getResponseEntity();
+        } else {
+            List<MusicianLetterResponseDto> result = musicianService.getMusiciansByLetter(letter);
+            return ResponseBuilder.getBuilder().code(200).body(result).getResponseEntity();
+        }
     }
 }
