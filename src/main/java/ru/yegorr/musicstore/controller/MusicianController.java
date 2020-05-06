@@ -4,12 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.yegorr.musicstore.dto.request.MusicianDto;
+import ru.yegorr.musicstore.dto.response.MusicianLetterResponseDto;
 import ru.yegorr.musicstore.dto.response.MusicianResponseDto;
 import ru.yegorr.musicstore.dto.response.ResponseBuilder;
 import ru.yegorr.musicstore.exception.ApplicationException;
 import ru.yegorr.musicstore.exception.ForbiddenException;
 import ru.yegorr.musicstore.service.MusicianService;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -85,6 +87,17 @@ public class MusicianController {
         }
 
         Map<String, Integer> result = musicianService.getMusicianCountByAbc();
+        return ResponseBuilder.getBuilder().code(200).body(result).getResponseEntity();
+    }
+
+    @GetMapping("/musicians")
+    public ResponseEntity<?> getMusiciansByLetter(
+            @RequestParam(value = "letter") String letter,
+            @RequestHeader("Authorization") String token) throws ApplicationException {
+        if (!userChecker.isAdmin(token)) {
+            throw new ForbiddenException("You have not rights to do this");
+        }
+        List<MusicianLetterResponseDto> result = musicianService.getMusiciansByLetter(letter);
         return ResponseBuilder.getBuilder().code(200).body(result).getResponseEntity();
     }
 }
