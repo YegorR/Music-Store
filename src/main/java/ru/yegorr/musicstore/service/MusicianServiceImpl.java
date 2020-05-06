@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.yegorr.musicstore.dto.response.AlbumDescriptionDto;
+import ru.yegorr.musicstore.dto.response.MusicianLetterResponseDto;
 import ru.yegorr.musicstore.dto.response.MusicianResponseDto;
 import ru.yegorr.musicstore.entity.AlbumEntity;
 import ru.yegorr.musicstore.entity.MusicianEntity;
@@ -13,6 +14,7 @@ import ru.yegorr.musicstore.repository.MusicianAbcCount;
 import ru.yegorr.musicstore.repository.MusicianRepository;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class MusicianServiceImpl implements MusicianService {
@@ -74,7 +76,7 @@ public class MusicianServiceImpl implements MusicianService {
     public Map<String, Integer> getMusicianCountByAbc() throws ApplicationException {
         List<MusicianAbcCount> counts = musicianRepository.getMusicianCountByAbc();
         Map<String, Integer> result = new LinkedHashMap<>();
-        for (MusicianAbcCount count: counts) {
+        for (MusicianAbcCount count : counts) {
             result.put(count.getLetter(), count.getCount());
         }
         return result;
@@ -91,11 +93,11 @@ public class MusicianServiceImpl implements MusicianService {
         if (albumsAndSingles == null) {
             return musicianResponseDto;
         }
-        
+
         List<AlbumDescriptionDto> albums = new ArrayList<>();
         List<AlbumDescriptionDto> singles = new ArrayList<>();
 
-        for (AlbumEntity release: albumsAndSingles) {
+        for (AlbumEntity release : albumsAndSingles) {
             AlbumDescriptionDto releaseDto = new AlbumDescriptionDto();
             releaseDto.setId(release.getAlbumId());
             releaseDto.setName(release.getName());
@@ -113,5 +115,15 @@ public class MusicianServiceImpl implements MusicianService {
         musicianResponseDto.setAlbums(albums);
 
         return musicianResponseDto;
+    }
+
+    @Override
+    public List<MusicianLetterResponseDto> getMusiciansByLetter(String letter) throws ApplicationException {
+        return musicianRepository.findAllByNameStartingWithIgnoreCase(letter).stream().map((entity) -> {
+            MusicianLetterResponseDto dto = new MusicianLetterResponseDto();
+            dto.setId(entity.getMusicianId());
+            dto.setName(entity.getName());
+            return dto;
+        }).collect(Collectors.toList());
     }
 }
