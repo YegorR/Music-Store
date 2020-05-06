@@ -1,8 +1,10 @@
 package ru.yegorr.musicstore.service;
 
+import ru.yegorr.musicstore.dto.response.MusicianLetterResponseDto;
 import ru.yegorr.musicstore.dto.response.MusicianResponseDto;
 import ru.yegorr.musicstore.exception.ApplicationException;
 
+import java.util.List;
 import java.util.Map;
 
 public interface MusicianService {
@@ -15,4 +17,6 @@ public interface MusicianService {
     MusicianResponseDto getMusician(Long id) throws ApplicationException;
 
     Map<String, Integer> getMusicianCountByAbc() throws ApplicationException;
+
+    List<MusicianLetterResponseDto> getMusiciansByLetter(String letter) throws ApplicationException;
 }
