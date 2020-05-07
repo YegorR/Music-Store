@@ -3,6 +3,7 @@ package ru.yegorr.musicstore.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import ru.yegorr.musicstore.dto.response.AlbumDescriptionDto;
 import ru.yegorr.musicstore.dto.response.MusicianLetterResponseDto;
 import ru.yegorr.musicstore.dto.response.MusicianResponseDto;
@@ -13,6 +14,7 @@ import ru.yegorr.musicstore.exception.ResourceIsNotFoundException;
 import ru.yegorr.musicstore.repository.MusicianAbcCount;
 import ru.yegorr.musicstore.repository.MusicianRepository;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -73,6 +75,7 @@ public class MusicianServiceImpl implements MusicianService {
     }
 
     @Override
+    @Transactional
     public Map<String, Integer> getMusicianCountByAbc() throws ApplicationException {
         List<MusicianAbcCount> counts = musicianRepository.getMusicianCountByAbc();
         Map<String, Integer> result = new LinkedHashMap<>();
@@ -118,6 +121,7 @@ public class MusicianServiceImpl implements MusicianService {
     }
 
     @Override
+    @Transactional
     public List<MusicianLetterResponseDto> getMusiciansByLetter(String letter) throws ApplicationException {
         return musicianRepository.findAllByNameStartingWithIgnoreCase(letter).stream().map((entity) -> {
             MusicianLetterResponseDto dto = new MusicianLetterResponseDto();
@@ -125,5 +129,17 @@ public class MusicianServiceImpl implements MusicianService {
             dto.setName(entity.getName());
             return dto;
         }).collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    public void saveImage(Long musicianId, MultipartFile image) throws ApplicationException {
+        try {
+            musicianRepository.findById(musicianId).
+                    orElseThrow(() -> new ResourceIsNotFoundException("The musician is not exists")).
+                    setImage(image.getBytes());
+        } catch (IOException ex) {
+            throw new ApplicationException("Some error", ex);
+        }
     }
 }
