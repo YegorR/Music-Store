@@ -39,7 +39,7 @@ public class AudioController {
             produces = "audio/mp3")
     public ResponseEntity<?> getAudio(@PathVariable Long trackId, @RequestHeader("Authorization") String token)
             throws ApplicationException {
-        userChecker.getUserId(token);
+        userChecker.getUserIdOrThrow(token);
 
         byte[] audio = trackService.getAudio(trackId);
         if ((audio == null) || (audio.length == 0)) {
@@ -51,7 +51,7 @@ public class AudioController {
     @GetMapping(path = "/track/{trackId}")
     public ResponseEntity<?> getTrackInfo(@PathVariable Long trackId, @RequestHeader("Authorization") String token)
         throws ApplicationException {
-        userChecker.getUserId(token);
+        userChecker.getUserIdOrThrow(token);
 
         TrackResponseDto trackResponseDto = trackService.getTrackInfo(trackId);
         return ResponseBuilder.getBuilder().body(trackResponseDto).code(200).getResponseEntity();

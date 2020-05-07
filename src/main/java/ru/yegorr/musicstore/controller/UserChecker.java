@@ -23,7 +23,7 @@ public class UserChecker {
         return userInformation.getAdmin();
     }
 
-    public Long getUserId(String token) throws ApplicationException {
+    public Long getUserIdOrThrow(String token) throws ApplicationException {
         ActualUserInformation userInformation = authService.check(token);
         return userInformation.getUserId();
     }

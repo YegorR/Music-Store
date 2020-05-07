@@ -56,7 +56,7 @@ public class AlbumController {
     @GetMapping("/album/{albumId}")
     public ResponseEntity<?> getAlbum(@PathVariable("albumId") Long albumId,
                                       @RequestHeader("Authorization") String token) throws ApplicationException {
-        userChecker.getUserId(token);
+        userChecker.getUserIdOrThrow(token);
         AlbumResponseDto response = albumService.getAlbum(albumId);
         return ResponseBuilder.getBuilder().body(response).code(200).getResponseEntity();
     }
@@ -87,7 +87,7 @@ public class AlbumController {
         produces = "text/plain")
     public ResponseEntity<?> getCover(@PathVariable("albumId") Long albumId,
                                       @RequestHeader("Authorization") String token) throws ApplicationException {
-        userChecker.getUserId(token);
+        userChecker.getUserIdOrThrow(token);
 
         byte[] cover = albumService.getCover(albumId);
         return ResponseEntity.ok(Base64.getEncoder().encodeToString(cover));
@@ -96,7 +96,7 @@ public class AlbumController {
     @GetMapping(path = "albums")
     public ResponseEntity<?> search(@RequestParam("query") String query,
                                     @RequestHeader("Authorization") String token) throws ApplicationException {
-        userChecker.getUserId(token);
+        userChecker.getUserIdOrThrow(token);
 
         query = query.strip();
         if (query.isEmpty()) {

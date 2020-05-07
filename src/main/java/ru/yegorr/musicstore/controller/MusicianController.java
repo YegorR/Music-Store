@@ -72,7 +72,7 @@ public class MusicianController {
     @GetMapping("/musician/{musicianId}")
     public ResponseEntity<?> getMusician(@PathVariable("musicianId") Long musicianId,
                                          @RequestHeader("Authorization") String token) throws ApplicationException {
-        userChecker.getUserId(token);
+        userChecker.getUserIdOrThrow(token);
         MusicianResponseDto musicianResponseDto = musicianService.getMusician(musicianId);
         return ResponseBuilder.getBuilder().code(200).body(musicianResponseDto).getResponseEntity();
     }
@@ -115,7 +115,7 @@ public class MusicianController {
     @GetMapping(path = "/musician/{musicianId}/image", produces = "text/plain")
     public ResponseEntity<?> getImage(@PathVariable Long musicianId,
                                       @RequestHeader("Authorization") String token) throws ApplicationException {
-        userChecker.getUserId(token);
+        userChecker.getUserIdOrThrow(token);
 
         byte[] image = musicianService.getImage(musicianId);
         return ResponseEntity.ok(Base64.getEncoder().encodeToString(image));
