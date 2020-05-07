@@ -3,6 +3,7 @@ package ru.yegorr.musicstore.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ru.yegorr.musicstore.dto.request.MusicianDto;
 import ru.yegorr.musicstore.dto.response.MusicianLetterResponseDto;
 import ru.yegorr.musicstore.dto.response.MusicianResponseDto;
@@ -11,6 +12,7 @@ import ru.yegorr.musicstore.exception.ApplicationException;
 import ru.yegorr.musicstore.exception.ForbiddenException;
 import ru.yegorr.musicstore.service.MusicianService;
 
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
@@ -83,7 +85,7 @@ public class MusicianController {
         if (!userChecker.isAdmin(token)) {
             throw new ForbiddenException("You have not rights to do this");
         }
-        if (((isAbc == null)&&(letter == null))||((isAbc != null)&&(letter != null))) {
+        if (((isAbc == null) && (letter == null)) || ((isAbc != null) && (letter != null))) {
             throw new ForbiddenException("Wrong method using");
         }
         if (isAbc != null) {
@@ -97,5 +99,25 @@ public class MusicianController {
             List<MusicianLetterResponseDto> result = musicianService.getMusiciansByLetter(letter);
             return ResponseBuilder.getBuilder().code(200).body(result).getResponseEntity();
         }
+    }
+
+    @PutMapping(path = "/musician/{musicianId}/image", consumes = "multipart/form-data")
+    public ResponseEntity<?> loadImage(@PathVariable Long musicianId, @RequestHeader("Authorization") String token,
+                                       @RequestParam("image") MultipartFile image) throws ApplicationException {
+        if (!userChecker.isAdmin(token)) {
+            throw new ForbiddenException("You have no rights for this");
+        }
+
+        musicianService.saveImage(musicianId, image);
+        return ResponseBuilder.getBuilder().code(200).getResponseEntity();
+    }
+
+    @GetMapping(path = "/musician/{musicianId}/image", produces = "text/plain")
+    public ResponseEntity<?> getImage(@PathVariable Long musicianId,
+                                      @RequestHeader("Authorization") String token) throws ApplicationException {
+        userChecker.getUserId(token);
+
+        byte[] image = musicianService.getImage(musicianId);
+        return ResponseEntity.ok(Base64.getEncoder().encodeToString(image));
     }
 }
