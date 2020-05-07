@@ -42,15 +42,12 @@ public class MusicianServiceImpl implements MusicianService {
     @Transactional
     @Override
     public MusicianResponseDto changeMusician(Long id, String name, String description) throws ApplicationException {
-        if (!musicianRepository.existsById(id)) {
-            throw new ResourceIsNotFoundException("The musician is not exists");
-        }
+        MusicianEntity musician = musicianRepository.findById(id).
+                orElseThrow(() -> new ResourceIsNotFoundException("The musician is not exists"));
 
-        MusicianEntity musician = new MusicianEntity();
         musician.setName(name);
         musician.setDescription(description);
         musician.setMusicianId(id);
-        musician = musicianRepository.save(musician);
 
         return translateEntityToDto(musician);
     }
