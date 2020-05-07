@@ -22,4 +22,6 @@ public interface MusicianService {
     List<MusicianLetterResponseDto> getMusiciansByLetter(String letter) throws ApplicationException;
 
     void saveImage(Long musicianId, MultipartFile image) throws ApplicationException;
+
+    byte[] getImage(Long musicianId) throws ApplicationException;
 }
