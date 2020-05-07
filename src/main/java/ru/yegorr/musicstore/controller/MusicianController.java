@@ -118,6 +118,9 @@ public class MusicianController {
         userChecker.getUserIdOrThrow(token);
 
         byte[] image = musicianService.getImage(musicianId);
+        if (image == null) {
+            image = new byte[0];
+        }
         return ResponseEntity.ok(Base64.getEncoder().encodeToString(image));
     }
 }

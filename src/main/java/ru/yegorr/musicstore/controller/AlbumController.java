@@ -90,6 +90,9 @@ public class AlbumController {
         userChecker.getUserIdOrThrow(token);
 
         byte[] cover = albumService.getCover(albumId);
+        if (cover == null) {
+            cover = new byte[0];
+        }
         return ResponseEntity.ok(Base64.getEncoder().encodeToString(cover));
     }
 
