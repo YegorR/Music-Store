@@ -142,4 +142,12 @@ public class MusicianServiceImpl implements MusicianService {
             throw new ApplicationException("Some error", ex);
         }
     }
+
+    @Override
+    @Transactional
+    public byte[] getImage(Long musicianId) throws ApplicationException {
+        return musicianRepository.findById(musicianId).
+                orElseThrow(() -> new ResourceIsNotFoundException("The musician is not exists")).
+                getImage();
+    }
 }
