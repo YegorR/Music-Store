@@ -53,7 +53,7 @@ public class MusicianController {
         MusicianResponseDto musicianResponseDto = musicianService.changeMusician(musicianId, musicianDto.getName(),
                 musicianDto.getDescription());
 
-        return ResponseBuilder.getBuilder().body(musicianDto).code(200).getResponseEntity();
+        return ResponseBuilder.getBuilder().body(musicianResponseDto).code(200).getResponseEntity();
 
     }
 
