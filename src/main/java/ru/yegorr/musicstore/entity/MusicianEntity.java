@@ -18,6 +18,7 @@ public class MusicianEntity {
     private String description;
 
     @Column(name = "image")
+    @Basic(fetch = FetchType.LAZY)
     private byte[] image;
 
     @OneToMany(mappedBy = "musician")
