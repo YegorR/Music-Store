@@ -43,8 +43,8 @@ public class AlbumServiceImpl implements AlbumService {
         AlbumEntity album = new AlbumEntity();
         album.setName(createAlbumRequest.getName());
         album.setReleaseDate(createAlbumRequest.getReleaseDate());
-        MusicianEntity musician = new MusicianEntity();
-        musician.setMusicianId(musicianId);
+        MusicianEntity musician = musicianRepository.findById(musicianId).
+                orElseThrow(() -> new ResourceIsNotFoundException("The musician is not exists"));
         album.setMusician(musician);
         album.setSingle(createAlbumRequest.isSingle());
 
