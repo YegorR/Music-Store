@@ -49,6 +49,7 @@ public class MusicianServiceImpl implements MusicianService {
         musician.setDescription(description);
         musician.setMusicianId(id);
 
+        musician = musicianRepository.save(musician);
         return translateEntityToDto(musician);
     }
 
