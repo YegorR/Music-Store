@@ -15,9 +15,15 @@ public class FavouriteEntity {
     @JoinColumn(name = "user_id")
     private UserEntity user;
 
+    @Column(name = "user_id")
+    private Long userId;
+
     @ManyToOne
     @JoinColumn(name = "track_id")
     private TrackEntity track;
+
+    @JoinColumn(name = "track_id")
+    private Long trackId;
 
     @Column(name = "adding_time")
     private LocalDateTime addingTime;
@@ -55,5 +61,21 @@ public class FavouriteEntity {
 
     public void setAddingTime(LocalDateTime addingTime) {
         this.addingTime = addingTime;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public Long getTrackId() {
+        return trackId;
+    }
+
+    public void setTrackId(Long trackId) {
+        this.trackId = trackId;
     }
 }
