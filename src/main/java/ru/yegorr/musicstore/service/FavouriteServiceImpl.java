@@ -1,6 +1,7 @@
 package ru.yegorr.musicstore.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.yegorr.musicstore.dto.response.TrackFullResponseDto;
 import ru.yegorr.musicstore.entity.FavouriteEntity;
@@ -13,9 +14,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class FavouriteServiceImpl implements FavouriteService {
 
-    private FavouriteRepository favouriteRepository;
+    private final FavouriteRepository favouriteRepository;
 
     @Autowired
     public FavouriteServiceImpl(FavouriteRepository favouriteRepository) {
