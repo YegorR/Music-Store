@@ -6,6 +6,7 @@ import ru.yegorr.musicstore.entity.FavouriteEntity;
 import ru.yegorr.musicstore.entity.TrackEntity;
 import ru.yegorr.musicstore.entity.UserEntity;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -13,4 +14,6 @@ public interface FavouriteRepository extends JpaRepository<FavouriteEntity, Long
     Optional<FavouriteEntity> findByUserAndTrack(UserEntity user, TrackEntity track);
 
     void deleteByUserAndTrack(UserEntity user, TrackEntity track);
+
+    List<FavouriteEntity> findAllByUser(UserEntity user);
 }
