@@ -6,7 +6,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.yegorr.musicstore.dto.response.TrackFullResponseDto;
 import ru.yegorr.musicstore.entity.FavouriteEntity;
 import ru.yegorr.musicstore.entity.TrackEntity;
-import ru.yegorr.musicstore.entity.UserEntity;
 import ru.yegorr.musicstore.exception.ApplicationException;
 import ru.yegorr.musicstore.repository.FavouriteRepository;
 
@@ -27,32 +26,24 @@ public class FavouriteServiceImpl implements FavouriteService {
     @Override
     @Transactional
     public void setFavourite(Long userId, Long trackId, boolean isFavourite) throws ApplicationException {
-        UserEntity user = new UserEntity();
-        user.setUserId(userId);
-        TrackEntity track = new TrackEntity();
-        track.setTrackId(trackId);
         if (isFavourite) {
-            favouriteRepository.findByUserAndTrack(user, track).ifPresentOrElse((entity) -> {
+            favouriteRepository.findByUserIdAndTrackId(userId, trackId).ifPresentOrElse((entity) -> {
             }, () -> {
                 FavouriteEntity favouriteEntity = new FavouriteEntity();
                 favouriteEntity.setAddingTime(LocalDateTime.now());
-                favouriteEntity.setTrack(track);
-                favouriteEntity.setUser(user);
+                favouriteEntity.setTrackId(trackId);
+                favouriteEntity.setUserId(userId);
                 favouriteRepository.save(favouriteEntity);
             });
         } else {
-            favouriteRepository.deleteByUserAndTrack(user, track);
+            favouriteRepository.deleteByUserIdAndTrackId(userId, trackId);
         }
-        user.setUserId(null);
-        track.setTrackId(null);
     }
 
     @Override
     @Transactional
     public List<TrackFullResponseDto> getFavouriteList(Long userId) throws ApplicationException {
-        UserEntity user = new UserEntity();
-        user.setUserId(userId);
-        return favouriteRepository.findAllByUser(user).stream().map((favouriteEntity) -> {
+        return favouriteRepository.findAllByUserId(userId).stream().map((favouriteEntity) -> {
             TrackEntity track = favouriteEntity.getTrack();
             TrackFullResponseDto response = new TrackFullResponseDto();
             response.setId(track.getTrackId());
