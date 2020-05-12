@@ -37,6 +37,7 @@ public class TrackServiceImpl implements TrackService {
     @Transactional
     public byte[] getAudio(Long trackId) throws ApplicationException {
         TrackEntity track = trackRepository.findById(trackId).orElseThrow(() -> new ResourceIsNotFoundException("The track is not exist"));
+        track.setPlaysNumber(track.getPlaysNumber() + 1);
         return track.getAudio();
     }
 
