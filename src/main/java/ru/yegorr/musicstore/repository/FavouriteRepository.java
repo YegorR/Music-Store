@@ -11,9 +11,9 @@ import java.util.Optional;
 
 @Repository
 public interface FavouriteRepository extends JpaRepository<FavouriteEntity, Long> {
-    Optional<FavouriteEntity> findByUserAndTrack(UserEntity user, TrackEntity track);
+    Optional<FavouriteEntity> findByUserIdAndTrackId(Long userId, Long trackId);
 
-    void deleteByUserAndTrack(UserEntity user, TrackEntity track);
+    void deleteByUserIdAndTrackId(Long userId, Long trackId);
 
-    List<FavouriteEntity> findAllByUser(UserEntity user);
+    List<FavouriteEntity> findAllByUserId(Long userId);
 }
