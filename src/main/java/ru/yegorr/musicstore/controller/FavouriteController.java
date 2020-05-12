@@ -26,7 +26,7 @@ public class FavouriteController {
 
     @PutMapping(path = "/favourite")
     public ResponseEntity<?> setFavourite(@RequestBody SetFavouriteRequest favouriteRequest,
-                                          @RequestHeader String token) throws ApplicationException {
+                                          @RequestHeader("Authorization") String token) throws ApplicationException {
         Long userId = userChecker.getUserIdOrThrow(token);
 
         favouriteService.setFavourite(userId, favouriteRequest.getId(), favouriteRequest.isFavourite());
@@ -35,7 +35,7 @@ public class FavouriteController {
     }
 
     @GetMapping(path = "/favourite")
-    public ResponseEntity<?> getFavourite(@RequestHeader String token) throws ApplicationException {
+    public ResponseEntity<?> getFavourite(@RequestHeader("Authorization") String token) throws ApplicationException {
         Long userId = userChecker.getUserIdOrThrow(token);
 
         List<TrackFullResponseDto> response = favouriteService.getFavouriteList(userId);
