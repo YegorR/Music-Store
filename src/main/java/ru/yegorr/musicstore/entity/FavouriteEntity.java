@@ -12,17 +12,17 @@ public class FavouriteEntity {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", insertable = false, updatable = false)
     private UserEntity user;
 
     @Column(name = "user_id")
     private Long userId;
 
     @ManyToOne
-    @JoinColumn(name = "track_id")
+    @JoinColumn(name = "track_id", insertable = false, updatable = false)
     private TrackEntity track;
 
-    @JoinColumn(name = "track_id")
+    @Column(name = "track_id")
     private Long trackId;
 
     @Column(name = "adding_time")
