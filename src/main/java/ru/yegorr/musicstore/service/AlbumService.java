@@ -14,7 +14,7 @@ public interface AlbumService {
 
     AlbumResponseDto changeAlbum(ChangeAlbumRequestDto changeAlbumRequest, Long albumId) throws ApplicationException;
 
-    AlbumResponseDto getAlbum(Long albumId) throws ApplicationException;
+    AlbumResponseDto getAlbum(Long albumId, Long userId) throws ApplicationException;
 
     void deleteAlbum(Long albumId) throws ApplicationException;
 
