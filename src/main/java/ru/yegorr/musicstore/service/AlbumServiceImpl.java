@@ -11,18 +11,18 @@ import ru.yegorr.musicstore.dto.response.BriefAlbumDescriptionDto;
 import ru.yegorr.musicstore.dto.response.MusicianBriefResponseDto;
 import ru.yegorr.musicstore.dto.response.TrackBriefResponseDto;
 import ru.yegorr.musicstore.entity.AlbumEntity;
+import ru.yegorr.musicstore.entity.FavouriteEntity;
 import ru.yegorr.musicstore.entity.MusicianEntity;
 import ru.yegorr.musicstore.entity.TrackEntity;
 import ru.yegorr.musicstore.exception.ApplicationException;
 import ru.yegorr.musicstore.exception.ResourceIsNotFoundException;
 import ru.yegorr.musicstore.repository.AlbumRepository;
+import ru.yegorr.musicstore.repository.FavouriteRepository;
 import ru.yegorr.musicstore.repository.MusicianRepository;
 import ru.yegorr.musicstore.repository.TrackRepository;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,6 +32,8 @@ public class AlbumServiceImpl implements AlbumService {
     private TrackRepository trackRepository;
 
     private AlbumRepository albumRepository;
+
+    private FavouriteRepository favouriteRepository;
 
     @Override
     @Transactional
@@ -113,10 +115,10 @@ public class AlbumServiceImpl implements AlbumService {
 
     @Override
     @Transactional
-    public AlbumResponseDto getAlbum(Long albumId) throws ApplicationException {
+    public AlbumResponseDto getAlbum(Long albumId, Long userId) throws ApplicationException {
         AlbumEntity album = albumRepository.findById(albumId)
                 .orElseThrow(() -> new ResourceIsNotFoundException("The album is not exist"));
-        return translateEntityToDto(album);
+        return translateEntityToDto(album, userId);
     }
 
     @Override
@@ -169,7 +171,7 @@ public class AlbumServiceImpl implements AlbumService {
         return dto;
     }
 
-    private AlbumResponseDto translateEntityToDto(AlbumEntity entity) { //TODO Add version for favourite
+    private AlbumResponseDto translateEntityToDto(AlbumEntity entity, Long userId) {
         AlbumResponseDto dto = new AlbumResponseDto();
         dto.setId(entity.getAlbumId());
         dto.setName(entity.getName());
@@ -181,18 +183,31 @@ public class AlbumServiceImpl implements AlbumService {
         musician.setName(entity.getMusician().getName());
         dto.setMusician(musician);
 
+        Set<TrackEntity> favourites;
+        if (userId != null) {
+            favourites = favouriteRepository.findAllByUserIdAndTrackIn(userId, entity.getTracks()).
+                    stream().
+                    map(FavouriteEntity::getTrack).
+                    collect(Collectors.toSet());
+        } else {
+            favourites = new HashSet<>();
+        }
         List<TrackBriefResponseDto> tracks = new ArrayList<>();
         for (TrackEntity trackEntity : entity.getTracks()) {
             TrackBriefResponseDto track = new TrackBriefResponseDto();
             track.setId(trackEntity.getTrackId());
-            track.setFavourite(false);
             track.setPlaysNumber(trackEntity.getPlaysNumber());
             track.setName(trackEntity.getName());
+            track.setFavourite(favourites.contains(trackEntity));
             tracks.add(track);
         }
         dto.setTracks(tracks);
 
         return dto;
+    }
+
+    private AlbumResponseDto translateEntityToDto(AlbumEntity entity) { //TODO Add version for favourite
+        return translateEntityToDto(entity, null);
     }
 
     @Autowired
@@ -208,5 +223,10 @@ public class AlbumServiceImpl implements AlbumService {
     @Autowired
     public void setAlbumRepository(AlbumRepository albumRepository) {
         this.albumRepository = albumRepository;
+    }
+
+    @Autowired
+    public void setFavouriteRepository(FavouriteRepository favouriteRepository) {
+        this.favouriteRepository = favouriteRepository;
     }
 }
