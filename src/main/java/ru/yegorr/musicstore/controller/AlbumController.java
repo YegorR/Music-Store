@@ -56,8 +56,8 @@ public class AlbumController {
     @GetMapping("/album/{albumId}")
     public ResponseEntity<?> getAlbum(@PathVariable("albumId") Long albumId,
                                       @RequestHeader("Authorization") String token) throws ApplicationException {
-        userChecker.getUserIdOrThrow(token);
-        AlbumResponseDto response = albumService.getAlbum(albumId);
+        Long userId = userChecker.getUserIdOrThrow(token);
+        AlbumResponseDto response = albumService.getAlbum(albumId, userId);
         return ResponseBuilder.getBuilder().body(response).code(200).getResponseEntity();
     }
 
