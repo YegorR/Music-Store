@@ -10,7 +10,7 @@ public class ActualUserInformation {
     }
 
     public void setUserId(Long userId) {
-        userId = userId;
+        this.userId = userId;
     }
 
     public Boolean getAdmin() {
@@ -18,6 +18,6 @@ public class ActualUserInformation {
     }
 
     public void setAdmin(Boolean admin) {
-        isAdmin = admin;
+        this.isAdmin = admin;
     }
 }
