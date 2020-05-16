@@ -7,7 +7,9 @@ import ru.yegorr.musicstore.dto.response.TrackFullResponseDto;
 import ru.yegorr.musicstore.entity.FavouriteEntity;
 import ru.yegorr.musicstore.entity.TrackEntity;
 import ru.yegorr.musicstore.exception.ApplicationException;
+import ru.yegorr.musicstore.exception.ResourceIsNotFoundException;
 import ru.yegorr.musicstore.repository.FavouriteRepository;
+import ru.yegorr.musicstore.repository.TrackRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,14 +20,20 @@ public class FavouriteServiceImpl implements FavouriteService {
 
     private final FavouriteRepository favouriteRepository;
 
+    private final TrackRepository trackRepository;
+
     @Autowired
-    public FavouriteServiceImpl(FavouriteRepository favouriteRepository) {
+    public FavouriteServiceImpl(FavouriteRepository favouriteRepository, TrackRepository trackRepository) {
         this.favouriteRepository = favouriteRepository;
+        this.trackRepository = trackRepository;
     }
 
     @Override
     @Transactional
     public void setFavourite(Long userId, Long trackId, boolean isFavourite) throws ApplicationException {
+        if (!trackRepository.existsById(trackId)) {
+            throw new ResourceIsNotFoundException("The track is not exist");
+        }
         if (isFavourite) {
             favouriteRepository.findByUserIdAndTrackId(userId, trackId).ifPresentOrElse((entity) -> {
             }, () -> {
@@ -46,6 +54,7 @@ public class FavouriteServiceImpl implements FavouriteService {
         return favouriteRepository.findAllByUserId(userId).stream().map((favouriteEntity) -> {
             TrackEntity track = favouriteEntity.getTrack();
             TrackFullResponseDto response = new TrackFullResponseDto();
+            response.setName(track.getName());
             response.setId(track.getTrackId());
             response.setAlbumId(track.getAlbum().getAlbumId());
             response.setAlbumName(track.getAlbum().getName());
