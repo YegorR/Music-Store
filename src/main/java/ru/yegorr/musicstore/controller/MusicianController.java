@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.yegorr.musicstore.dto.request.MusicianDto;
+import ru.yegorr.musicstore.dto.response.MusicianBriefResponseDto;
 import ru.yegorr.musicstore.dto.response.MusicianLetterResponseDto;
 import ru.yegorr.musicstore.dto.response.MusicianResponseDto;
 import ru.yegorr.musicstore.dto.response.ResponseBuilder;
@@ -81,11 +82,19 @@ public class MusicianController {
     public ResponseEntity<?> getMusiciansCountByLetter(
             @RequestParam(value = "abc", required = false) String isAbc,
             @RequestParam(value = "letter", required = false) String letter,
+            @RequestParam(value = "query", required = false) String query,
             @RequestHeader("Authorization") String token) throws ApplicationException {
-        if (!userChecker.isAdmin(token)) {
-            throw new ForbiddenException("You have not rights to do this");
+        if (query != null) {
+            userChecker.getUserIdOrThrow(token);
+        } else {
+            if (!userChecker.isAdmin(token)) {
+                throw new ForbiddenException("You have not rights to do this");
+            }
         }
-        if (((isAbc == null) && (letter == null)) || ((isAbc != null) && (letter != null))) {
+//        if (((isAbc == null) && (letter == null)) || ((isAbc != null) && (letter != null))) {
+//            throw new ForbiddenException("Wrong method using");
+//        }
+        if (!isOnlyTrue((isAbc != null), (letter != null), (query != null))) {
             throw new ForbiddenException("Wrong method using");
         }
         if (isAbc != null) {
@@ -95,10 +104,25 @@ public class MusicianController {
 
             Map<String, Integer> result = musicianService.getMusicianCountByAbc();
             return ResponseBuilder.getBuilder().code(200).body(result).getResponseEntity();
-        } else {
+        } else if (letter != null) {
             List<MusicianLetterResponseDto> result = musicianService.getMusiciansByLetter(letter);
             return ResponseBuilder.getBuilder().code(200).body(result).getResponseEntity();
+        } else {
+            List<MusicianBriefResponseDto> result = musicianService.searchMusicians(query);
+            return ResponseBuilder.getBuilder().code(200).body(result).getResponseEntity();
         }
+    }
+
+    private boolean isOnlyTrue(boolean... args) {
+        boolean isOnly = false;
+        for (boolean arg : args) {
+            if (arg && (!isOnly)) {
+                isOnly = true;
+            } else if (arg && isOnly) {
+                return false;
+            }
+        }
+        return isOnly;
     }
 
     @PutMapping(path = "/musician/{musicianId}/image", consumes = "multipart/form-data")

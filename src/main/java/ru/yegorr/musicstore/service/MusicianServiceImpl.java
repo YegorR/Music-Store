@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import ru.yegorr.musicstore.dto.response.AlbumDescriptionDto;
+import ru.yegorr.musicstore.dto.response.MusicianBriefResponseDto;
 import ru.yegorr.musicstore.dto.response.MusicianLetterResponseDto;
 import ru.yegorr.musicstore.dto.response.MusicianResponseDto;
 import ru.yegorr.musicstore.entity.AlbumEntity;
@@ -147,5 +148,16 @@ public class MusicianServiceImpl implements MusicianService {
         return musicianRepository.findById(musicianId).
                 orElseThrow(() -> new ResourceIsNotFoundException("The musician is not exists")).
                 getImage();
+    }
+
+    @Override
+    @Transactional
+    public List<MusicianBriefResponseDto> searchMusicians(String query) throws ApplicationException {
+        return musicianRepository.findAllByNameContainingIgnoreCase(query).stream().map((entity) -> {
+            MusicianBriefResponseDto dto = new MusicianBriefResponseDto();
+            dto.setName(entity.getName());
+            dto.setId(entity.getMusicianId());
+            return dto;
+        }).collect(Collectors.toList());
     }
 }

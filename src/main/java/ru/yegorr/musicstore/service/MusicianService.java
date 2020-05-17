@@ -1,6 +1,7 @@
 package ru.yegorr.musicstore.service;
 
 import org.springframework.web.multipart.MultipartFile;
+import ru.yegorr.musicstore.dto.response.MusicianBriefResponseDto;
 import ru.yegorr.musicstore.dto.response.MusicianLetterResponseDto;
 import ru.yegorr.musicstore.dto.response.MusicianResponseDto;
 import ru.yegorr.musicstore.exception.ApplicationException;
@@ -24,4 +25,6 @@ public interface MusicianService {
     void saveImage(Long musicianId, MultipartFile image) throws ApplicationException;
 
     byte[] getImage(Long musicianId) throws ApplicationException;
+
+    List<MusicianBriefResponseDto> searchMusicians(String query) throws ApplicationException;
 }
