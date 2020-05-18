@@ -5,11 +5,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.yegorr.musicstore.dto.response.ResponseBuilder;
+import ru.yegorr.musicstore.dto.response.TrackFullResponseDto;
 import ru.yegorr.musicstore.dto.response.TrackResponseDto;
 import ru.yegorr.musicstore.exception.ApplicationException;
 import ru.yegorr.musicstore.exception.ForbiddenException;
 import ru.yegorr.musicstore.exception.ResourceIsNotFoundException;
 import ru.yegorr.musicstore.service.TrackService;
+
+import java.util.List;
 
 @RestController
 public class AudioController {
@@ -55,5 +58,14 @@ public class AudioController {
 
         TrackResponseDto trackResponseDto = trackService.getTrackInfo(trackId);
         return ResponseBuilder.getBuilder().body(trackResponseDto).code(200).getResponseEntity();
+    }
+
+    @GetMapping(path = "/tracks")
+    public ResponseEntity<?> searchTracks(@RequestParam String query, @RequestHeader("Authorization") String token)
+            throws ApplicationException {
+        userChecker.getUserIdOrThrow(token);
+
+        List<TrackFullResponseDto> result = trackService.searchTracks(query);
+        return ResponseBuilder.getBuilder().body(result).code(200).getResponseEntity();
     }
 }

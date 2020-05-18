@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface TrackRepository extends JpaRepository<TrackEntity, Long> {
-    List<TrackEntity> findAllByNameContainingIgnoreCase(String search);
+    List<TrackEntity> findAllByNameContainingIgnoreCaseOrderByPlaysNumberDesc(String search);
 }
