@@ -10,7 +10,7 @@ import java.util.List;
 public interface TrackService {
     void saveAudio(MultipartFile audio, Long trackId) throws ApplicationException;
 
-    byte[] getAudio(Long trackId) throws ApplicationException;
+    byte[] getAudio(Long trackId, Long userId) throws ApplicationException;
 
     TrackResponseDto getTrackInfo(Long trackId) throws ApplicationException;
 

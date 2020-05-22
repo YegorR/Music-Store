@@ -42,9 +42,9 @@ public class AudioController {
             produces = "audio/mp3")
     public ResponseEntity<?> getAudio(@PathVariable Long trackId, @RequestHeader("Authorization") String token)
             throws ApplicationException {
-        userChecker.getUserIdOrThrow(token);
+        Long userId = userChecker.getUserIdOrThrow(token);
 
-        byte[] audio = trackService.getAudio(trackId);
+        byte[] audio = trackService.getAudio(trackId, userId);
         if ((audio == null) || (audio.length == 0)) {
             throw new ResourceIsNotFoundException("The audio is not exist for this track");
         }

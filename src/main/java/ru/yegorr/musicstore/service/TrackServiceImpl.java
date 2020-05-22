@@ -6,12 +6,15 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import ru.yegorr.musicstore.dto.response.TrackFullResponseDto;
 import ru.yegorr.musicstore.dto.response.TrackResponseDto;
+import ru.yegorr.musicstore.entity.HistoryEntity;
 import ru.yegorr.musicstore.entity.TrackEntity;
 import ru.yegorr.musicstore.exception.ApplicationException;
 import ru.yegorr.musicstore.exception.ResourceIsNotFoundException;
+import ru.yegorr.musicstore.repository.HistoryRepository;
 import ru.yegorr.musicstore.repository.TrackRepository;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,9 +23,12 @@ public class TrackServiceImpl implements TrackService {
 
     private final TrackRepository trackRepository;
 
+    private final HistoryRepository historyRepository;
+
     @Autowired
-    public TrackServiceImpl(TrackRepository trackRepository) {
+    public TrackServiceImpl(TrackRepository trackRepository, HistoryRepository historyRepository) {
         this.trackRepository = trackRepository;
+        this.historyRepository = historyRepository;
     }
 
     @Override
@@ -38,9 +44,16 @@ public class TrackServiceImpl implements TrackService {
 
     @Override
     @Transactional
-    public byte[] getAudio(Long trackId) throws ApplicationException {
+    public byte[] getAudio(Long trackId, Long userId) throws ApplicationException {
         TrackEntity track = trackRepository.findById(trackId).orElseThrow(() -> new ResourceIsNotFoundException("The track is not exist"));
         track.setPlaysNumber(track.getPlaysNumber() + 1);
+
+        HistoryEntity historyEntity = new HistoryEntity();
+        historyEntity.setTrackId(trackId);
+        historyEntity.setUserId(userId);
+        historyEntity.setPlayTime(LocalDateTime.now());
+        historyRepository.save(historyEntity);
+
         return track.getAudio();
     }
 

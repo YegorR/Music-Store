@@ -13,12 +13,18 @@ public class HistoryEntity {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", insertable = false, updatable = false)
     private UserEntity user;
 
+    @Column(name = "user_id")
+    private Long userId;
+
     @ManyToOne
-    @JoinColumn(name = "track_id")
+    @JoinColumn(name = "track_id", insertable = false, updatable = false)
     private TrackEntity track;
+
+    @Column(name = "track_id")
+    private Long trackId;
 
     @Column(name = "play_time")
     private LocalDateTime playTime;
@@ -56,5 +62,21 @@ public class HistoryEntity {
 
     public void setPlayTime(LocalDateTime playTime) {
         this.playTime = playTime;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public Long getTrackId() {
+        return trackId;
+    }
+
+    public void setTrackId(Long trackId) {
+        this.trackId = trackId;
     }
 }
