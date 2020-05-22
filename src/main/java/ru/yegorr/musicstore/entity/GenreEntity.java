@@ -17,8 +17,8 @@ public class GenreEntity {
     @Column(name = "genre_description")
     private String description;
 
-    @Lob
     @Column(name = "genre_image")
+    @Basic(fetch = FetchType.LAZY)
     private byte[] image;
 
     @ManyToMany
