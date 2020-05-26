@@ -14,7 +14,7 @@ public class GenreFullResponseDto {
 
     public GenreFullResponseDto(GenreEntity genreEntity) {
         id = genreEntity.getGenreId();
-        name = genreEntity.getDescription();
+        name = genreEntity.getName();
         description = genreEntity.getDescription();
     }
 
