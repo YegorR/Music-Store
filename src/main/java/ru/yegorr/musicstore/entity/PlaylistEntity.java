@@ -14,8 +14,8 @@ public class PlaylistEntity {
     @Column(name = "playlist_name")
     private String name;
 
-    @Lob
     @Column(name = "playlist_image")
+    @Basic (fetch = FetchType.LAZY)
     private byte[] image;
 
     @ManyToOne
