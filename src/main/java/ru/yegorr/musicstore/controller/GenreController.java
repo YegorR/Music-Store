@@ -96,7 +96,7 @@ public class GenreController {
         return ResponseBuilder.getBuilder().code(200).getResponseEntity();
     }
 
-    @PutMapping(path = "/audio/{trackId}/genre")
+    @PutMapping(path = "/track/{trackId}/genre")
     public ResponseEntity<?> changeTrackGenres(@PathVariable Long trackId, @RequestBody List<IdDto> genres,
                                                @RequestHeader("Authorization") String token) throws ApplicationException {
         if (!userChecker.isAdmin(token)) {
@@ -107,7 +107,7 @@ public class GenreController {
         return ResponseBuilder.getBuilder().code(200).body(result).getResponseEntity();
     }
 
-    @GetMapping(path = "/audio/{trackId}/genre")
+    @GetMapping(path = "/track/{trackId}/genre")
     public ResponseEntity<?> getTrackGenres(@PathVariable Long trackId,
                                             @RequestHeader("Authorization") String token) throws ApplicationException {
         userChecker.getUserIdOrThrow(token);
