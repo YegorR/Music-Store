@@ -1,5 +1,7 @@
 package ru.yegorr.musicstore.dto.response;
 
+import ru.yegorr.musicstore.entity.TrackEntity;
+
 public class TrackSuperFullResponseDto {
     private Long id;
 
@@ -16,6 +18,20 @@ public class TrackSuperFullResponseDto {
     private int playsNumber;
 
     private boolean favourite;
+
+    public TrackSuperFullResponseDto() {
+    }
+
+    public TrackSuperFullResponseDto(TrackEntity entity, boolean isFavourite) {
+        id = entity.getTrackId();
+        musicianId = entity.getAlbum().getMusician().getMusicianId();
+        musicianName = entity.getAlbum().getMusician().getName();
+        albumId = entity.getAlbum().getAlbumId();
+        albumName = entity.getAlbum().getName();
+        name = entity.getName();
+        playsNumber = entity.getPlaysNumber();
+        favourite = isFavourite;
+    }
 
     public Long getId() {
         return id;

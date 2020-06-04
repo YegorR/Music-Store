@@ -19,7 +19,7 @@ public class PlaylistTrackEntity {
     @JoinColumn(name = "track_id")
     private TrackEntity track;
 
-    @Column(name = "order")
+    @Column(name = "order_num")
     private Integer order;
 
     public PlaylistTrackEntity() {

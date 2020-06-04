@@ -19,8 +19,11 @@ public class PlaylistEntity {
     private byte[] image;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", updatable = false, insertable = false)
     private UserEntity user;
+
+    @Column(name = "user_id")
+    private Long userId;
 
     @OneToMany(mappedBy = "playlist")
     @OrderBy("order")
@@ -67,5 +70,13 @@ public class PlaylistEntity {
 
     public void setTracks(List<PlaylistTrackEntity> tracks) {
         this.tracks = tracks;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 }

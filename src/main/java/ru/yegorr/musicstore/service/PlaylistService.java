@@ -9,7 +9,7 @@ import ru.yegorr.musicstore.exception.ApplicationException;
 import java.util.List;
 
 public interface PlaylistService {
-    PlaylistResponseDto getPlaylist(Long playlistId) throws ApplicationException;
+    PlaylistResponseDto getPlaylist(Long userId, Long playlistId) throws ApplicationException;
 
     PlaylistResponseDto createPlaylist(Long userId, String name) throws ApplicationException;
 

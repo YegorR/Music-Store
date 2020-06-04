@@ -1,6 +1,11 @@
 package ru.yegorr.musicstore.dto.response;
 
+import ru.yegorr.musicstore.entity.PlaylistEntity;
+
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class PlaylistResponseDto {
     private Long id;
@@ -10,6 +15,25 @@ public class PlaylistResponseDto {
     private String name;
 
     private List<TrackSuperFullResponseDto> tracks;
+
+    public PlaylistResponseDto() {
+    }
+
+    public PlaylistResponseDto(PlaylistEntity entity, Iterator<Boolean> isFavouriteIterator) {
+        id = entity.getPlaylistId();
+        author = entity.getUser().getNickname();
+        name = entity.getName();
+        tracks = entity.getTracks().stream().
+                map(track -> new TrackSuperFullResponseDto(track.getTrack(), isFavouriteIterator.next())).
+                collect(Collectors.toList());
+    }
+
+    public PlaylistResponseDto(PlaylistEntity entity, String authorName) {
+        id = entity.getPlaylistId();
+        author = authorName;
+        name = entity.getName();
+        tracks = new ArrayList<>();
+    }
 
     public Long getId() {
         return id;
