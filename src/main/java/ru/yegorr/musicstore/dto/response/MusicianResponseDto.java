@@ -4,6 +4,7 @@ import ru.yegorr.musicstore.dto.response.AlbumDescriptionDto;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class MusicianResponseDto {
     private Long id;
@@ -54,5 +55,18 @@ public class MusicianResponseDto {
 
     public void setSingles(List<AlbumDescriptionDto> singles) {
         this.singles = singles;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MusicianResponseDto that = (MusicianResponseDto) o;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

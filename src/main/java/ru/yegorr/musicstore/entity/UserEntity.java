@@ -2,6 +2,7 @@ package ru.yegorr.musicstore.entity;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "user_account")
@@ -149,5 +150,18 @@ public class UserEntity {
 
     public void setReleaseAlbums(List<AlbumEntity> releaseAlbums) {
         this.releaseAlbums = releaseAlbums;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserEntity that = (UserEntity) o;
+        return userId.equals(that.userId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId);
     }
 }

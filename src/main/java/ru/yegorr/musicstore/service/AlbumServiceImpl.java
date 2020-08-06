@@ -66,6 +66,9 @@ public class AlbumServiceImpl implements AlbumService {
         album.setTracks(tracks);
 
         album = albumRepository.save(album);
+
+        AlbumEntity finalAlbum = album;
+        musician.getSubscribers().forEach((user) -> user.getReleaseAlbums().add(finalAlbum));
         return translateEntityToDto(album);
     }
 

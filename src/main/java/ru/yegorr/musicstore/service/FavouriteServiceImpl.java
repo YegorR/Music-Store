@@ -51,7 +51,7 @@ public class FavouriteServiceImpl implements FavouriteService {
     @Override
     @Transactional
     public List<TrackFullResponseDto> getFavouriteList(Long userId) throws ApplicationException {
-        return favouriteRepository.findAllByUserId(userId).stream().map((favouriteEntity) -> {
+        return favouriteRepository.findAllByUserIdOrderByAddingTimeDesc(userId).stream().map((favouriteEntity) -> {
             TrackEntity track = favouriteEntity.getTrack();
             TrackFullResponseDto response = new TrackFullResponseDto();
             response.setName(track.getName());

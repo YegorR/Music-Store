@@ -15,7 +15,7 @@ public interface FavouriteRepository extends JpaRepository<FavouriteEntity, Long
 
     void deleteByUserIdAndTrackId(Long userId, Long trackId);
 
-    List<FavouriteEntity> findAllByUserId(Long userId);
+    List<FavouriteEntity> findAllByUserIdOrderByAddingTimeDesc(Long userId);
 
     Set<FavouriteEntity> findAllByUserIdAndTrackIn(Long userId, List<TrackEntity> tracks);
 }

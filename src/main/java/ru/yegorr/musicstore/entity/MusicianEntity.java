@@ -2,6 +2,7 @@ package ru.yegorr.musicstore.entity;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "musician")
@@ -77,5 +78,18 @@ public class MusicianEntity {
 
     public void setSubscribers(List<UserEntity> subscribers) {
         this.subscribers = subscribers;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MusicianEntity that = (MusicianEntity) o;
+        return musicianId.equals(that.musicianId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(musicianId);
     }
 }
