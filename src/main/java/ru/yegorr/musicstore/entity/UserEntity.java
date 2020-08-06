@@ -31,9 +31,6 @@ public class UserEntity {
     private List<PlaylistEntity> playlists;
 
     @OneToMany(mappedBy = "user")
-    private List<ReviewEntity> reviews;
-
-    @OneToMany(mappedBy = "user")
     @OrderBy("playTime")
     private List<HistoryEntity> history;
 
@@ -110,14 +107,6 @@ public class UserEntity {
 
     public void setPlaylists(List<PlaylistEntity> playlists) {
         this.playlists = playlists;
-    }
-
-    public List<ReviewEntity> getReviews() {
-        return reviews;
-    }
-
-    public void setReviews(List<ReviewEntity> reviews) {
-        this.reviews = reviews;
     }
 
     public List<HistoryEntity> getHistory() {

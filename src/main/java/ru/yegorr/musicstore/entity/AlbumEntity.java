@@ -33,12 +33,6 @@ public class AlbumEntity {
     @OrderBy("order")
     private List<TrackEntity> tracks;
 
-    @OneToMany(mappedBy = "album")
-    private List<ReviewEntity> reviews;
-
-    @ManyToMany(mappedBy = "releaseAlbums")
-    private List<UserEntity> subscribers;
-
     public AlbumEntity() {
     }
 
@@ -96,21 +90,5 @@ public class AlbumEntity {
 
     public void setTracks(List<TrackEntity> albums) {
         this.tracks = albums;
-    }
-
-    public List<ReviewEntity> getReviews() {
-        return reviews;
-    }
-
-    public void setReviews(List<ReviewEntity> reviews) {
-        this.reviews = reviews;
-    }
-
-    public List<UserEntity> getSubscribers() {
-        return subscribers;
-    }
-
-    public void setSubscribers(List<UserEntity> subscribers) {
-        this.subscribers = subscribers;
     }
 }
