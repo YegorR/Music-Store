@@ -29,12 +29,6 @@ public class TrackEntity {
     @JoinColumn(name = "album_id")
     private AlbumEntity album;
 
-    @ManyToMany
-    @JoinTable(name = "track_genre",
-            joinColumns = @JoinColumn(name = "track_id"),
-            inverseJoinColumns = @JoinColumn(name = "genre_id"))
-    private List<GenreEntity> genres;
-
     public TrackEntity() {
     }
 
@@ -84,13 +78,5 @@ public class TrackEntity {
 
     public void setAlbum(AlbumEntity album) {
         this.album = album;
-    }
-
-    public List<GenreEntity> getGenres() {
-        return genres;
-    }
-
-    public void setGenres(List<GenreEntity> genres) {
-        this.genres = genres;
     }
 }
