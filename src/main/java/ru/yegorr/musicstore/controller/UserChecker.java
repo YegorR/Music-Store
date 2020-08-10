@@ -1,9 +1,9 @@
 package ru.yegorr.musicstore.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import ru.yegorr.musicstore.exception.ApplicationException;
-import ru.yegorr.musicstore.exception.ForbiddenException;
+import ru.yegorr.musicstore.exception.ClientException;
 import ru.yegorr.musicstore.service.AuthService;
 
 @Component
@@ -15,15 +15,14 @@ public class UserChecker {
         this.authService = authService;
     }
 
-    public boolean isAdmin(String token) throws ApplicationException {
+    public void checkAdmin(String token) throws ClientException {
         ActualUserInformation userInformation = authService.check(token);
         if (!userInformation.getAdmin()) {
-            throw new ForbiddenException("You have no rights to do this");
+            throw new ClientException(HttpStatus.FORBIDDEN);
         }
-        return userInformation.getAdmin();
     }
 
-    public Long getUserIdOrThrow(String token) throws ApplicationException {
+    public Long getUserIdOrThrow(String token) throws ClientException {
         ActualUserInformation userInformation = authService.check(token);
         return userInformation.getUserId();
     }

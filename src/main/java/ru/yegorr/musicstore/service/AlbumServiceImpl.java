@@ -1,6 +1,7 @@
 package ru.yegorr.musicstore.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,8 +15,8 @@ import ru.yegorr.musicstore.entity.AlbumEntity;
 import ru.yegorr.musicstore.entity.FavouriteEntity;
 import ru.yegorr.musicstore.entity.MusicianEntity;
 import ru.yegorr.musicstore.entity.TrackEntity;
-import ru.yegorr.musicstore.exception.ApplicationException;
-import ru.yegorr.musicstore.exception.ResourceIsNotFoundException;
+import ru.yegorr.musicstore.exception.ClientException;
+import ru.yegorr.musicstore.exception.ServerException;
 import ru.yegorr.musicstore.repository.AlbumRepository;
 import ru.yegorr.musicstore.repository.FavouriteRepository;
 import ru.yegorr.musicstore.repository.MusicianRepository;
@@ -37,16 +38,16 @@ public class AlbumServiceImpl implements AlbumService {
 
     @Override
     @Transactional
-    public AlbumResponseDto createAlbum(CreateAlbumRequestDto createAlbumRequest, Long musicianId) throws ApplicationException {
+    public AlbumResponseDto createAlbum(CreateAlbumRequestDto createAlbumRequest, Long musicianId) throws ClientException {
         if (!musicianRepository.existsById(musicianId)) {
-            throw new ResourceIsNotFoundException("The musician is not exists");
+            throw new ClientException(HttpStatus.NOT_FOUND, "The musician is not exists");
         }
 
         AlbumEntity album = new AlbumEntity();
         album.setName(createAlbumRequest.getName());
         album.setReleaseDate(createAlbumRequest.getReleaseDate());
         MusicianEntity musician = musicianRepository.findById(musicianId).
-                orElseThrow(() -> new ResourceIsNotFoundException("The musician is not exists"));
+                orElseThrow(() -> new ClientException(HttpStatus.NOT_FOUND, "The musician is not exists"));
         album.setMusician(musician);
         album.setSingle(createAlbumRequest.isSingle());
 
@@ -74,10 +75,10 @@ public class AlbumServiceImpl implements AlbumService {
 
     @Override
     @Transactional
-    public AlbumResponseDto changeAlbum(ChangeAlbumRequestDto changeAlbumRequest, Long albumId) throws ApplicationException {
+    public AlbumResponseDto changeAlbum(ChangeAlbumRequestDto changeAlbumRequest, Long albumId) throws ClientException {
         Optional<AlbumEntity> albumOptional = albumRepository.findById(albumId);
         if (albumOptional.isEmpty()) {
-            throw new ResourceIsNotFoundException("The album is not exists");
+            throw new ClientException(HttpStatus.NOT_FOUND, "The album is not exists");
         }
         AlbumEntity album = albumOptional.get();
 
@@ -98,7 +99,7 @@ public class AlbumServiceImpl implements AlbumService {
             } else {
                 Optional<TrackEntity> trackEntityOptional = trackRepository.findById(id);
                 if (trackEntityOptional.isEmpty()) {
-                    throw new ResourceIsNotFoundException(String.format("The track %d is not exist", id));
+                    throw new ClientException(HttpStatus.NOT_FOUND, String.format("The track %d is not exist", id));
                 }
                 trackEntity = trackEntityOptional.get();
                 oldTracks.removeIf(oldTrack -> oldTrack.getTrackId().equals(id));
@@ -118,43 +119,43 @@ public class AlbumServiceImpl implements AlbumService {
 
     @Override
     @Transactional
-    public AlbumResponseDto getAlbum(Long albumId, Long userId) throws ApplicationException {
+    public AlbumResponseDto getAlbum(Long albumId, Long userId) throws ClientException {
         AlbumEntity album = albumRepository.findById(albumId)
-                .orElseThrow(() -> new ResourceIsNotFoundException("The album is not exist"));
+                .orElseThrow(() -> new ClientException(HttpStatus.NOT_FOUND, "The album is not exist"));
         return translateEntityToDto(album, userId);
     }
 
     @Override
     @Transactional
-    public void deleteAlbum(Long albumId) throws ApplicationException {
+    public void deleteAlbum(Long albumId) throws ClientException {
         if (!albumRepository.existsById(albumId)) {
-            throw new ResourceIsNotFoundException("The album is not exist");
+            throw new ClientException(HttpStatus.NOT_FOUND, "The album is not exist");
         }
         albumRepository.deleteById(albumId);
     }
 
     @Override
     @Transactional
-    public byte[] getCover(Long albumId) throws ApplicationException {
+    public byte[] getCover(Long albumId) throws ClientException {
         return albumRepository.findById(albumId).
-                orElseThrow(() -> new ResourceIsNotFoundException("The album is not exists")).
+                orElseThrow(() -> new ClientException(HttpStatus.NOT_FOUND, "The album is not exists")).
                 getCover();
     }
 
     @Override
     @Transactional
-    public void saveCover(Long albumId, MultipartFile cover) throws ApplicationException {
+    public void saveCover(Long albumId, MultipartFile cover) throws ServerException {
         try {
             albumRepository.findById(albumId).
-                    orElseThrow(() -> new ResourceIsNotFoundException("The album is not exists")).
+                    orElseThrow(() -> new ClientException(HttpStatus.NOT_FOUND, "The album is not exists")).
                     setCover(cover.getBytes());
         } catch (IOException ex) {
-            throw new ApplicationException("Something wrong", ex);
+            throw new ServerException(ex);
         }
     }
 
     @Override
-    public List<BriefAlbumDescriptionDto> searchAlbums(String query) throws ApplicationException {
+    public List<BriefAlbumDescriptionDto> searchAlbums(String query) {
         List<AlbumEntity> albums = albumRepository.findAllByNameContainingIgnoreCase(query);
         return albums.stream().map(this::translateEntityToBriefDto).collect(Collectors.toList());
     }

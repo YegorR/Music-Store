@@ -9,8 +9,7 @@ import ru.yegorr.musicstore.dto.request.CreateAlbumRequestDto;
 import ru.yegorr.musicstore.dto.response.AlbumResponseDto;
 import ru.yegorr.musicstore.dto.response.BriefAlbumDescriptionDto;
 import ru.yegorr.musicstore.dto.response.ResponseBuilder;
-import ru.yegorr.musicstore.exception.ApplicationException;
-import ru.yegorr.musicstore.exception.ForbiddenException;
+import ru.yegorr.musicstore.exception.ClientException;
 import ru.yegorr.musicstore.service.AlbumService;
 
 import java.util.Base64;
@@ -32,10 +31,8 @@ public class AlbumController {
     @PostMapping("/musician/{musicianId}/album")
     public ResponseEntity<?> createAlbum(@RequestBody CreateAlbumRequestDto request,
                                          @PathVariable("musicianId") Long musicianId,
-                                         @RequestHeader("Authorization") String token) throws ApplicationException {
-        if (!userChecker.isAdmin(token)) {
-            throw new ForbiddenException("You have not rights for this");
-        }
+                                         @RequestHeader("Authorization") String token) throws Exception {
+        userChecker.checkAdmin(token);
 
         AlbumResponseDto response = albumService.createAlbum(request, musicianId);
         return ResponseBuilder.getBuilder().body(response).code(201).getResponseEntity();
@@ -44,10 +41,8 @@ public class AlbumController {
     @PutMapping("/album/{albumId}")
     public ResponseEntity<?> changeAlbum(@RequestBody ChangeAlbumRequestDto request,
                                          @PathVariable("albumId") Long albumId,
-                                         @RequestHeader("Authorization") String token) throws ApplicationException {
-        if (!userChecker.isAdmin(token)) {
-            throw new ForbiddenException("You have not rights for this");
-        }
+                                         @RequestHeader("Authorization") String token) throws Exception {
+        userChecker.checkAdmin(token);
 
         AlbumResponseDto response = albumService.changeAlbum(request, albumId);
         return ResponseBuilder.getBuilder().body(response).code(200).getResponseEntity();
@@ -55,7 +50,7 @@ public class AlbumController {
 
     @GetMapping("/album/{albumId}")
     public ResponseEntity<?> getAlbum(@PathVariable("albumId") Long albumId,
-                                      @RequestHeader("Authorization") String token) throws ApplicationException {
+                                      @RequestHeader("Authorization") String token) throws Exception {
         Long userId = userChecker.getUserIdOrThrow(token);
         AlbumResponseDto response = albumService.getAlbum(albumId, userId);
         return ResponseBuilder.getBuilder().body(response).code(200).getResponseEntity();
@@ -63,10 +58,8 @@ public class AlbumController {
 
     @DeleteMapping("album/{albumId}")
     public ResponseEntity<?> deleteAlbum(@PathVariable("albumId") Long albumId,
-                                         @RequestHeader("Authorization") String token) throws ApplicationException {
-        if (!userChecker.isAdmin(token)) {
-            throw new ForbiddenException("You have not rights for this");
-        }
+                                         @RequestHeader("Authorization") String token) throws Exception {
+        userChecker.checkAdmin(token);
         albumService.deleteAlbum(albumId);
         return ResponseBuilder.getBuilder().code(200).getResponseEntity();
     }
@@ -75,10 +68,8 @@ public class AlbumController {
             consumes = "multipart/form-data")
     public ResponseEntity<?> unloadCover(@PathVariable("albumId") Long albumId,
                                          @RequestHeader("Authorization") String token,
-                                         @RequestParam("image") MultipartFile cover) throws ApplicationException {
-        if (!userChecker.isAdmin(token)) {
-            throw new ForbiddenException("You have not right for this");
-        }
+                                         @RequestParam("image") MultipartFile cover) throws Exception {
+        userChecker.checkAdmin(token);
         albumService.saveCover(albumId, cover);
         return ResponseBuilder.getBuilder().code(200).getResponseEntity();
     }
@@ -86,7 +77,7 @@ public class AlbumController {
     @GetMapping(path = "album/{albumId}/image",
         produces = "text/plain")
     public ResponseEntity<?> getCover(@PathVariable("albumId") Long albumId,
-                                      @RequestHeader("Authorization") String token) throws ApplicationException {
+                                      @RequestHeader("Authorization") String token) throws Exception {
         userChecker.getUserIdOrThrow(token);
 
         byte[] cover = albumService.getCover(albumId);
@@ -98,12 +89,12 @@ public class AlbumController {
 
     @GetMapping(path = "albums")
     public ResponseEntity<?> search(@RequestParam("query") String query,
-                                    @RequestHeader("Authorization") String token) throws ApplicationException {
+                                    @RequestHeader("Authorization") String token) throws Exception {
         userChecker.getUserIdOrThrow(token);
 
         query = query.strip();
         if (query.isEmpty()) {
-            throw new ApplicationException("No query");
+            throw new ClientException("No query");
         }
         List<BriefAlbumDescriptionDto> response = albumService.searchAlbums(query);
         return ResponseBuilder.getBuilder().code(200).body(response).getResponseEntity();

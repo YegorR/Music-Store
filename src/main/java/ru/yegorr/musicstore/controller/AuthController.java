@@ -9,7 +9,6 @@ import ru.yegorr.musicstore.dto.response.LoginResponseDto;
 import ru.yegorr.musicstore.dto.response.ResponseBuilder;
 import ru.yegorr.musicstore.dto.request.LoginDto;
 import ru.yegorr.musicstore.dto.request.RegistrationDto;
-import ru.yegorr.musicstore.exception.ApplicationException;
 import ru.yegorr.musicstore.service.AuthService;
 
 @RestController
@@ -25,7 +24,7 @@ public class AuthController {
     @PostMapping(value = "/register",
             consumes = "application/json",
             produces = "application/json")
-    public ResponseEntity<?> register(@RequestBody RegistrationDto userRegistration) throws ApplicationException {
+    public ResponseEntity<?> register(@RequestBody RegistrationDto userRegistration) throws Exception {
         authService.register(userRegistration);
 
         return ResponseBuilder.getBuilder().code(200).body("OK").getResponseEntity();
@@ -34,7 +33,7 @@ public class AuthController {
     @PostMapping(value = "/login",
             consumes = "application/json",
             produces = "application/json")
-    public ResponseEntity<?> login(@RequestBody LoginDto userLogin) throws ApplicationException {
+    public ResponseEntity<?> login(@RequestBody LoginDto userLogin) throws Exception {
         LoginResponseDto loginResponse = authService.login(userLogin);
 
         return ResponseBuilder.getBuilder().code(200).body(loginResponse).getResponseEntity();

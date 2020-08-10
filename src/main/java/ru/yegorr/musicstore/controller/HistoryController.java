@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import ru.yegorr.musicstore.dto.response.ResponseBuilder;
 import ru.yegorr.musicstore.dto.response.TrackSuperFullResponseDto;
-import ru.yegorr.musicstore.exception.ApplicationException;
 import ru.yegorr.musicstore.service.HistoryService;
 
 import java.util.List;
@@ -25,7 +24,7 @@ public class HistoryController {
     }
 
     @GetMapping(path = "/history")
-    public ResponseEntity<?> getHistory(@RequestHeader("Authorization") String token) throws ApplicationException {
+    public ResponseEntity<?> getHistory(@RequestHeader("Authorization") String token) throws Exception {
         Long userId = userChecker.getUserIdOrThrow(token);
 
         List<TrackSuperFullResponseDto> result = historyService.getHistory(userId);

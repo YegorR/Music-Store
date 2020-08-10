@@ -1,6 +1,7 @@
 package ru.yegorr.musicstore.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -8,8 +9,8 @@ import ru.yegorr.musicstore.dto.response.TrackFullResponseDto;
 import ru.yegorr.musicstore.dto.response.TrackResponseDto;
 import ru.yegorr.musicstore.entity.HistoryEntity;
 import ru.yegorr.musicstore.entity.TrackEntity;
-import ru.yegorr.musicstore.exception.ApplicationException;
-import ru.yegorr.musicstore.exception.ResourceIsNotFoundException;
+import ru.yegorr.musicstore.exception.ClientException;
+import ru.yegorr.musicstore.exception.ServerException;
 import ru.yegorr.musicstore.repository.HistoryRepository;
 import ru.yegorr.musicstore.repository.TrackRepository;
 
@@ -33,19 +34,21 @@ public class TrackServiceImpl implements TrackService {
 
     @Override
     @Transactional
-    public void saveAudio(MultipartFile audio, Long trackId) throws ApplicationException {
-        TrackEntity track = trackRepository.findById(trackId).orElseThrow(() -> new ResourceIsNotFoundException("The track is not exist"));
+    public void saveAudio(MultipartFile audio, Long trackId) throws ServerException {
+        TrackEntity track = trackRepository.findById(trackId).orElseThrow(() ->
+                new ClientException(HttpStatus.NOT_FOUND, "The track is not exist"));
         try {
             track.setAudio(audio.getBytes());
         } catch (IOException ex) {
-            throw new ApplicationException("Error with audio file", ex);
+            throw new ServerException(ex);
         }
     }
 
     @Override
     @Transactional
-    public byte[] getAudio(Long trackId, Long userId) throws ApplicationException {
-        TrackEntity track = trackRepository.findById(trackId).orElseThrow(() -> new ResourceIsNotFoundException("The track is not exist"));
+    public byte[] getAudio(Long trackId, Long userId) throws ClientException {
+        TrackEntity track = trackRepository.findById(trackId).orElseThrow(() ->
+                new ClientException(HttpStatus.NOT_FOUND, "The track is not exist"));
         track.setPlaysNumber(track.getPlaysNumber() + 1);
 
         HistoryEntity historyEntity = new HistoryEntity();
@@ -59,8 +62,9 @@ public class TrackServiceImpl implements TrackService {
 
     @Override
     @Transactional
-    public TrackResponseDto getTrackInfo(Long trackId) throws ApplicationException {
-        TrackEntity track = trackRepository.findById(trackId).orElseThrow(() -> new ResourceIsNotFoundException("The track is not exist"));
+    public TrackResponseDto getTrackInfo(Long trackId) throws ClientException {
+        TrackEntity track = trackRepository.findById(trackId).orElseThrow(() ->
+                new ClientException(HttpStatus.NOT_FOUND, "The track is not exist"));
         TrackResponseDto response = new TrackResponseDto();
         response.setId(trackId);
         response.setName(track.getName());
@@ -73,7 +77,7 @@ public class TrackServiceImpl implements TrackService {
     }
 
     @Override
-    public List<TrackFullResponseDto> searchTracks(String query) throws ApplicationException {
+    public List<TrackFullResponseDto> searchTracks(String query) {
         return trackRepository.findAllByNameContainingIgnoreCaseOrderByPlaysNumberDesc(query).stream().map((entity) -> {
             TrackFullResponseDto dto = new TrackFullResponseDto();
             dto.setId(entity.getTrackId());

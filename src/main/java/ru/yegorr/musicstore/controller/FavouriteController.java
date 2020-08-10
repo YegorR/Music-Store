@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.yegorr.musicstore.dto.request.SetFavouriteRequest;
 import ru.yegorr.musicstore.dto.response.ResponseBuilder;
 import ru.yegorr.musicstore.dto.response.TrackFullResponseDto;
-import ru.yegorr.musicstore.exception.ApplicationException;
 import ru.yegorr.musicstore.service.FavouriteService;
 
 import java.util.List;
@@ -26,7 +25,7 @@ public class FavouriteController {
 
     @PutMapping(path = "/favourite")
     public ResponseEntity<?> setFavourite(@RequestBody SetFavouriteRequest favouriteRequest,
-                                          @RequestHeader("Authorization") String token) throws ApplicationException {
+                                          @RequestHeader("Authorization") String token) throws Exception {
         Long userId = userChecker.getUserIdOrThrow(token);
 
         favouriteService.setFavourite(userId, favouriteRequest.getId(), favouriteRequest.isFavourite());
@@ -35,7 +34,7 @@ public class FavouriteController {
     }
 
     @GetMapping(path = "/favourite")
-    public ResponseEntity<?> getFavourite(@RequestHeader("Authorization") String token) throws ApplicationException {
+    public ResponseEntity<?> getFavourite(@RequestHeader("Authorization") String token) throws Exception {
         Long userId = userChecker.getUserIdOrThrow(token);
 
         List<TrackFullResponseDto> response = favouriteService.getFavouriteList(userId);

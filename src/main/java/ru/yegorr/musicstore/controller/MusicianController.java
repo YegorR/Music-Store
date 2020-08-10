@@ -9,8 +9,7 @@ import ru.yegorr.musicstore.dto.response.MusicianBriefResponseDto;
 import ru.yegorr.musicstore.dto.response.MusicianLetterResponseDto;
 import ru.yegorr.musicstore.dto.response.MusicianResponseDto;
 import ru.yegorr.musicstore.dto.response.ResponseBuilder;
-import ru.yegorr.musicstore.exception.ApplicationException;
-import ru.yegorr.musicstore.exception.ForbiddenException;
+import ru.yegorr.musicstore.exception.ClientException;
 import ru.yegorr.musicstore.service.MusicianService;
 
 import java.util.Base64;
@@ -32,10 +31,8 @@ public class MusicianController {
 
     @PostMapping(path = "/musician", consumes = "application/json", produces = "application/json")
     public ResponseEntity<?> createMusician(@RequestBody MusicianDto musicianDto,
-                                            @RequestHeader("Authorization") String token) throws ApplicationException {
-        if (!userChecker.isAdmin(token)) {
-            throw new ForbiddenException("You have no rights to do this");
-        }
+                                            @RequestHeader("Authorization") String token) throws Exception {
+        userChecker.checkAdmin(token);
 
         MusicianResponseDto musicianResponseDto =
                 musicianService.createMusician(musicianDto.getName(), musicianDto.getDescription());
@@ -46,10 +43,8 @@ public class MusicianController {
     @PutMapping("/musician/{musicianId}")
     public ResponseEntity<?> changeMusician(@RequestBody MusicianDto musicianDto,
                                             @PathVariable("musicianId") Long musicianId,
-                                            @RequestHeader("Authorization") String token) throws ApplicationException {
-        if (!userChecker.isAdmin(token)) {
-            throw new ForbiddenException("You have no rights to do this");
-        }
+                                            @RequestHeader("Authorization") String token) throws Exception {
+        userChecker.checkAdmin(token);
 
         MusicianResponseDto musicianResponseDto = musicianService.changeMusician(musicianId, musicianDto.getName(),
                 musicianDto.getDescription());
@@ -60,10 +55,8 @@ public class MusicianController {
 
     @DeleteMapping("/musician/{musicianId}")
     public ResponseEntity<?> deleteMusician(@PathVariable("musicianId") Long musicianId,
-                                            @RequestHeader("Authorization") String token) throws ApplicationException {
-        if (!userChecker.isAdmin(token)) {
-            throw new ForbiddenException("You have not rights to do this");
-        }
+                                            @RequestHeader("Authorization") String token) throws Exception {
+        userChecker.checkAdmin(token);
 
         musicianService.deleteMusician(musicianId);
 
@@ -72,34 +65,33 @@ public class MusicianController {
 
     @GetMapping("/musician/{musicianId}")
     public ResponseEntity<?> getMusician(@PathVariable("musicianId") Long musicianId,
-                                         @RequestHeader("Authorization") String token) throws ApplicationException {
+                                         @RequestHeader("Authorization") String token) throws Exception {
         userChecker.getUserIdOrThrow(token);
         MusicianResponseDto musicianResponseDto = musicianService.getMusician(musicianId);
         return ResponseBuilder.getBuilder().code(200).body(musicianResponseDto).getResponseEntity();
     }
 
+    // TODO fix method
     @GetMapping("/musicians")
     public ResponseEntity<?> getMusiciansCountByLetter(
             @RequestParam(value = "abc", required = false) String isAbc,
             @RequestParam(value = "letter", required = false) String letter,
             @RequestParam(value = "query", required = false) String query,
-            @RequestHeader("Authorization") String token) throws ApplicationException {
+            @RequestHeader("Authorization") String token) throws Exception {
         if (query != null) {
             userChecker.getUserIdOrThrow(token);
         } else {
-            if (!userChecker.isAdmin(token)) {
-                throw new ForbiddenException("You have not rights to do this");
-            }
+            userChecker.checkAdmin(token);
         }
 //        if (((isAbc == null) && (letter == null)) || ((isAbc != null) && (letter != null))) {
 //            throw new ForbiddenException("Wrong method using");
 //        }
         if (!isOnlyTrue((isAbc != null), (letter != null), (query != null))) {
-            throw new ForbiddenException("Wrong method using");
+            throw new ClientException("Wrong method using");
         }
         if (isAbc != null) {
             if (!isAbc.equals("true")) {
-                throw new ApplicationException("Wrong method using");
+                throw new ClientException("Wrong method using");
             }
 
             Map<String, Integer> result = musicianService.getMusicianCountByAbc();
@@ -127,10 +119,8 @@ public class MusicianController {
 
     @PutMapping(path = "/musician/{musicianId}/image", consumes = "multipart/form-data")
     public ResponseEntity<?> loadImage(@PathVariable Long musicianId, @RequestHeader("Authorization") String token,
-                                       @RequestParam("image") MultipartFile image) throws ApplicationException {
-        if (!userChecker.isAdmin(token)) {
-            throw new ForbiddenException("You have no rights for this");
-        }
+                                       @RequestParam("image") MultipartFile image) throws Exception {
+        userChecker.checkAdmin(token);
 
         musicianService.saveImage(musicianId, image);
         return ResponseBuilder.getBuilder().code(200).getResponseEntity();
@@ -138,7 +128,7 @@ public class MusicianController {
 
     @GetMapping(path = "/musician/{musicianId}/image", produces = "text/plain")
     public ResponseEntity<?> getImage(@PathVariable Long musicianId,
-                                      @RequestHeader("Authorization") String token) throws ApplicationException {
+                                      @RequestHeader("Authorization") String token) throws Exception {
         userChecker.getUserIdOrThrow(token);
 
         byte[] image = musicianService.getImage(musicianId);

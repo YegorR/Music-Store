@@ -9,7 +9,6 @@ import ru.yegorr.musicstore.dto.request.CreatePlaylistRequest;
 import ru.yegorr.musicstore.dto.response.PlaylistBriefDto;
 import ru.yegorr.musicstore.dto.response.PlaylistResponseDto;
 import ru.yegorr.musicstore.dto.response.ResponseBuilder;
-import ru.yegorr.musicstore.exception.ApplicationException;
 import ru.yegorr.musicstore.service.PlaylistService;
 
 import java.util.Base64;
@@ -29,7 +28,7 @@ public class PlaylistController {
 
     @GetMapping(path = "/playlist/{playlistId}")
     public ResponseEntity<?> getPlaylist(@PathVariable Long playlistId,
-                                         @RequestHeader("Authorization") String token) throws ApplicationException {
+                                         @RequestHeader("Authorization") String token) throws Exception {
         Long userId = userChecker.getUserIdOrThrow(token);
 
         PlaylistResponseDto response = playlistService.getPlaylist(userId, playlistId);
@@ -39,7 +38,7 @@ public class PlaylistController {
 
     @PostMapping(path = "/playlist")
     public ResponseEntity<?> createPlaylist(@RequestBody CreatePlaylistRequest request,
-                                            @RequestHeader("Authorization") String token) throws ApplicationException {
+                                            @RequestHeader("Authorization") String token) throws Exception {
         Long userId = userChecker.getUserIdOrThrow(token);
 
         PlaylistResponseDto response = playlistService.createPlaylist(userId, request.getName());
@@ -49,7 +48,7 @@ public class PlaylistController {
 
     @PutMapping(path = "/playlist/{playlistId}")
     public ResponseEntity<?> changePlaylist(@RequestBody ChangePlaylistRequest request, @PathVariable Long playlistId,
-                                            @RequestHeader("Authorization") String token) throws ApplicationException {
+                                            @RequestHeader("Authorization") String token) throws Exception {
         Long userId = userChecker.getUserIdOrThrow(token);
 
         PlaylistResponseDto response = playlistService.changePlaylist(userId, playlistId,
@@ -60,7 +59,7 @@ public class PlaylistController {
 
     @DeleteMapping(path = "/playlist/{playlistId}")
     public ResponseEntity<?> deletePlaylist(@PathVariable Long playlistId,
-                                            @RequestHeader("Authorization") String token) throws ApplicationException {
+                                            @RequestHeader("Authorization") String token) throws Exception {
         Long userId = userChecker.getUserIdOrThrow(token);
 
         playlistService.deletePlaylist(userId, playlistId);
@@ -70,7 +69,7 @@ public class PlaylistController {
 
     @PutMapping(path = "/playlist/{playlistId}/image", consumes = "multipart/form-data")
     public ResponseEntity<?> loadImage(@PathVariable Long playlistId, @RequestHeader("Authorization") String token,
-                                       @RequestParam("image") MultipartFile image) throws ApplicationException {
+                                       @RequestParam("image") MultipartFile image) throws Exception {
         Long userId = userChecker.getUserIdOrThrow(token);
 
         playlistService.unloadPlaylistImage(userId, playlistId, image);
@@ -79,7 +78,7 @@ public class PlaylistController {
 
     @GetMapping(path = "/playlist/{playlistId}/image", produces = "text/plain")
     public ResponseEntity<?> getImage(@PathVariable Long playlistId,
-                                      @RequestHeader("Authorization") String token) throws ApplicationException {
+                                      @RequestHeader("Authorization") String token) throws Exception {
         userChecker.getUserIdOrThrow(token);
 
         byte[] image = playlistService.getPlaylistImage(playlistId);
@@ -92,7 +91,7 @@ public class PlaylistController {
     @GetMapping(path = "/user/{userId}/playlists")
     public ResponseEntity<?> getPlaylistsByUser(@PathVariable Long userId,
                                                 @RequestHeader("Authorization") String token)
-            throws ApplicationException {
+            throws Exception {
         userChecker.getUserIdOrThrow(token);
 
         List<PlaylistBriefDto> response = playlistService.getPlaylistsOfUser(userId);
@@ -103,7 +102,7 @@ public class PlaylistController {
     @GetMapping(path = "/playlists")
     public ResponseEntity<?> searchPlaylists(@RequestParam String query,
                                              @RequestHeader("Authorization") String token)
-            throws ApplicationException {
+            throws Exception {
         userChecker.getUserIdOrThrow(token);
 
         List<PlaylistBriefDto> response = playlistService.searchPlaylists(query);

@@ -1,13 +1,13 @@
 package ru.yegorr.musicstore.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.yegorr.musicstore.dto.response.TrackFullResponseDto;
 import ru.yegorr.musicstore.entity.FavouriteEntity;
 import ru.yegorr.musicstore.entity.TrackEntity;
-import ru.yegorr.musicstore.exception.ApplicationException;
-import ru.yegorr.musicstore.exception.ResourceIsNotFoundException;
+import ru.yegorr.musicstore.exception.ClientException;
 import ru.yegorr.musicstore.repository.FavouriteRepository;
 import ru.yegorr.musicstore.repository.TrackRepository;
 
@@ -30,9 +30,9 @@ public class FavouriteServiceImpl implements FavouriteService {
 
     @Override
     @Transactional
-    public void setFavourite(Long userId, Long trackId, boolean isFavourite) throws ApplicationException {
+    public void setFavourite(Long userId, Long trackId, boolean isFavourite) throws ClientException {
         if (!trackRepository.existsById(trackId)) {
-            throw new ResourceIsNotFoundException("The track is not exist");
+            throw new ClientException(HttpStatus.NOT_FOUND, "The track is not exist");
         }
         if (isFavourite) {
             favouriteRepository.findByUserIdAndTrackId(userId, trackId).ifPresentOrElse((entity) -> {
@@ -50,7 +50,7 @@ public class FavouriteServiceImpl implements FavouriteService {
 
     @Override
     @Transactional
-    public List<TrackFullResponseDto> getFavouriteList(Long userId) throws ApplicationException {
+    public List<TrackFullResponseDto> getFavouriteList(Long userId) {
         return favouriteRepository.findAllByUserIdOrderByAddingTimeDesc(userId).stream().map((favouriteEntity) -> {
             TrackEntity track = favouriteEntity.getTrack();
             TrackFullResponseDto response = new TrackFullResponseDto();

@@ -1,6 +1,7 @@
 package ru.yegorr.musicstore.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.yegorr.musicstore.controller.ActualUserInformation;
@@ -8,10 +9,7 @@ import ru.yegorr.musicstore.dto.request.LoginDto;
 import ru.yegorr.musicstore.dto.response.LoginResponseDto;
 import ru.yegorr.musicstore.dto.request.RegistrationDto;
 import ru.yegorr.musicstore.entity.UserEntity;
-import ru.yegorr.musicstore.exception.ApplicationException;
-import ru.yegorr.musicstore.exception.UserIsAlreadyExistsException;
-import ru.yegorr.musicstore.exception.WrongLoginOrPasswordException;
-import ru.yegorr.musicstore.exception.WrongTokenException;
+import ru.yegorr.musicstore.exception.*;
 import ru.yegorr.musicstore.repository.UserRepository;
 
 import java.util.Arrays;
@@ -33,12 +31,12 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public void register(RegistrationDto userRegistration) throws ApplicationException {
+    public void register(RegistrationDto userRegistration) throws ClientException {
         if (userRepository.countAllByEmail(userRegistration.getEmail()) != 0) {
-            throw new UserIsAlreadyExistsException("User with this email already exists");
+            throw new ClientException(HttpStatus.FORBIDDEN, "User with this email already exist");
         }
         if (userRepository.countAllByNickname(userRegistration.getNickname()) != 0) {
-            throw new UserIsAlreadyExistsException("User with this nickname already exists");
+            throw new ClientException(HttpStatus.FORBIDDEN, "User with this nickname already exist");
         }
 
         byte[] salt = hashGenerator.generateRandomSalt();
@@ -55,15 +53,15 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public LoginResponseDto login(LoginDto userLogin) throws ApplicationException {
+    public LoginResponseDto login(LoginDto userLogin) throws ClientException {
         UserEntity user = userRepository.findByEmail(userLogin.getEmail());
         if (user == null) {
-            throw new WrongLoginOrPasswordException("Wrong login or password");
+            throw new ClientException(HttpStatus.UNAUTHORIZED, "Wrong login or password");
         }
 
         byte[] hashPassword = hashGenerator.generateHash(userLogin.getPassword(), user.getSalt());
         if (!Arrays.equals(hashPassword, user.getPassword())) {
-            throw new WrongLoginOrPasswordException("Wrong login or password");
+            throw new ClientException(HttpStatus.UNAUTHORIZED, "Wrong login or password");
         }
 
         String token = tokenHandler.getToken(user.getUserId());
@@ -79,15 +77,15 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public ActualUserInformation check(String token) throws ApplicationException {
+    public ActualUserInformation check(String token) throws ClientException {
         Long id = tokenHandler.checkToken(token);
         if (id == null) {
-            throw new WrongTokenException("Wrong token");
+            throw new ClientException(HttpStatus.UNAUTHORIZED, "Wrong token");
         }
 
         Optional<UserEntity> userOptional = userRepository.findById(id);
         if (userOptional.isEmpty()) {
-            throw new WrongTokenException("Wrong token");
+            throw new ClientException(HttpStatus.UNAUTHORIZED, "Wrong token");
         }
 
         ActualUserInformation userInformation = new ActualUserInformation();

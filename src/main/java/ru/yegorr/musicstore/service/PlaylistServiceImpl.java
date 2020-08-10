@@ -1,7 +1,7 @@
 package ru.yegorr.musicstore.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContextException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -9,9 +9,7 @@ import ru.yegorr.musicstore.dto.request.IdDto;
 import ru.yegorr.musicstore.dto.response.PlaylistBriefDto;
 import ru.yegorr.musicstore.dto.response.PlaylistResponseDto;
 import ru.yegorr.musicstore.entity.*;
-import ru.yegorr.musicstore.exception.ApplicationException;
-import ru.yegorr.musicstore.exception.ForbiddenException;
-import ru.yegorr.musicstore.exception.ResourceIsNotFoundException;
+import ru.yegorr.musicstore.exception.*;
 import ru.yegorr.musicstore.repository.*;
 
 import java.io.IOException;
@@ -51,17 +49,17 @@ public class PlaylistServiceImpl implements PlaylistService {
     }
 
     @Override
-    public PlaylistResponseDto getPlaylist(Long userId, Long playlistId) throws ApplicationException {
+    public PlaylistResponseDto getPlaylist(Long userId, Long playlistId) throws ClientException {
         PlaylistEntity playlistEntity = playlistRepository.
                 findById(playlistId).
-                orElseThrow(() -> new ResourceIsNotFoundException("The playlist is not exists"));
+                orElseThrow(() -> new ClientException(HttpStatus.NOT_FOUND, "The playlist is not exists"));
 
         return getPlaylistWithFavourites(userId, playlistEntity);
     }
 
     @Override
     @Transactional
-    public PlaylistResponseDto createPlaylist(Long userId, String name) throws ApplicationException {
+    public PlaylistResponseDto createPlaylist(Long userId, String name) {
 
         PlaylistEntity playlistEntity = new PlaylistEntity();
         playlistEntity.setUserId(userId);
@@ -69,27 +67,27 @@ public class PlaylistServiceImpl implements PlaylistService {
 
         playlistEntity = playlistRepository.save(playlistEntity);
 
-        UserEntity user = userRepository.findById(userId).
-                orElseThrow(() -> new ApplicationContextException("Some error"));
+        //TODO fix
+        UserEntity user = userRepository.findById(userId).get();
 
         return new PlaylistResponseDto(playlistEntity, user.getNickname());
     }
 
     @Override
     @Transactional
-    public PlaylistResponseDto changePlaylist(Long userId, Long playlistId, String name, List<IdDto> tracks) throws ApplicationException {
+    public PlaylistResponseDto changePlaylist(Long userId, Long playlistId, String name, List<IdDto> tracks) throws ClientException {
         PlaylistEntity playlistEntity = playlistRepository.
                 findById(playlistId).
-                orElseThrow(() -> new ResourceIsNotFoundException("The playlist is not exists"));
+                orElseThrow(() -> new ClientException(HttpStatus.NOT_FOUND, "The playlist is not exists"));
 
         playlistEntity.setName(name);
         if (!playlistEntity.getUserId().equals(userId)) {
-            throw new ForbiddenException("You have no rights for this");
+            throw new ClientException(HttpStatus.FORBIDDEN);
         }
         List<TrackEntity> trackEntities = new ArrayList<>();
         for (IdDto track : tracks) {
             trackEntities.add(trackRepository.findById(track.getId()).
-                    orElseThrow(() -> new ResourceIsNotFoundException("The track is not exists")));
+                    orElseThrow(() -> new ClientException(HttpStatus.NOT_FOUND, "The playlist is not exists")));
         }
         playlistTrackRepository.deleteAll(playlistEntity.getTracks());
         playlistTrackRepository.flush();
@@ -110,40 +108,40 @@ public class PlaylistServiceImpl implements PlaylistService {
 
     @Override
     @Transactional
-    public void deletePlaylist(Long userId, Long playlistId) throws ApplicationException {
-        PlaylistEntity playlist = playlistRepository.findById(playlistId).orElseThrow(() -> new ResourceIsNotFoundException("The playlist is not exists"));
+    public void deletePlaylist(Long userId, Long playlistId) throws ClientException {
+        PlaylistEntity playlist = playlistRepository.findById(playlistId).orElseThrow(() -> new ClientException(HttpStatus.NOT_FOUND, "The playlist is not exists"));
         if (!playlist.getUserId().equals(userId)) {
-            throw new ForbiddenException("You have no rights for this");
+            throw new ClientException(HttpStatus.FORBIDDEN);
         }
         playlistRepository.deleteById(playlistId);
     }
 
     @Override
     @Transactional
-    public void unloadPlaylistImage(Long userId, Long playlistId, MultipartFile image) throws ApplicationException {
+    public void unloadPlaylistImage(Long userId, Long playlistId, MultipartFile image) throws ServerException {
         try {
             PlaylistEntity playlist = playlistRepository.findById(playlistId).
-                    orElseThrow(() -> new ResourceIsNotFoundException("The playlists is not exists"));
+                    orElseThrow(() -> new ClientException(HttpStatus.NOT_FOUND, "The playlists is not exists"));
             if (!playlist.getUserId().equals(userId)) {
-                throw new ForbiddenException("You have no rights for this");
+                throw new ClientException(HttpStatus.FORBIDDEN);
             }
             playlist.setImage(image.getBytes());
         } catch (IOException ex) {
-            throw new ApplicationException("Some error", ex);
+            throw new ServerException(ex);
         }
     }
 
     @Override
     @Transactional
-    public byte[] getPlaylistImage(Long playlistId) throws ApplicationException {
+    public byte[] getPlaylistImage(Long playlistId) throws ClientException {
         return playlistRepository.findById(playlistId).
-                orElseThrow(() -> new ResourceIsNotFoundException("The musician is not exists")).
+                orElseThrow(() -> new ClientException(HttpStatus.NOT_FOUND, "The musician is not exists")).
                 getImage();
     }
 
     @Override
     @Transactional
-    public List<PlaylistBriefDto> searchPlaylists(String query) throws ApplicationException {
+    public List<PlaylistBriefDto> searchPlaylists(String query) {
         return playlistRepository.findAllByNameContainingIgnoreCase(query).stream().
                 map(PlaylistBriefDto::new).
                 collect(Collectors.toList());
@@ -151,7 +149,7 @@ public class PlaylistServiceImpl implements PlaylistService {
 
     @Override
     @Transactional
-    public List<PlaylistBriefDto> getPlaylistsOfUser(Long userId) throws ApplicationException {
+    public List<PlaylistBriefDto> getPlaylistsOfUser(Long userId) {
         return playlistRepository.findAllByUserId(userId).stream().
                 map(PlaylistBriefDto::new).
                 collect(Collectors.toList());
