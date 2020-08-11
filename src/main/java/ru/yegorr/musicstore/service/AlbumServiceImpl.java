@@ -10,7 +10,7 @@ import ru.yegorr.musicstore.dto.request.CreateAlbumDto;
 import ru.yegorr.musicstore.dto.response.FullAlbumDto;
 import ru.yegorr.musicstore.dto.response.BriefAlbumDescriptionDto;
 import ru.yegorr.musicstore.dto.response.BriefMusicianDto;
-import ru.yegorr.musicstore.dto.response.TrackDescirptionDto;
+import ru.yegorr.musicstore.dto.response.TrackDescriptionDto;
 import ru.yegorr.musicstore.entity.AlbumEntity;
 import ru.yegorr.musicstore.entity.FavouriteEntity;
 import ru.yegorr.musicstore.entity.MusicianEntity;
@@ -196,9 +196,9 @@ public class AlbumServiceImpl implements AlbumService {
         } else {
             favourites = new HashSet<>();
         }
-        List<TrackDescirptionDto> tracks = new ArrayList<>();
+        List<TrackDescriptionDto> tracks = new ArrayList<>();
         for (TrackEntity trackEntity : entity.getTracks()) {
-            TrackDescirptionDto track = new TrackDescirptionDto();
+            TrackDescriptionDto track = new TrackDescriptionDto();
             track.setId(trackEntity.getTrackId());
             track.setPlaysNumber(trackEntity.getPlaysNumber());
             track.setName(trackEntity.getName());

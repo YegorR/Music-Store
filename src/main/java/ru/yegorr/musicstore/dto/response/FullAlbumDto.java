@@ -18,7 +18,7 @@ public class FullAlbumDto {
 
     private BriefMusicianDto musician;
 
-    private List<TrackDescirptionDto> tracks = new ArrayList<>();
+    private List<TrackDescriptionDto> tracks = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -60,11 +60,11 @@ public class FullAlbumDto {
         this.musician = musician;
     }
 
-    public List<TrackDescirptionDto> getTracks() {
+    public List<TrackDescriptionDto> getTracks() {
         return tracks;
     }
 
-    public void setTracks(List<TrackDescirptionDto> tracks) {
+    public void setTracks(List<TrackDescriptionDto> tracks) {
         this.tracks = tracks;
     }
 }
