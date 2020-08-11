@@ -9,7 +9,7 @@ import ru.yegorr.musicstore.dto.request.ChangeAlbumRequestDto;
 import ru.yegorr.musicstore.dto.request.CreateAlbumRequestDto;
 import ru.yegorr.musicstore.dto.response.AlbumResponseDto;
 import ru.yegorr.musicstore.dto.response.BriefAlbumDescriptionDto;
-import ru.yegorr.musicstore.dto.response.ResponseBuilder;
+import ru.yegorr.musicstore.response.ResponseBuilder;
 import ru.yegorr.musicstore.exception.ClientException;
 import ru.yegorr.musicstore.security.UserChecker;
 import ru.yegorr.musicstore.service.AlbumService;

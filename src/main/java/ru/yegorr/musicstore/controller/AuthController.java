@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import ru.yegorr.musicstore.dto.response.LoginResponseDto;
-import ru.yegorr.musicstore.dto.response.ResponseBuilder;
+import ru.yegorr.musicstore.response.ResponseBuilder;
 import ru.yegorr.musicstore.dto.request.LoginDto;
 import ru.yegorr.musicstore.dto.request.RegistrationDto;
 import ru.yegorr.musicstore.service.AuthService;

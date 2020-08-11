@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.yegorr.musicstore.dto.request.SetFavouriteRequest;
-import ru.yegorr.musicstore.dto.response.ResponseBuilder;
+import ru.yegorr.musicstore.response.ResponseBuilder;
 import ru.yegorr.musicstore.dto.response.TrackFullResponseDto;
 import ru.yegorr.musicstore.security.UserChecker;
 import ru.yegorr.musicstore.service.FavouriteService;

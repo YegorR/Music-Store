@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.yegorr.musicstore.dto.response.ResponseBuilder;
+import ru.yegorr.musicstore.response.ResponseBuilder;
 import ru.yegorr.musicstore.dto.response.TrackFullResponseDto;
 import ru.yegorr.musicstore.dto.response.TrackResponseDto;
 import ru.yegorr.musicstore.exception.ClientException;

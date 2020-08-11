@@ -1,4 +1,4 @@
-package ru.yegorr.musicstore.dto.response;
+package ru.yegorr.musicstore.response;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

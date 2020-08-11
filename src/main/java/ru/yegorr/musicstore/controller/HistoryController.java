@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
-import ru.yegorr.musicstore.dto.response.ResponseBuilder;
+import ru.yegorr.musicstore.response.ResponseBuilder;
 import ru.yegorr.musicstore.dto.response.TrackSuperFullResponseDto;
 import ru.yegorr.musicstore.security.UserChecker;
 import ru.yegorr.musicstore.service.HistoryService;
