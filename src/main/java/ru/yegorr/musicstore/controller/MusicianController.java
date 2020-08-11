@@ -9,7 +9,6 @@ import ru.yegorr.musicstore.dto.response.BriefMusicianDto;
 import ru.yegorr.musicstore.dto.response.MusicianLetterDto;
 import ru.yegorr.musicstore.dto.response.MusicianDto;
 import ru.yegorr.musicstore.response.ResponseBuilder;
-import ru.yegorr.musicstore.exception.ClientException;
 import ru.yegorr.musicstore.security.UserChecker;
 import ru.yegorr.musicstore.service.MusicianService;
 
@@ -72,50 +71,28 @@ public class MusicianController {
         return ResponseBuilder.getBuilder().code(HttpStatus.OK).body(musicianDto).getResponseEntity();
     }
 
-    // TODO fix method
     @GetMapping("/musicians")
-    public ResponseEntity<?> getMusiciansCountByLetter(
-            @RequestParam(value = "abc", required = false) String isAbc,
-            @RequestParam(value = "letter", required = false) String letter,
-            @RequestParam(value = "query", required = false) String query,
-            @RequestHeader("Authorization") String token) throws Exception {
-        if (query != null) {
-            userChecker.getUserIdOrThrow(token);
-        } else {
-            userChecker.checkAdmin(token);
-        }
-//        if (((isAbc == null) && (letter == null)) || ((isAbc != null) && (letter != null))) {
-//            throw new ForbiddenException("Wrong method using");
-//        }
-        if (!isOnlyTrue((isAbc != null), (letter != null), (query != null))) {
-            throw new ClientException("Wrong method using");
-        }
-        if (isAbc != null) {
-            if (!isAbc.equals("true")) {
-                throw new ClientException("Wrong method using");
-            }
+    public ResponseEntity<?> searchMusicians(@RequestParam("query") String query,
+                                             @RequestHeader("Authorization") String token) throws Exception {
+        userChecker.getUserIdOrThrow(token);
 
-            Map<String, Integer> result = musicianService.getMusicianCountByAbc();
-            return ResponseBuilder.getBuilder().code(HttpStatus.OK).body(result).getResponseEntity();
-        } else if (letter != null) {
-            List<MusicianLetterDto> result = musicianService.getMusiciansByLetter(letter);
-            return ResponseBuilder.getBuilder().code(HttpStatus.OK).body(result).getResponseEntity();
-        } else {
-            List<BriefMusicianDto> result = musicianService.searchMusicians(query);
-            return ResponseBuilder.getBuilder().code(HttpStatus.OK).body(result).getResponseEntity();
-        }
+        List<BriefMusicianDto> result = musicianService.searchMusicians(query);
+        return ResponseBuilder.getBuilder().code(HttpStatus.OK).body(result).getResponseEntity();
     }
 
-    private boolean isOnlyTrue(boolean... args) {
-        boolean isOnly = false;
-        for (boolean arg : args) {
-            if (arg && (!isOnly)) {
-                isOnly = true;
-            } else if (arg && isOnly) {
-                return false;
-            }
-        }
-        return isOnly;
+    @GetMapping("/musicians/abc")
+    public ResponseEntity<?> getMusiciansAbcList(@RequestHeader("Authorization") String token) throws Exception {
+        userChecker.checkAdmin(token);
+        Map<String, Integer> result = musicianService.getMusicianCountByAbc();
+        return ResponseBuilder.getBuilder().code(HttpStatus.OK).body(result).getResponseEntity();
+    }
+
+    @GetMapping("/musicians/letter")
+    public ResponseEntity<?> getMusiciansByLetter(@RequestParam("letter") String letter,
+                                                  @RequestHeader("Authorization") String token) throws Exception {
+        userChecker.checkAdmin(token);
+        List<MusicianLetterDto> result = musicianService.getMusiciansByLetter(letter);
+        return ResponseBuilder.getBuilder().code(HttpStatus.OK).body(result).getResponseEntity();
     }
 
     @PutMapping(path = "/musician/{musicianId}/image", consumes = "multipart/form-data")
