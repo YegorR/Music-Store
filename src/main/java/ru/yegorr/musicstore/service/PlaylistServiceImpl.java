@@ -9,11 +9,15 @@ import ru.yegorr.musicstore.dto.request.IdDto;
 import ru.yegorr.musicstore.dto.response.BriefPlaylistDto;
 import ru.yegorr.musicstore.dto.response.PlaylistDto;
 import ru.yegorr.musicstore.entity.*;
-import ru.yegorr.musicstore.exception.*;
+import ru.yegorr.musicstore.exception.ClientException;
+import ru.yegorr.musicstore.exception.ServerException;
+import ru.yegorr.musicstore.exception.SuddenException;
 import ru.yegorr.musicstore.repository.*;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
@@ -67,8 +71,8 @@ public class PlaylistServiceImpl implements PlaylistService {
 
         playlistEntity = playlistRepository.save(playlistEntity);
 
-        //TODO fix
-        UserEntity user = userRepository.findById(userId).get();
+        UserEntity user = userRepository.findById(userId).
+                orElseThrow(() -> new SuddenException("The user should exist!"));
 
         return new PlaylistDto(playlistEntity, user.getNickname());
     }
