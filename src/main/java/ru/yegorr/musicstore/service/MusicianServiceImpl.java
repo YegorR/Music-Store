@@ -6,9 +6,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import ru.yegorr.musicstore.dto.response.AlbumDescriptionDto;
-import ru.yegorr.musicstore.dto.response.MusicianBriefResponseDto;
-import ru.yegorr.musicstore.dto.response.MusicianLetterResponseDto;
-import ru.yegorr.musicstore.dto.response.MusicianResponseDto;
+import ru.yegorr.musicstore.dto.response.BriefMusicianDto;
+import ru.yegorr.musicstore.dto.response.MusicianLetterDto;
+import ru.yegorr.musicstore.dto.response.MusicianDto;
 import ru.yegorr.musicstore.entity.AlbumEntity;
 import ru.yegorr.musicstore.entity.MusicianEntity;
 import ru.yegorr.musicstore.exception.ClientException;
@@ -32,7 +32,7 @@ public class MusicianServiceImpl implements MusicianService {
 
     @Transactional
     @Override
-    public MusicianResponseDto createMusician(String name, String description) {
+    public MusicianDto createMusician(String name, String description) {
         MusicianEntity musician = new MusicianEntity();
         musician.setName(name);
         musician.setDescription(description);
@@ -43,7 +43,7 @@ public class MusicianServiceImpl implements MusicianService {
 
     @Transactional
     @Override
-    public MusicianResponseDto changeMusician(Long id, String name, String description) throws ClientException {
+    public MusicianDto changeMusician(Long id, String name, String description) throws ClientException {
         MusicianEntity musician = musicianRepository.findById(id).
                 orElseThrow(() -> new ClientException(HttpStatus.NOT_FOUND, "The musician is not exists"));
 
@@ -66,7 +66,7 @@ public class MusicianServiceImpl implements MusicianService {
 
     @Transactional
     @Override
-    public MusicianResponseDto getMusician(Long id) throws ClientException {
+    public MusicianDto getMusician(Long id) throws ClientException {
         Optional<MusicianEntity> musician = musicianRepository.findById(id);
         if (musician.isEmpty()) {
             throw new ClientException(HttpStatus.NOT_FOUND, "The musician is not exists");
@@ -85,16 +85,16 @@ public class MusicianServiceImpl implements MusicianService {
         return result;
     }
 
-    private MusicianResponseDto translateEntityToDto(MusicianEntity entity) {
-        MusicianResponseDto musicianResponseDto = new MusicianResponseDto();
-        musicianResponseDto.setId(entity.getMusicianId());
-        musicianResponseDto.setDescription(entity.getDescription());
-        musicianResponseDto.setName(entity.getName());
+    private MusicianDto translateEntityToDto(MusicianEntity entity) {
+        MusicianDto musicianDto = new MusicianDto();
+        musicianDto.setId(entity.getMusicianId());
+        musicianDto.setDescription(entity.getDescription());
+        musicianDto.setName(entity.getName());
 
         List<AlbumEntity> albumsAndSingles = entity.getAlbums();
 
         if (albumsAndSingles == null) {
-            return musicianResponseDto;
+            return musicianDto;
         }
 
         List<AlbumDescriptionDto> albums = new ArrayList<>();
@@ -114,17 +114,17 @@ public class MusicianServiceImpl implements MusicianService {
             }
         }
 
-        musicianResponseDto.setSingles(singles);
-        musicianResponseDto.setAlbums(albums);
+        musicianDto.setSingles(singles);
+        musicianDto.setAlbums(albums);
 
-        return musicianResponseDto;
+        return musicianDto;
     }
 
     @Override
     @Transactional
-    public List<MusicianLetterResponseDto> getMusiciansByLetter(String letter) {
+    public List<MusicianLetterDto> getMusiciansByLetter(String letter) {
         return musicianRepository.findAllByNameStartingWithIgnoreCase(letter).stream().map((entity) -> {
-            MusicianLetterResponseDto dto = new MusicianLetterResponseDto();
+            MusicianLetterDto dto = new MusicianLetterDto();
             dto.setId(entity.getMusicianId());
             dto.setName(entity.getName());
             return dto;
@@ -153,9 +153,9 @@ public class MusicianServiceImpl implements MusicianService {
 
     @Override
     @Transactional
-    public List<MusicianBriefResponseDto> searchMusicians(String query) {
+    public List<BriefMusicianDto> searchMusicians(String query) {
         return musicianRepository.findAllByNameContainingIgnoreCase(query).stream().map((entity) -> {
-            MusicianBriefResponseDto dto = new MusicianBriefResponseDto();
+            BriefMusicianDto dto = new BriefMusicianDto();
             dto.setName(entity.getName());
             dto.setId(entity.getMusicianId());
             return dto;

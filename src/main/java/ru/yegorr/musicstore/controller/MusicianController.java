@@ -5,10 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.yegorr.musicstore.dto.request.MusicianDto;
-import ru.yegorr.musicstore.dto.response.MusicianBriefResponseDto;
-import ru.yegorr.musicstore.dto.response.MusicianLetterResponseDto;
-import ru.yegorr.musicstore.dto.response.MusicianResponseDto;
+import ru.yegorr.musicstore.dto.response.BriefMusicianDto;
+import ru.yegorr.musicstore.dto.response.MusicianLetterDto;
+import ru.yegorr.musicstore.dto.response.MusicianDto;
 import ru.yegorr.musicstore.response.ResponseBuilder;
 import ru.yegorr.musicstore.exception.ClientException;
 import ru.yegorr.musicstore.security.UserChecker;
@@ -32,23 +31,23 @@ public class MusicianController {
     }
 
     @PostMapping(path = "/musician", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<?> createMusician(@RequestBody MusicianDto musicianDto,
+    public ResponseEntity<?> createMusician(@RequestBody ru.yegorr.musicstore.dto.request.MusicianDto musicianDto,
                                             @RequestHeader("Authorization") String token) throws Exception {
         userChecker.checkAdmin(token);
 
-        MusicianResponseDto musicianResponseDto =
+        MusicianDto musicianResponseDto =
                 musicianService.createMusician(musicianDto.getName(), musicianDto.getDescription());
 
         return ResponseBuilder.getBuilder().code(HttpStatus.CREATED).body(musicianResponseDto).getResponseEntity();
     }
 
     @PutMapping("/musician/{musicianId}")
-    public ResponseEntity<?> changeMusician(@RequestBody MusicianDto musicianDto,
+    public ResponseEntity<?> changeMusician(@RequestBody ru.yegorr.musicstore.dto.request.MusicianDto musicianDto,
                                             @PathVariable("musicianId") Long musicianId,
                                             @RequestHeader("Authorization") String token) throws Exception {
         userChecker.checkAdmin(token);
 
-        MusicianResponseDto musicianResponseDto = musicianService.changeMusician(musicianId, musicianDto.getName(),
+        MusicianDto musicianResponseDto = musicianService.changeMusician(musicianId, musicianDto.getName(),
                 musicianDto.getDescription());
 
         return ResponseBuilder.getBuilder().body(musicianResponseDto).code(HttpStatus.OK).getResponseEntity();
@@ -69,8 +68,8 @@ public class MusicianController {
     public ResponseEntity<?> getMusician(@PathVariable("musicianId") Long musicianId,
                                          @RequestHeader("Authorization") String token) throws Exception {
         userChecker.getUserIdOrThrow(token);
-        MusicianResponseDto musicianResponseDto = musicianService.getMusician(musicianId);
-        return ResponseBuilder.getBuilder().code(HttpStatus.OK).body(musicianResponseDto).getResponseEntity();
+        MusicianDto musicianDto = musicianService.getMusician(musicianId);
+        return ResponseBuilder.getBuilder().code(HttpStatus.OK).body(musicianDto).getResponseEntity();
     }
 
     // TODO fix method
@@ -99,10 +98,10 @@ public class MusicianController {
             Map<String, Integer> result = musicianService.getMusicianCountByAbc();
             return ResponseBuilder.getBuilder().code(HttpStatus.OK).body(result).getResponseEntity();
         } else if (letter != null) {
-            List<MusicianLetterResponseDto> result = musicianService.getMusiciansByLetter(letter);
+            List<MusicianLetterDto> result = musicianService.getMusiciansByLetter(letter);
             return ResponseBuilder.getBuilder().code(HttpStatus.OK).body(result).getResponseEntity();
         } else {
-            List<MusicianBriefResponseDto> result = musicianService.searchMusicians(query);
+            List<BriefMusicianDto> result = musicianService.searchMusicians(query);
             return ResponseBuilder.getBuilder().code(HttpStatus.OK).body(result).getResponseEntity();
         }
     }

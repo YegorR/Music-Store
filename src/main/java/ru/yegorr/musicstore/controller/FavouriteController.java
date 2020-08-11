@@ -4,9 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.yegorr.musicstore.dto.request.SetFavouriteRequest;
+import ru.yegorr.musicstore.dto.request.SetFavouriteDto;
 import ru.yegorr.musicstore.response.ResponseBuilder;
-import ru.yegorr.musicstore.dto.response.TrackFullResponseDto;
+import ru.yegorr.musicstore.dto.response.TrackWithPlaysNumberDto;
 import ru.yegorr.musicstore.security.UserChecker;
 import ru.yegorr.musicstore.service.FavouriteService;
 
@@ -26,7 +26,7 @@ public class FavouriteController {
     }
 
     @PutMapping(path = "/favourite")
-    public ResponseEntity<?> setFavourite(@RequestBody SetFavouriteRequest favouriteRequest,
+    public ResponseEntity<?> setFavourite(@RequestBody SetFavouriteDto favouriteRequest,
                                           @RequestHeader("Authorization") String token) throws Exception {
         Long userId = userChecker.getUserIdOrThrow(token);
 
@@ -39,7 +39,7 @@ public class FavouriteController {
     public ResponseEntity<?> getFavourite(@RequestHeader("Authorization") String token) throws Exception {
         Long userId = userChecker.getUserIdOrThrow(token);
 
-        List<TrackFullResponseDto> response = favouriteService.getFavouriteList(userId);
+        List<TrackWithPlaysNumberDto> response = favouriteService.getFavouriteList(userId);
         return ResponseBuilder.getBuilder().code(HttpStatus.OK).body(response).getResponseEntity();
     }
 }

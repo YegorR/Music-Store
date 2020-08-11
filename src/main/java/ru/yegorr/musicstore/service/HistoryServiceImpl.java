@@ -3,7 +3,7 @@ package ru.yegorr.musicstore.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.yegorr.musicstore.dto.response.TrackSuperFullResponseDto;
+import ru.yegorr.musicstore.dto.response.FullTrackDto;
 import ru.yegorr.musicstore.entity.FavouriteEntity;
 import ru.yegorr.musicstore.entity.HistoryEntity;
 import ru.yegorr.musicstore.entity.TrackEntity;
@@ -30,7 +30,7 @@ public class HistoryServiceImpl implements HistoryService {
 
     @Override
     @Transactional
-    public List<TrackSuperFullResponseDto> getHistory(Long userId) {
+    public List<FullTrackDto> getHistory(Long userId) {
         List<TrackEntity> tracks = historyRepository.findTop50ByUserIdOrderByPlayTimeDesc(userId).stream().
                 map(HistoryEntity::getTrack).
                 collect(Collectors.toList());
@@ -38,7 +38,7 @@ public class HistoryServiceImpl implements HistoryService {
                 map(FavouriteEntity::getTrack).
                 collect(Collectors.toSet());
         return tracks.stream().map(trackEntity -> {
-            TrackSuperFullResponseDto dto = new TrackSuperFullResponseDto();
+            FullTrackDto dto = new FullTrackDto();
             dto.setId(trackEntity.getTrackId());
             dto.setName(trackEntity.getName());
             dto.setPlaysNumber(trackEntity.getPlaysNumber());

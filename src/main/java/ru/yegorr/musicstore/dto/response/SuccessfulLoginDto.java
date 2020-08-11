@@ -1,6 +1,6 @@
 package ru.yegorr.musicstore.dto.response;
 
-public class LoginResponseDto {
+public class SuccessfulLoginDto {
     private String token;
 
     private Long id;

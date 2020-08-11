@@ -7,28 +7,28 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class PlaylistResponseDto {
+public class PlaylistDto {
     private Long id;
 
     private String author;
 
     private String name;
 
-    private List<TrackSuperFullResponseDto> tracks;
+    private List<FullTrackDto> tracks;
 
-    public PlaylistResponseDto() {
+    public PlaylistDto() {
     }
 
-    public PlaylistResponseDto(PlaylistEntity entity, Iterator<Boolean> isFavouriteIterator) {
+    public PlaylistDto(PlaylistEntity entity, Iterator<Boolean> isFavouriteIterator) {
         id = entity.getPlaylistId();
         author = entity.getUser().getNickname();
         name = entity.getName();
         tracks = entity.getTracks().stream().
-                map(track -> new TrackSuperFullResponseDto(track.getTrack(), isFavouriteIterator.next())).
+                map(track -> new FullTrackDto(track.getTrack(), isFavouriteIterator.next())).
                 collect(Collectors.toList());
     }
 
-    public PlaylistResponseDto(PlaylistEntity entity, String authorName) {
+    public PlaylistDto(PlaylistEntity entity, String authorName) {
         id = entity.getPlaylistId();
         author = authorName;
         name = entity.getName();
@@ -59,11 +59,11 @@ public class PlaylistResponseDto {
         this.name = name;
     }
 
-    public List<TrackSuperFullResponseDto> getTracks() {
+    public List<FullTrackDto> getTracks() {
         return tracks;
     }
 
-    public void setTracks(List<TrackSuperFullResponseDto> tracks) {
+    public void setTracks(List<FullTrackDto> tracks) {
         this.tracks = tracks;
     }
 }

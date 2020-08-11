@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import ru.yegorr.musicstore.dto.request.IdDto;
-import ru.yegorr.musicstore.dto.response.PlaylistBriefDto;
-import ru.yegorr.musicstore.dto.response.PlaylistResponseDto;
+import ru.yegorr.musicstore.dto.response.BriefPlaylistDto;
+import ru.yegorr.musicstore.dto.response.PlaylistDto;
 import ru.yegorr.musicstore.entity.*;
 import ru.yegorr.musicstore.exception.*;
 import ru.yegorr.musicstore.repository.*;
@@ -37,7 +37,7 @@ public class PlaylistServiceImpl implements PlaylistService {
         this.favouriteRepository = favouriteRepository;
     }
 
-    private PlaylistResponseDto getPlaylistWithFavourites(Long userId, PlaylistEntity playlistEntity) {
+    private PlaylistDto getPlaylistWithFavourites(Long userId, PlaylistEntity playlistEntity) {
         List<TrackEntity> tracks = playlistEntity.getTracks().stream().
                 map(PlaylistTrackEntity::getTrack).collect(Collectors.toList());
         Set<TrackEntity> favourites = favouriteRepository.findAllByUserIdAndTrackIn(userId, tracks).stream().
@@ -45,11 +45,11 @@ public class PlaylistServiceImpl implements PlaylistService {
         List<Boolean> isFavourite = new ArrayList<>();
         tracks.forEach((track) -> isFavourite.add(favourites.contains(track)));
 
-        return new PlaylistResponseDto(playlistEntity, isFavourite.iterator());
+        return new PlaylistDto(playlistEntity, isFavourite.iterator());
     }
 
     @Override
-    public PlaylistResponseDto getPlaylist(Long userId, Long playlistId) throws ClientException {
+    public PlaylistDto getPlaylist(Long userId, Long playlistId) throws ClientException {
         PlaylistEntity playlistEntity = playlistRepository.
                 findById(playlistId).
                 orElseThrow(() -> new ClientException(HttpStatus.NOT_FOUND, "The playlist is not exists"));
@@ -59,7 +59,7 @@ public class PlaylistServiceImpl implements PlaylistService {
 
     @Override
     @Transactional
-    public PlaylistResponseDto createPlaylist(Long userId, String name) {
+    public PlaylistDto createPlaylist(Long userId, String name) {
 
         PlaylistEntity playlistEntity = new PlaylistEntity();
         playlistEntity.setUserId(userId);
@@ -70,12 +70,12 @@ public class PlaylistServiceImpl implements PlaylistService {
         //TODO fix
         UserEntity user = userRepository.findById(userId).get();
 
-        return new PlaylistResponseDto(playlistEntity, user.getNickname());
+        return new PlaylistDto(playlistEntity, user.getNickname());
     }
 
     @Override
     @Transactional
-    public PlaylistResponseDto changePlaylist(Long userId, Long playlistId, String name, List<IdDto> tracks) throws ClientException {
+    public PlaylistDto changePlaylist(Long userId, Long playlistId, String name, List<IdDto> tracks) throws ClientException {
         PlaylistEntity playlistEntity = playlistRepository.
                 findById(playlistId).
                 orElseThrow(() -> new ClientException(HttpStatus.NOT_FOUND, "The playlist is not exists"));
@@ -141,17 +141,17 @@ public class PlaylistServiceImpl implements PlaylistService {
 
     @Override
     @Transactional
-    public List<PlaylistBriefDto> searchPlaylists(String query) {
+    public List<BriefPlaylistDto> searchPlaylists(String query) {
         return playlistRepository.findAllByNameContainingIgnoreCase(query).stream().
-                map(PlaylistBriefDto::new).
+                map(BriefPlaylistDto::new).
                 collect(Collectors.toList());
     }
 
     @Override
     @Transactional
-    public List<PlaylistBriefDto> getPlaylistsOfUser(Long userId) {
+    public List<BriefPlaylistDto> getPlaylistsOfUser(Long userId) {
         return playlistRepository.findAllByUserId(userId).stream().
-                map(PlaylistBriefDto::new).
+                map(BriefPlaylistDto::new).
                 collect(Collectors.toList());
     }
 

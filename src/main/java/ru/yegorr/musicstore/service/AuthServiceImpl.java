@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.yegorr.musicstore.security.ActualUserInformation;
 import ru.yegorr.musicstore.dto.request.LoginDto;
-import ru.yegorr.musicstore.dto.response.LoginResponseDto;
+import ru.yegorr.musicstore.dto.response.SuccessfulLoginDto;
 import ru.yegorr.musicstore.dto.request.RegistrationDto;
 import ru.yegorr.musicstore.entity.UserEntity;
 import ru.yegorr.musicstore.exception.*;
@@ -55,7 +55,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public LoginResponseDto login(LoginDto userLogin) throws ClientException {
+    public SuccessfulLoginDto login(LoginDto userLogin) throws ClientException {
         UserEntity user = userRepository.findByEmail(userLogin.getEmail());
         if (user == null) {
             throw new ClientException(HttpStatus.UNAUTHORIZED, "Wrong login or password");
@@ -68,13 +68,13 @@ public class AuthServiceImpl implements AuthService {
 
         String token = tokenHandler.getToken(user.getUserId());
 
-        LoginResponseDto loginResponseDto = new LoginResponseDto();
-        loginResponseDto.setId(user.getUserId());
-        loginResponseDto.setNickname(user.getNickname());
-        loginResponseDto.setToken(token);
-        loginResponseDto.setAdmin(user.getAdmin());
+        SuccessfulLoginDto successfulLoginDto = new SuccessfulLoginDto();
+        successfulLoginDto.setId(user.getUserId());
+        successfulLoginDto.setNickname(user.getNickname());
+        successfulLoginDto.setToken(token);
+        successfulLoginDto.setAdmin(user.getAdmin());
 
-        return loginResponseDto;
+        return successfulLoginDto;
     }
 
     @Override

@@ -5,9 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.yegorr.musicstore.dto.request.ChangeAlbumRequestDto;
-import ru.yegorr.musicstore.dto.request.CreateAlbumRequestDto;
-import ru.yegorr.musicstore.dto.response.AlbumResponseDto;
+import ru.yegorr.musicstore.dto.request.ChangeAlbumDto;
+import ru.yegorr.musicstore.dto.request.CreateAlbumDto;
+import ru.yegorr.musicstore.dto.response.FullAlbumDto;
 import ru.yegorr.musicstore.dto.response.BriefAlbumDescriptionDto;
 import ru.yegorr.musicstore.response.ResponseBuilder;
 import ru.yegorr.musicstore.exception.ClientException;
@@ -31,22 +31,22 @@ public class AlbumController {
     }
 
     @PostMapping("/musician/{musicianId}/album")
-    public ResponseEntity<?> createAlbum(@RequestBody CreateAlbumRequestDto request,
+    public ResponseEntity<?> createAlbum(@RequestBody CreateAlbumDto request,
                                          @PathVariable("musicianId") Long musicianId,
                                          @RequestHeader("Authorization") String token) throws Exception {
         userChecker.checkAdmin(token);
 
-        AlbumResponseDto response = albumService.createAlbum(request, musicianId);
+        FullAlbumDto response = albumService.createAlbum(request, musicianId);
         return ResponseBuilder.getBuilder().body(response).code(HttpStatus.CREATED).getResponseEntity();
     }
 
     @PutMapping("/album/{albumId}")
-    public ResponseEntity<?> changeAlbum(@RequestBody ChangeAlbumRequestDto request,
+    public ResponseEntity<?> changeAlbum(@RequestBody ChangeAlbumDto request,
                                          @PathVariable("albumId") Long albumId,
                                          @RequestHeader("Authorization") String token) throws Exception {
         userChecker.checkAdmin(token);
 
-        AlbumResponseDto response = albumService.changeAlbum(request, albumId);
+        FullAlbumDto response = albumService.changeAlbum(request, albumId);
         return ResponseBuilder.getBuilder().body(response).code(HttpStatus.OK).getResponseEntity();
     }
 
@@ -54,7 +54,7 @@ public class AlbumController {
     public ResponseEntity<?> getAlbum(@PathVariable("albumId") Long albumId,
                                       @RequestHeader("Authorization") String token) throws Exception {
         Long userId = userChecker.getUserIdOrThrow(token);
-        AlbumResponseDto response = albumService.getAlbum(albumId, userId);
+        FullAlbumDto response = albumService.getAlbum(albumId, userId);
         return ResponseBuilder.getBuilder().body(response).code(HttpStatus.OK).getResponseEntity();
     }
 

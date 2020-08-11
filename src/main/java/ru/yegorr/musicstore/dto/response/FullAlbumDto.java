@@ -1,4 +1,4 @@
-package ru.yegorr.musicstore.dto.request;
+package ru.yegorr.musicstore.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -6,7 +6,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChangeAlbumRequestDto {
+public class FullAlbumDto {
+    private Long id;
+
     private String name;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
@@ -14,7 +16,17 @@ public class ChangeAlbumRequestDto {
 
     private boolean single;
 
-    private List<Track> tracks = new ArrayList<>();
+    private BriefMusicianDto musician;
+
+    private List<TrackDescirptionDto> tracks = new ArrayList<>();
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -40,33 +52,19 @@ public class ChangeAlbumRequestDto {
         this.single = single;
     }
 
-    public List<Track> getTracks() {
+    public BriefMusicianDto getMusician() {
+        return musician;
+    }
+
+    public void setMusician(BriefMusicianDto musician) {
+        this.musician = musician;
+    }
+
+    public List<TrackDescirptionDto> getTracks() {
         return tracks;
     }
 
-    public void setTracks(List<Track> tracks) {
+    public void setTracks(List<TrackDescirptionDto> tracks) {
         this.tracks = tracks;
-    }
-
-    public static class Track {
-        private Long id;
-
-        private String name;
-
-        public Long getId() {
-            return id;
-        }
-
-        public void setId(Long id) {
-            this.id = id;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
     }
 }

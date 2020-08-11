@@ -3,9 +3,10 @@ package ru.yegorr.musicstore.dto.request;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
-public class CreateAlbumRequestDto {
+public class ChangeAlbumDto {
     private String name;
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
@@ -13,19 +14,7 @@ public class CreateAlbumRequestDto {
 
     private boolean single;
 
-    private List<Track> tracks;
-
-    public static class Track {
-        private String name;
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-    }
+    private List<Track> tracks = new ArrayList<>();
 
     public String getName() {
         return name;
@@ -57,5 +46,27 @@ public class CreateAlbumRequestDto {
 
     public void setTracks(List<Track> tracks) {
         this.tracks = tracks;
+    }
+
+    public static class Track {
+        private Long id;
+
+        private String name;
+
+        public Long getId() {
+            return id;
+        }
+
+        public void setId(Long id) {
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
     }
 }

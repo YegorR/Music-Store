@@ -6,8 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.yegorr.musicstore.response.ResponseBuilder;
-import ru.yegorr.musicstore.dto.response.TrackFullResponseDto;
-import ru.yegorr.musicstore.dto.response.TrackResponseDto;
+import ru.yegorr.musicstore.dto.response.TrackWithPlaysNumberDto;
+import ru.yegorr.musicstore.dto.response.TrackDto;
 import ru.yegorr.musicstore.exception.ClientException;
 import ru.yegorr.musicstore.security.UserChecker;
 import ru.yegorr.musicstore.service.TrackService;
@@ -54,8 +54,8 @@ public class AudioController {
         throws Exception {
         userChecker.getUserIdOrThrow(token);
 
-        TrackResponseDto trackResponseDto = trackService.getTrackInfo(trackId);
-        return ResponseBuilder.getBuilder().body(trackResponseDto).code(HttpStatus.OK).getResponseEntity();
+        TrackDto trackDto = trackService.getTrackInfo(trackId);
+        return ResponseBuilder.getBuilder().body(trackDto).code(HttpStatus.OK).getResponseEntity();
     }
 
     @GetMapping(path = "/tracks")
@@ -63,7 +63,7 @@ public class AudioController {
             throws Exception {
         userChecker.getUserIdOrThrow(token);
 
-        List<TrackFullResponseDto> result = trackService.searchTracks(query);
+        List<TrackWithPlaysNumberDto> result = trackService.searchTracks(query);
         return ResponseBuilder.getBuilder().body(result).code(HttpStatus.OK).getResponseEntity();
     }
 }

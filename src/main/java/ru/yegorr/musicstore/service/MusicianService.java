@@ -1,9 +1,9 @@
 package ru.yegorr.musicstore.service;
 
 import org.springframework.web.multipart.MultipartFile;
-import ru.yegorr.musicstore.dto.response.MusicianBriefResponseDto;
-import ru.yegorr.musicstore.dto.response.MusicianLetterResponseDto;
-import ru.yegorr.musicstore.dto.response.MusicianResponseDto;
+import ru.yegorr.musicstore.dto.response.BriefMusicianDto;
+import ru.yegorr.musicstore.dto.response.MusicianLetterDto;
+import ru.yegorr.musicstore.dto.response.MusicianDto;
 import ru.yegorr.musicstore.exception.ClientException;
 import ru.yegorr.musicstore.exception.ServerException;
 
@@ -11,21 +11,21 @@ import java.util.List;
 import java.util.Map;
 
 public interface MusicianService {
-    MusicianResponseDto createMusician(String name, String description);
+    MusicianDto createMusician(String name, String description);
 
-    MusicianResponseDto changeMusician(Long id, String name, String description) throws ClientException;
+    MusicianDto changeMusician(Long id, String name, String description) throws ClientException;
 
     void deleteMusician(Long id) throws ClientException;
 
-    MusicianResponseDto getMusician(Long id) throws ClientException;
+    MusicianDto getMusician(Long id) throws ClientException;
 
     Map<String, Integer> getMusicianCountByAbc();
 
-    List<MusicianLetterResponseDto> getMusiciansByLetter(String letter);
+    List<MusicianLetterDto> getMusiciansByLetter(String letter);
 
     void saveImage(Long musicianId, MultipartFile image) throws ServerException, ClientException;
 
     byte[] getImage(Long musicianId) throws ClientException;
 
-    List<MusicianBriefResponseDto> searchMusicians(String query);
+    List<BriefMusicianDto> searchMusicians(String query);
 }

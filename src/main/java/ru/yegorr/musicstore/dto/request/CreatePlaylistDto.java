@@ -1,6 +1,6 @@
 package ru.yegorr.musicstore.dto.request;
 
-public class CreatePlaylistRequest {
+public class CreatePlaylistDto {
     private String name;
 
     public String getName() {

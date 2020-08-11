@@ -14,7 +14,7 @@ public class BriefAlbumDescriptionDto {
 
     private boolean single;
 
-    private MusicianBriefResponseDto musician;
+    private BriefMusicianDto musician;
 
     public Long getId() {
         return id;
@@ -48,11 +48,11 @@ public class BriefAlbumDescriptionDto {
         this.single = single;
     }
 
-    public MusicianBriefResponseDto getMusician() {
+    public BriefMusicianDto getMusician() {
         return musician;
     }
 
-    public void setMusician(MusicianBriefResponseDto musician) {
+    public void setMusician(BriefMusicianDto musician) {
         this.musician = musician;
     }
 }

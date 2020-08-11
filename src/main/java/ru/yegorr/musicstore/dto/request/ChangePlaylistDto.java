@@ -2,7 +2,7 @@ package ru.yegorr.musicstore.dto.request;
 
 import java.util.List;
 
-public class ChangePlaylistRequest {
+public class ChangePlaylistDto {
     private String name;
 
     private List<IdDto> tracks;

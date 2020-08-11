@@ -1,12 +1,10 @@
 package ru.yegorr.musicstore.dto.response;
 
-import ru.yegorr.musicstore.dto.response.AlbumDescriptionDto;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class MusicianResponseDto {
+public class MusicianDto {
     private Long id;
 
     private String name;
@@ -61,7 +59,7 @@ public class MusicianResponseDto {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        MusicianResponseDto that = (MusicianResponseDto) o;
+        MusicianDto that = (MusicianDto) o;
         return Objects.equals(id, that.id);
     }
 

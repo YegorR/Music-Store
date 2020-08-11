@@ -5,10 +5,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.yegorr.musicstore.dto.request.ChangePlaylistRequest;
-import ru.yegorr.musicstore.dto.request.CreatePlaylistRequest;
-import ru.yegorr.musicstore.dto.response.PlaylistBriefDto;
-import ru.yegorr.musicstore.dto.response.PlaylistResponseDto;
+import ru.yegorr.musicstore.dto.request.ChangePlaylistDto;
+import ru.yegorr.musicstore.dto.request.CreatePlaylistDto;
+import ru.yegorr.musicstore.dto.response.BriefPlaylistDto;
+import ru.yegorr.musicstore.dto.response.PlaylistDto;
 import ru.yegorr.musicstore.response.ResponseBuilder;
 import ru.yegorr.musicstore.security.UserChecker;
 import ru.yegorr.musicstore.service.PlaylistService;
@@ -33,27 +33,27 @@ public class PlaylistController {
                                          @RequestHeader("Authorization") String token) throws Exception {
         Long userId = userChecker.getUserIdOrThrow(token);
 
-        PlaylistResponseDto response = playlistService.getPlaylist(userId, playlistId);
+        PlaylistDto response = playlistService.getPlaylist(userId, playlistId);
 
         return ResponseBuilder.getBuilder().body(response).code(HttpStatus.OK).getResponseEntity();
     }
 
     @PostMapping(path = "/playlist")
-    public ResponseEntity<?> createPlaylist(@RequestBody CreatePlaylistRequest request,
+    public ResponseEntity<?> createPlaylist(@RequestBody CreatePlaylistDto request,
                                             @RequestHeader("Authorization") String token) throws Exception {
         Long userId = userChecker.getUserIdOrThrow(token);
 
-        PlaylistResponseDto response = playlistService.createPlaylist(userId, request.getName());
+        PlaylistDto response = playlistService.createPlaylist(userId, request.getName());
 
         return ResponseBuilder.getBuilder().body(response).code(HttpStatus.CREATED).getResponseEntity();
     }
 
     @PutMapping(path = "/playlist/{playlistId}")
-    public ResponseEntity<?> changePlaylist(@RequestBody ChangePlaylistRequest request, @PathVariable Long playlistId,
+    public ResponseEntity<?> changePlaylist(@RequestBody ChangePlaylistDto request, @PathVariable Long playlistId,
                                             @RequestHeader("Authorization") String token) throws Exception {
         Long userId = userChecker.getUserIdOrThrow(token);
 
-        PlaylistResponseDto response = playlistService.changePlaylist(userId, playlistId,
+        PlaylistDto response = playlistService.changePlaylist(userId, playlistId,
                 request.getName(), request.getTracks());
 
         return ResponseBuilder.getBuilder().body(response).code(HttpStatus.OK).getResponseEntity();
@@ -96,7 +96,7 @@ public class PlaylistController {
             throws Exception {
         userChecker.getUserIdOrThrow(token);
 
-        List<PlaylistBriefDto> response = playlistService.getPlaylistsOfUser(userId);
+        List<BriefPlaylistDto> response = playlistService.getPlaylistsOfUser(userId);
 
         return ResponseBuilder.getBuilder().body(response).code(HttpStatus.OK).getResponseEntity();
     }
@@ -107,7 +107,7 @@ public class PlaylistController {
             throws Exception {
         userChecker.getUserIdOrThrow(token);
 
-        List<PlaylistBriefDto> response = playlistService.searchPlaylists(query);
+        List<BriefPlaylistDto> response = playlistService.searchPlaylists(query);
 
         return ResponseBuilder.getBuilder().body(response).code(HttpStatus.OK).getResponseEntity();
     }

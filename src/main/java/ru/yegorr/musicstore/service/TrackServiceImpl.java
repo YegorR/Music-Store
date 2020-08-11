@@ -5,8 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import ru.yegorr.musicstore.dto.response.TrackFullResponseDto;
-import ru.yegorr.musicstore.dto.response.TrackResponseDto;
+import ru.yegorr.musicstore.dto.response.TrackWithPlaysNumberDto;
+import ru.yegorr.musicstore.dto.response.TrackDto;
 import ru.yegorr.musicstore.entity.HistoryEntity;
 import ru.yegorr.musicstore.entity.TrackEntity;
 import ru.yegorr.musicstore.exception.ClientException;
@@ -62,10 +62,10 @@ public class TrackServiceImpl implements TrackService {
 
     @Override
     @Transactional
-    public TrackResponseDto getTrackInfo(Long trackId) throws ClientException {
+    public TrackDto getTrackInfo(Long trackId) throws ClientException {
         TrackEntity track = trackRepository.findById(trackId).orElseThrow(() ->
                 new ClientException(HttpStatus.NOT_FOUND, "The track is not exist"));
-        TrackResponseDto response = new TrackResponseDto();
+        TrackDto response = new TrackDto();
         response.setId(trackId);
         response.setName(track.getName());
         response.setAlbumId(track.getAlbum().getAlbumId());
@@ -77,9 +77,9 @@ public class TrackServiceImpl implements TrackService {
     }
 
     @Override
-    public List<TrackFullResponseDto> searchTracks(String query) {
+    public List<TrackWithPlaysNumberDto> searchTracks(String query) {
         return trackRepository.findAllByNameContainingIgnoreCaseOrderByPlaysNumberDesc(query).stream().map((entity) -> {
-            TrackFullResponseDto dto = new TrackFullResponseDto();
+            TrackWithPlaysNumberDto dto = new TrackWithPlaysNumberDto();
             dto.setId(entity.getTrackId());
             dto.setName(entity.getName());
             dto.setPlaysNumber(entity.getPlaysNumber());

@@ -5,12 +5,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import ru.yegorr.musicstore.dto.request.ChangeAlbumRequestDto;
-import ru.yegorr.musicstore.dto.request.CreateAlbumRequestDto;
-import ru.yegorr.musicstore.dto.response.AlbumResponseDto;
+import ru.yegorr.musicstore.dto.request.ChangeAlbumDto;
+import ru.yegorr.musicstore.dto.request.CreateAlbumDto;
+import ru.yegorr.musicstore.dto.response.FullAlbumDto;
 import ru.yegorr.musicstore.dto.response.BriefAlbumDescriptionDto;
-import ru.yegorr.musicstore.dto.response.MusicianBriefResponseDto;
-import ru.yegorr.musicstore.dto.response.TrackBriefResponseDto;
+import ru.yegorr.musicstore.dto.response.BriefMusicianDto;
+import ru.yegorr.musicstore.dto.response.TrackDescirptionDto;
 import ru.yegorr.musicstore.entity.AlbumEntity;
 import ru.yegorr.musicstore.entity.FavouriteEntity;
 import ru.yegorr.musicstore.entity.MusicianEntity;
@@ -38,7 +38,7 @@ public class AlbumServiceImpl implements AlbumService {
 
     @Override
     @Transactional
-    public AlbumResponseDto createAlbum(CreateAlbumRequestDto createAlbumRequest, Long musicianId) throws ClientException {
+    public FullAlbumDto createAlbum(CreateAlbumDto createAlbumRequest, Long musicianId) throws ClientException {
         if (!musicianRepository.existsById(musicianId)) {
             throw new ClientException(HttpStatus.NOT_FOUND, "The musician is not exists");
         }
@@ -55,7 +55,7 @@ public class AlbumServiceImpl implements AlbumService {
 
         List<TrackEntity> tracks = new ArrayList<>();
         int order = 0;
-        for (CreateAlbumRequestDto.Track track : createAlbumRequest.getTracks()) {
+        for (CreateAlbumDto.Track track : createAlbumRequest.getTracks()) {
             TrackEntity trackEntity = new TrackEntity();
             trackEntity.setName(track.getName());
             trackEntity.setAlbum(album);
@@ -75,7 +75,7 @@ public class AlbumServiceImpl implements AlbumService {
 
     @Override
     @Transactional
-    public AlbumResponseDto changeAlbum(ChangeAlbumRequestDto changeAlbumRequest, Long albumId) throws ClientException {
+    public FullAlbumDto changeAlbum(ChangeAlbumDto changeAlbumRequest, Long albumId) throws ClientException {
         Optional<AlbumEntity> albumOptional = albumRepository.findById(albumId);
         if (albumOptional.isEmpty()) {
             throw new ClientException(HttpStatus.NOT_FOUND, "The album is not exists");
@@ -90,7 +90,7 @@ public class AlbumServiceImpl implements AlbumService {
         List<TrackEntity> newTracks = new ArrayList<>();
 
         int order = 0;
-        for (ChangeAlbumRequestDto.Track track : changeAlbumRequest.getTracks()) {
+        for (ChangeAlbumDto.Track track : changeAlbumRequest.getTracks()) {
             Long id = track.getId();
             TrackEntity trackEntity;
             if (id == null) {
@@ -119,7 +119,7 @@ public class AlbumServiceImpl implements AlbumService {
 
     @Override
     @Transactional
-    public AlbumResponseDto getAlbum(Long albumId, Long userId) throws ClientException {
+    public FullAlbumDto getAlbum(Long albumId, Long userId) throws ClientException {
         AlbumEntity album = albumRepository.findById(albumId)
                 .orElseThrow(() -> new ClientException(HttpStatus.NOT_FOUND, "The album is not exist"));
         return translateEntityToDto(album, userId);
@@ -167,7 +167,7 @@ public class AlbumServiceImpl implements AlbumService {
         dto.setReleaseDate(entity.getReleaseDate());
         dto.setSingle(entity.getSingle());
 
-        MusicianBriefResponseDto musician = new MusicianBriefResponseDto();
+        BriefMusicianDto musician = new BriefMusicianDto();
         musician.setId(entity.getMusician().getMusicianId());
         musician.setName(entity.getMusician().getName());
         dto.setMusician(musician);
@@ -175,14 +175,14 @@ public class AlbumServiceImpl implements AlbumService {
         return dto;
     }
 
-    private AlbumResponseDto translateEntityToDto(AlbumEntity entity, Long userId) {
-        AlbumResponseDto dto = new AlbumResponseDto();
+    private FullAlbumDto translateEntityToDto(AlbumEntity entity, Long userId) {
+        FullAlbumDto dto = new FullAlbumDto();
         dto.setId(entity.getAlbumId());
         dto.setName(entity.getName());
         dto.setReleaseDate(entity.getReleaseDate());
         dto.setSingle(entity.getSingle());
 
-        MusicianBriefResponseDto musician = new MusicianBriefResponseDto();
+        BriefMusicianDto musician = new BriefMusicianDto();
         musician.setId(entity.getMusician().getMusicianId());
         musician.setName(entity.getMusician().getName());
         dto.setMusician(musician);
@@ -196,9 +196,9 @@ public class AlbumServiceImpl implements AlbumService {
         } else {
             favourites = new HashSet<>();
         }
-        List<TrackBriefResponseDto> tracks = new ArrayList<>();
+        List<TrackDescirptionDto> tracks = new ArrayList<>();
         for (TrackEntity trackEntity : entity.getTracks()) {
-            TrackBriefResponseDto track = new TrackBriefResponseDto();
+            TrackDescirptionDto track = new TrackDescirptionDto();
             track.setId(trackEntity.getTrackId());
             track.setPlaysNumber(trackEntity.getPlaysNumber());
             track.setName(trackEntity.getName());
@@ -210,7 +210,7 @@ public class AlbumServiceImpl implements AlbumService {
         return dto;
     }
 
-    private AlbumResponseDto translateEntityToDto(AlbumEntity entity) { //TODO Add version for favourite
+    private FullAlbumDto translateEntityToDto(AlbumEntity entity) { //TODO Add version for favourite
         return translateEntityToDto(entity, null);
     }
 

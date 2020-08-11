@@ -1,8 +1,8 @@
 package ru.yegorr.musicstore.service;
 
 import org.springframework.web.multipart.MultipartFile;
-import ru.yegorr.musicstore.dto.response.TrackFullResponseDto;
-import ru.yegorr.musicstore.dto.response.TrackResponseDto;
+import ru.yegorr.musicstore.dto.response.TrackWithPlaysNumberDto;
+import ru.yegorr.musicstore.dto.response.TrackDto;
 import ru.yegorr.musicstore.exception.ClientException;
 import ru.yegorr.musicstore.exception.ServerException;
 
@@ -13,7 +13,7 @@ public interface TrackService {
 
     byte[] getAudio(Long trackId, Long userId) throws ClientException;
 
-    TrackResponseDto getTrackInfo(Long trackId) throws ClientException;
+    TrackDto getTrackInfo(Long trackId) throws ClientException;
 
-    List<TrackFullResponseDto> searchTracks(String query) throws ClientException;
+    List<TrackWithPlaysNumberDto> searchTracks(String query) throws ClientException;
 }

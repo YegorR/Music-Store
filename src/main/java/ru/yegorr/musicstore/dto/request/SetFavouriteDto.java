@@ -1,6 +1,6 @@
 package ru.yegorr.musicstore.dto.request;
 
-public class SetFavouriteRequest {
+public class SetFavouriteDto {
     private Long id;
 
     private boolean favourite;

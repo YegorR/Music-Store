@@ -1,6 +1,6 @@
 package ru.yegorr.musicstore.dto.response;
 
-public class MusicianBriefResponseDto {
+public class MusicianLetterDto {
     private Long id;
 
     private String name;
