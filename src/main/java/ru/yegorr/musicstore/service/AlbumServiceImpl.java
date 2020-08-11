@@ -7,9 +7,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import ru.yegorr.musicstore.dto.request.ChangeAlbumDto;
 import ru.yegorr.musicstore.dto.request.CreateAlbumDto;
-import ru.yegorr.musicstore.dto.response.FullAlbumDto;
 import ru.yegorr.musicstore.dto.response.BriefAlbumDescriptionDto;
 import ru.yegorr.musicstore.dto.response.BriefMusicianDto;
+import ru.yegorr.musicstore.dto.response.FullAlbumDto;
 import ru.yegorr.musicstore.dto.response.TrackDescriptionDto;
 import ru.yegorr.musicstore.entity.AlbumEntity;
 import ru.yegorr.musicstore.entity.FavouriteEntity;
@@ -210,7 +210,7 @@ public class AlbumServiceImpl implements AlbumService {
         return dto;
     }
 
-    private FullAlbumDto translateEntityToDto(AlbumEntity entity) { //TODO Add version for favourite
+    private FullAlbumDto translateEntityToDto(AlbumEntity entity) {
         return translateEntityToDto(entity, null);
     }
 
