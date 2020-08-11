@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.yegorr.musicstore.dto.request.SetFavouriteRequest;
 import ru.yegorr.musicstore.dto.response.ResponseBuilder;
 import ru.yegorr.musicstore.dto.response.TrackFullResponseDto;
+import ru.yegorr.musicstore.security.UserChecker;
 import ru.yegorr.musicstore.service.FavouriteService;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package ru.yegorr.musicstore.service;
+package ru.yegorr.musicstore.security;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;

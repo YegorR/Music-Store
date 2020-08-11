@@ -4,13 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.yegorr.musicstore.controller.ActualUserInformation;
+import ru.yegorr.musicstore.security.ActualUserInformation;
 import ru.yegorr.musicstore.dto.request.LoginDto;
 import ru.yegorr.musicstore.dto.response.LoginResponseDto;
 import ru.yegorr.musicstore.dto.request.RegistrationDto;
 import ru.yegorr.musicstore.entity.UserEntity;
 import ru.yegorr.musicstore.exception.*;
 import ru.yegorr.musicstore.repository.UserRepository;
+import ru.yegorr.musicstore.security.PasswordHashGenerator;
+import ru.yegorr.musicstore.security.TokenHandler;
 
 import java.util.Arrays;
 import java.util.Optional;

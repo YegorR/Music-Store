@@ -10,6 +10,7 @@ import ru.yegorr.musicstore.dto.response.MusicianLetterResponseDto;
 import ru.yegorr.musicstore.dto.response.MusicianResponseDto;
 import ru.yegorr.musicstore.dto.response.ResponseBuilder;
 import ru.yegorr.musicstore.exception.ClientException;
+import ru.yegorr.musicstore.security.UserChecker;
 import ru.yegorr.musicstore.service.MusicianService;
 
 import java.util.Base64;

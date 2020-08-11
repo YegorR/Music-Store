@@ -1,4 +1,4 @@
-package ru.yegorr.musicstore.service;
+package ru.yegorr.musicstore.security;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import at.favre.lib.crypto.bcrypt.LongPasswordStrategies;

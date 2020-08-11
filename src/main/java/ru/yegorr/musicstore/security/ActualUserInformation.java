@@ -1,4 +1,4 @@
-package ru.yegorr.musicstore.controller;
+package ru.yegorr.musicstore.security;
 
 public class ActualUserInformation {
     private Long userId;

@@ -1,4 +1,4 @@
-package ru.yegorr.musicstore.controller;
+package ru.yegorr.musicstore.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

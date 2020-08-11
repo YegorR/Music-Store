@@ -9,6 +9,7 @@ import ru.yegorr.musicstore.dto.request.CreatePlaylistRequest;
 import ru.yegorr.musicstore.dto.response.PlaylistBriefDto;
 import ru.yegorr.musicstore.dto.response.PlaylistResponseDto;
 import ru.yegorr.musicstore.dto.response.ResponseBuilder;
+import ru.yegorr.musicstore.security.UserChecker;
 import ru.yegorr.musicstore.service.PlaylistService;
 
 import java.util.Base64;
