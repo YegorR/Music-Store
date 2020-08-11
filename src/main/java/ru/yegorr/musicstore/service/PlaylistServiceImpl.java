@@ -24,22 +24,15 @@ import java.util.stream.Collectors;
 @Service
 public class PlaylistServiceImpl implements PlaylistService {
 
-    private final PlaylistRepository playlistRepository;
+    private PlaylistRepository playlistRepository;
 
-    private final FavouriteRepository favouriteRepository;
+    private FavouriteRepository favouriteRepository;
 
     private TrackRepository trackRepository;
 
     private PlaylistTrackRepository playlistTrackRepository;
 
-    @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    public PlaylistServiceImpl(PlaylistRepository playlistRepository, FavouriteRepository favouriteRepository) {
-        this.playlistRepository = playlistRepository;
-        this.favouriteRepository = favouriteRepository;
-    }
 
     private PlaylistDto getPlaylistWithFavourites(Long userId, PlaylistEntity playlistEntity) {
         List<TrackEntity> tracks = playlistEntity.getTracks().stream().
@@ -167,5 +160,20 @@ public class PlaylistServiceImpl implements PlaylistService {
     @Autowired
     public void setPlaylistTrackRepository(PlaylistTrackRepository playlistTrackRepository) {
         this.playlistTrackRepository = playlistTrackRepository;
+    }
+
+    @Autowired
+    public void setPlaylistRepository(PlaylistRepository playlistRepository) {
+        this.playlistRepository = playlistRepository;
+    }
+
+    @Autowired
+    public void setFavouriteRepository(FavouriteRepository favouriteRepository) {
+        this.favouriteRepository = favouriteRepository;
+    }
+
+    @Autowired
+    public void setUserRepository(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 }
