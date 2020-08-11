@@ -1,6 +1,7 @@
 package ru.yegorr.musicstore.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,7 +37,7 @@ public class AlbumController {
         userChecker.checkAdmin(token);
 
         AlbumResponseDto response = albumService.createAlbum(request, musicianId);
-        return ResponseBuilder.getBuilder().body(response).code(201).getResponseEntity();
+        return ResponseBuilder.getBuilder().body(response).code(HttpStatus.CREATED).getResponseEntity();
     }
 
     @PutMapping("/album/{albumId}")
@@ -46,7 +47,7 @@ public class AlbumController {
         userChecker.checkAdmin(token);
 
         AlbumResponseDto response = albumService.changeAlbum(request, albumId);
-        return ResponseBuilder.getBuilder().body(response).code(200).getResponseEntity();
+        return ResponseBuilder.getBuilder().body(response).code(HttpStatus.OK).getResponseEntity();
     }
 
     @GetMapping("/album/{albumId}")
@@ -54,7 +55,7 @@ public class AlbumController {
                                       @RequestHeader("Authorization") String token) throws Exception {
         Long userId = userChecker.getUserIdOrThrow(token);
         AlbumResponseDto response = albumService.getAlbum(albumId, userId);
-        return ResponseBuilder.getBuilder().body(response).code(200).getResponseEntity();
+        return ResponseBuilder.getBuilder().body(response).code(HttpStatus.OK).getResponseEntity();
     }
 
     @DeleteMapping("album/{albumId}")
@@ -62,7 +63,7 @@ public class AlbumController {
                                          @RequestHeader("Authorization") String token) throws Exception {
         userChecker.checkAdmin(token);
         albumService.deleteAlbum(albumId);
-        return ResponseBuilder.getBuilder().code(200).getResponseEntity();
+        return ResponseBuilder.getBuilder().code(HttpStatus.NO_CONTENT).getResponseEntity();
     }
 
     @PutMapping(path = "/album/{albumId}/image",
@@ -72,7 +73,7 @@ public class AlbumController {
                                          @RequestParam("image") MultipartFile cover) throws Exception {
         userChecker.checkAdmin(token);
         albumService.saveCover(albumId, cover);
-        return ResponseBuilder.getBuilder().code(200).getResponseEntity();
+        return ResponseBuilder.getBuilder().code(HttpStatus.OK).getResponseEntity();
     }
 
     @GetMapping(path = "album/{albumId}/image",
@@ -98,6 +99,6 @@ public class AlbumController {
             throw new ClientException("No query");
         }
         List<BriefAlbumDescriptionDto> response = albumService.searchAlbums(query);
-        return ResponseBuilder.getBuilder().code(200).body(response).getResponseEntity();
+        return ResponseBuilder.getBuilder().code(HttpStatus.OK).body(response).getResponseEntity();
     }
 }

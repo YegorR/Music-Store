@@ -33,7 +33,7 @@ public class AudioController {
         userChecker.checkAdmin(token);
         trackService.saveAudio(audio, trackId);
 
-        return ResponseBuilder.getBuilder().code(200).getResponseEntity();
+        return ResponseBuilder.getBuilder().code(HttpStatus.OK).getResponseEntity();
     }
 
     @GetMapping(path = "/track/{trackId}/audio",
@@ -55,7 +55,7 @@ public class AudioController {
         userChecker.getUserIdOrThrow(token);
 
         TrackResponseDto trackResponseDto = trackService.getTrackInfo(trackId);
-        return ResponseBuilder.getBuilder().body(trackResponseDto).code(200).getResponseEntity();
+        return ResponseBuilder.getBuilder().body(trackResponseDto).code(HttpStatus.OK).getResponseEntity();
     }
 
     @GetMapping(path = "/tracks")
@@ -64,6 +64,6 @@ public class AudioController {
         userChecker.getUserIdOrThrow(token);
 
         List<TrackFullResponseDto> result = trackService.searchTracks(query);
-        return ResponseBuilder.getBuilder().body(result).code(200).getResponseEntity();
+        return ResponseBuilder.getBuilder().body(result).code(HttpStatus.OK).getResponseEntity();
     }
 }

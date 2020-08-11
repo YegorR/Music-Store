@@ -35,6 +35,6 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
 
     private ResponseEntity<?> sendResponse(HttpStatus httpStatus, String errorMessage) {
-        return ResponseBuilder.getBuilder().code(httpStatus.value()).error(errorMessage).getResponseEntity();
+        return ResponseBuilder.getBuilder().code(httpStatus).body(errorMessage).getResponseEntity();
     }
 }

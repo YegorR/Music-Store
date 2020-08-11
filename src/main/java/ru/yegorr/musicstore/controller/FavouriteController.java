@@ -1,6 +1,7 @@
 package ru.yegorr.musicstore.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.yegorr.musicstore.dto.request.SetFavouriteRequest;
@@ -31,7 +32,7 @@ public class FavouriteController {
 
         favouriteService.setFavourite(userId, favouriteRequest.getId(), favouriteRequest.isFavourite());
 
-        return ResponseBuilder.getBuilder().code(200).body(favouriteRequest).getResponseEntity();
+        return ResponseBuilder.getBuilder().code(HttpStatus.OK).body(favouriteRequest).getResponseEntity();
     }
 
     @GetMapping(path = "/favourite")
@@ -39,6 +40,6 @@ public class FavouriteController {
         Long userId = userChecker.getUserIdOrThrow(token);
 
         List<TrackFullResponseDto> response = favouriteService.getFavouriteList(userId);
-        return ResponseBuilder.getBuilder().code(200).body(response).getResponseEntity();
+        return ResponseBuilder.getBuilder().code(HttpStatus.OK).body(response).getResponseEntity();
     }
 }

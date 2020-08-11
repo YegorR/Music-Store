@@ -1,6 +1,7 @@
 package ru.yegorr.musicstore.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,7 +28,7 @@ public class AuthController {
     public ResponseEntity<?> register(@RequestBody RegistrationDto userRegistration) throws Exception {
         authService.register(userRegistration);
 
-        return ResponseBuilder.getBuilder().code(200).body("OK").getResponseEntity();
+        return ResponseBuilder.getBuilder().code(HttpStatus.OK).body("OK").getResponseEntity();
     }
 
     @PostMapping(value = "/login",
@@ -36,6 +37,6 @@ public class AuthController {
     public ResponseEntity<?> login(@RequestBody LoginDto userLogin) throws Exception {
         LoginResponseDto loginResponse = authService.login(userLogin);
 
-        return ResponseBuilder.getBuilder().code(200).body(loginResponse).getResponseEntity();
+        return ResponseBuilder.getBuilder().code(HttpStatus.OK).body(loginResponse).getResponseEntity();
     }
 }

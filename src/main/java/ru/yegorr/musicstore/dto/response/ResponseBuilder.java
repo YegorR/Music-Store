@@ -1,5 +1,6 @@
 package ru.yegorr.musicstore.dto.response;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 public class ResponseBuilder {
@@ -15,13 +16,8 @@ public class ResponseBuilder {
         return this;
     }
 
-    public ResponseBuilder code(int code) {
-        response.setCode(code);
-        return this;
-    }
-
-    public ResponseBuilder error(String error) {
-        response.setError(error);
+    public ResponseBuilder code(HttpStatus status) {
+        response.setCode(status.value());
         return this;
     }
 
@@ -30,12 +26,11 @@ public class ResponseBuilder {
     }
 }
 
+
 class ResponseDto {
-    private int code;
+    private int code = 200;
 
     private Object body;
-
-    private String error;
 
     public int getCode() {
         return code;
@@ -51,13 +46,5 @@ class ResponseDto {
 
     public void setBody(Object body) {
         this.body = body;
-    }
-
-    public String getError() {
-        return error;
-    }
-
-    public void setError(String error) {
-        this.error = error;
     }
 }

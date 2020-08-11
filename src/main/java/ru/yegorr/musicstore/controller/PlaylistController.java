@@ -1,6 +1,7 @@
 package ru.yegorr.musicstore.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -34,7 +35,7 @@ public class PlaylistController {
 
         PlaylistResponseDto response = playlistService.getPlaylist(userId, playlistId);
 
-        return ResponseBuilder.getBuilder().body(response).code(200).getResponseEntity();
+        return ResponseBuilder.getBuilder().body(response).code(HttpStatus.OK).getResponseEntity();
     }
 
     @PostMapping(path = "/playlist")
@@ -44,7 +45,7 @@ public class PlaylistController {
 
         PlaylistResponseDto response = playlistService.createPlaylist(userId, request.getName());
 
-        return ResponseBuilder.getBuilder().body(response).code(200).getResponseEntity();
+        return ResponseBuilder.getBuilder().body(response).code(HttpStatus.CREATED).getResponseEntity();
     }
 
     @PutMapping(path = "/playlist/{playlistId}")
@@ -55,7 +56,7 @@ public class PlaylistController {
         PlaylistResponseDto response = playlistService.changePlaylist(userId, playlistId,
                 request.getName(), request.getTracks());
 
-        return ResponseBuilder.getBuilder().body(response).code(200).getResponseEntity();
+        return ResponseBuilder.getBuilder().body(response).code(HttpStatus.OK).getResponseEntity();
     }
 
     @DeleteMapping(path = "/playlist/{playlistId}")
@@ -65,7 +66,7 @@ public class PlaylistController {
 
         playlistService.deletePlaylist(userId, playlistId);
 
-        return ResponseBuilder.getBuilder().code(200).getResponseEntity();
+        return ResponseBuilder.getBuilder().code(HttpStatus.NO_CONTENT).getResponseEntity();
     }
 
     @PutMapping(path = "/playlist/{playlistId}/image", consumes = "multipart/form-data")
@@ -74,7 +75,7 @@ public class PlaylistController {
         Long userId = userChecker.getUserIdOrThrow(token);
 
         playlistService.unloadPlaylistImage(userId, playlistId, image);
-        return ResponseBuilder.getBuilder().code(200).getResponseEntity();
+        return ResponseBuilder.getBuilder().code(HttpStatus.OK).getResponseEntity();
     }
 
     @GetMapping(path = "/playlist/{playlistId}/image", produces = "text/plain")
@@ -97,7 +98,7 @@ public class PlaylistController {
 
         List<PlaylistBriefDto> response = playlistService.getPlaylistsOfUser(userId);
 
-        return ResponseBuilder.getBuilder().body(response).code(200).getResponseEntity();
+        return ResponseBuilder.getBuilder().body(response).code(HttpStatus.OK).getResponseEntity();
     }
 
     @GetMapping(path = "/playlists")
@@ -108,6 +109,6 @@ public class PlaylistController {
 
         List<PlaylistBriefDto> response = playlistService.searchPlaylists(query);
 
-        return ResponseBuilder.getBuilder().body(response).code(200).getResponseEntity();
+        return ResponseBuilder.getBuilder().body(response).code(HttpStatus.OK).getResponseEntity();
     }
 }

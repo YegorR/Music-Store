@@ -1,6 +1,7 @@
 package ru.yegorr.musicstore.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -38,7 +39,7 @@ public class MusicianController {
         MusicianResponseDto musicianResponseDto =
                 musicianService.createMusician(musicianDto.getName(), musicianDto.getDescription());
 
-        return ResponseBuilder.getBuilder().code(201).body(musicianResponseDto).getResponseEntity();
+        return ResponseBuilder.getBuilder().code(HttpStatus.CREATED).body(musicianResponseDto).getResponseEntity();
     }
 
     @PutMapping("/musician/{musicianId}")
@@ -50,7 +51,7 @@ public class MusicianController {
         MusicianResponseDto musicianResponseDto = musicianService.changeMusician(musicianId, musicianDto.getName(),
                 musicianDto.getDescription());
 
-        return ResponseBuilder.getBuilder().body(musicianResponseDto).code(200).getResponseEntity();
+        return ResponseBuilder.getBuilder().body(musicianResponseDto).code(HttpStatus.OK).getResponseEntity();
 
     }
 
@@ -61,7 +62,7 @@ public class MusicianController {
 
         musicianService.deleteMusician(musicianId);
 
-        return ResponseBuilder.getBuilder().code(200).getResponseEntity();
+        return ResponseBuilder.getBuilder().code(HttpStatus.NO_CONTENT).getResponseEntity();
     }
 
     @GetMapping("/musician/{musicianId}")
@@ -69,7 +70,7 @@ public class MusicianController {
                                          @RequestHeader("Authorization") String token) throws Exception {
         userChecker.getUserIdOrThrow(token);
         MusicianResponseDto musicianResponseDto = musicianService.getMusician(musicianId);
-        return ResponseBuilder.getBuilder().code(200).body(musicianResponseDto).getResponseEntity();
+        return ResponseBuilder.getBuilder().code(HttpStatus.OK).body(musicianResponseDto).getResponseEntity();
     }
 
     // TODO fix method
@@ -96,13 +97,13 @@ public class MusicianController {
             }
 
             Map<String, Integer> result = musicianService.getMusicianCountByAbc();
-            return ResponseBuilder.getBuilder().code(200).body(result).getResponseEntity();
+            return ResponseBuilder.getBuilder().code(HttpStatus.OK).body(result).getResponseEntity();
         } else if (letter != null) {
             List<MusicianLetterResponseDto> result = musicianService.getMusiciansByLetter(letter);
-            return ResponseBuilder.getBuilder().code(200).body(result).getResponseEntity();
+            return ResponseBuilder.getBuilder().code(HttpStatus.OK).body(result).getResponseEntity();
         } else {
             List<MusicianBriefResponseDto> result = musicianService.searchMusicians(query);
-            return ResponseBuilder.getBuilder().code(200).body(result).getResponseEntity();
+            return ResponseBuilder.getBuilder().code(HttpStatus.OK).body(result).getResponseEntity();
         }
     }
 
@@ -124,7 +125,7 @@ public class MusicianController {
         userChecker.checkAdmin(token);
 
         musicianService.saveImage(musicianId, image);
-        return ResponseBuilder.getBuilder().code(200).getResponseEntity();
+        return ResponseBuilder.getBuilder().code(HttpStatus.OK).getResponseEntity();
     }
 
     @GetMapping(path = "/musician/{musicianId}/image", produces = "text/plain")

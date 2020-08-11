@@ -3,8 +3,7 @@
 ```json
 {
 	"code" : 200,
-	"body" : {},
-	"error" : "" 
+	"body" : {}
 }
 ```
 
