@@ -2,14 +2,14 @@ package ru.yegorr.musicstore.dto.response;
 
 import ru.yegorr.musicstore.entity.PlaylistEntity;
 
-public class PlaylistBriefDto {
+public class BriefPlaylistDto {
     private Long id;
 
     private String name;
 
-    public PlaylistBriefDto() {}
+    public BriefPlaylistDto() {}
 
-    public PlaylistBriefDto(PlaylistEntity entity) {
+    public BriefPlaylistDto(PlaylistEntity entity) {
         id = entity.getPlaylistId();
         name = entity.getName();
     }
