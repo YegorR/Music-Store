@@ -10,19 +10,21 @@ import ru.yegorr.musicstore.exception.ServerException;
 import java.util.List;
 
 public interface PlaylistService {
-    PlaylistDto getPlaylist(Long userId, Long playlistId) throws ClientException;
+  PlaylistDto getPlaylist(Long userId, Long playlistId) throws ClientException;
 
-    PlaylistDto createPlaylist(Long userId, String name) throws ClientException;
+  PlaylistDto createPlaylist(Long userId, String name) throws ClientException;
 
-    PlaylistDto changePlaylist(Long userId, Long playlistId, String name, List<IdDto> tracks) throws ClientException;
+  PlaylistDto changePlaylist(Long userId, Long playlistId, String name, List<IdDto> tracks)
+          throws ClientException;
 
-    void deletePlaylist(Long userId, Long playlistId) throws ClientException;
+  void deletePlaylist(Long userId, Long playlistId) throws ClientException;
 
-    void unloadPlaylistImage(Long userId, Long playlistId, MultipartFile image) throws ClientException, ServerException;
+  void unloadPlaylistImage(Long userId, Long playlistId, MultipartFile image)
+          throws ServerException;
 
-    byte[] getPlaylistImage(Long playlistId) throws ClientException;
+  byte[] getPlaylistImage(Long playlistId) throws ClientException;
 
-    List<BriefPlaylistDto> searchPlaylists(String query) throws ClientException;
+  List<BriefPlaylistDto> searchPlaylists(String query) throws ClientException;
 
-    List<BriefPlaylistDto> getPlaylistsOfUser(Long userId) throws ClientException;
+  List<BriefPlaylistDto> getPlaylistsOfUser(Long userId) throws ClientException;
 }

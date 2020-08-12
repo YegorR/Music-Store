@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface HistoryRepository extends JpaRepository<HistoryEntity, Long> {
-    List<HistoryEntity> findTop50ByUserIdOrderByPlayTimeDesc(Long UserId);
+  List<HistoryEntity> findTop50ByUserIdOrderByPlayTimeDesc(Long UserId);
 }

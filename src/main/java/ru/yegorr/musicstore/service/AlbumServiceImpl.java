@@ -28,209 +28,216 @@ import java.util.stream.Collectors;
 
 @Service
 public class AlbumServiceImpl implements AlbumService {
-    private MusicianRepository musicianRepository;
+  private MusicianRepository musicianRepository;
 
-    private TrackRepository trackRepository;
+  private TrackRepository trackRepository;
 
-    private AlbumRepository albumRepository;
+  private AlbumRepository albumRepository;
 
-    private FavouriteRepository favouriteRepository;
+  private FavouriteRepository favouriteRepository;
 
-    @Override
-    @Transactional
-    public FullAlbumDto createAlbum(CreateAlbumDto createAlbumRequest, Long musicianId) throws ClientException {
-        if (!musicianRepository.existsById(musicianId)) {
-            throw new ClientException(HttpStatus.NOT_FOUND, "The musician is not exists");
+  @Override
+  @Transactional
+  public FullAlbumDto createAlbum(CreateAlbumDto createAlbumRequest, Long musicianId)
+          throws ClientException {
+    if (!musicianRepository.existsById(musicianId)) {
+      throw new ClientException(HttpStatus.NOT_FOUND, "The musician is not exists");
+    }
+
+    AlbumEntity album = new AlbumEntity();
+    album.setName(createAlbumRequest.getName());
+    album.setReleaseDate(createAlbumRequest.getReleaseDate());
+    MusicianEntity musician = musicianRepository.findById(musicianId).
+            orElseThrow(() -> new ClientException(HttpStatus.NOT_FOUND,
+                    "The musician is not exists"));
+    album.setMusician(musician);
+    album.setSingle(createAlbumRequest.isSingle());
+
+    album = albumRepository.save(album);
+
+    List<TrackEntity> tracks = new ArrayList<>();
+    int order = 0;
+    for (CreateAlbumDto.Track track : createAlbumRequest.getTracks()) {
+      TrackEntity trackEntity = new TrackEntity();
+      trackEntity.setName(track.getName());
+      trackEntity.setAlbum(album);
+      trackEntity.setOrder(order++);
+      trackEntity.setPlaysNumber(0);
+      tracks.add(trackEntity);
+      trackRepository.save(trackEntity);
+    }
+    album.setTracks(tracks);
+
+    album = albumRepository.save(album);
+
+    AlbumEntity finalAlbum = album;
+    musician.getSubscribers().forEach((user) -> user.getReleaseAlbums().add(finalAlbum));
+    return translateEntityToDto(album);
+  }
+
+  @Override
+  @Transactional
+  public FullAlbumDto changeAlbum(ChangeAlbumDto changeAlbumRequest, Long albumId)
+          throws ClientException {
+    Optional<AlbumEntity> albumOptional = albumRepository.findById(albumId);
+    if (albumOptional.isEmpty()) {
+      throw new ClientException(HttpStatus.NOT_FOUND, "The album is not exists");
+    }
+    AlbumEntity album = albumOptional.get();
+
+    album.setName(changeAlbumRequest.getName());
+    album.setReleaseDate(changeAlbumRequest.getReleaseDate());
+    album.setSingle(changeAlbumRequest.isSingle());
+
+    List<TrackEntity> oldTracks = album.getTracks();
+    List<TrackEntity> newTracks = new ArrayList<>();
+
+    int order = 0;
+    for (ChangeAlbumDto.Track track : changeAlbumRequest.getTracks()) {
+      Long id = track.getId();
+      TrackEntity trackEntity;
+      if (id == null) {
+        trackEntity = new TrackEntity();
+        trackEntity.setPlaysNumber(0);
+      } else {
+        Optional<TrackEntity> trackEntityOptional = trackRepository.findById(id);
+        if (trackEntityOptional.isEmpty()) {
+          throw new ClientException(HttpStatus.NOT_FOUND,
+                  String.format("The track %d is not exist", id));
         }
-
-        AlbumEntity album = new AlbumEntity();
-        album.setName(createAlbumRequest.getName());
-        album.setReleaseDate(createAlbumRequest.getReleaseDate());
-        MusicianEntity musician = musicianRepository.findById(musicianId).
-                orElseThrow(() -> new ClientException(HttpStatus.NOT_FOUND, "The musician is not exists"));
-        album.setMusician(musician);
-        album.setSingle(createAlbumRequest.isSingle());
-
-        album = albumRepository.save(album);
-
-        List<TrackEntity> tracks = new ArrayList<>();
-        int order = 0;
-        for (CreateAlbumDto.Track track : createAlbumRequest.getTracks()) {
-            TrackEntity trackEntity = new TrackEntity();
-            trackEntity.setName(track.getName());
-            trackEntity.setAlbum(album);
-            trackEntity.setOrder(order++);
-            trackEntity.setPlaysNumber(0);
-            tracks.add(trackEntity);
-            trackRepository.save(trackEntity);
-        }
-        album.setTracks(tracks);
-
-        album = albumRepository.save(album);
-
-        AlbumEntity finalAlbum = album;
-        musician.getSubscribers().forEach((user) -> user.getReleaseAlbums().add(finalAlbum));
-        return translateEntityToDto(album);
+        trackEntity = trackEntityOptional.get();
+        oldTracks.removeIf(oldTrack -> oldTrack.getTrackId().equals(id));
+      }
+      trackEntity.setName(track.getName());
+      trackEntity.setAlbum(album);
+      trackEntity.setOrder(order++);
+      newTracks.add(trackEntity);
     }
+    trackRepository.deleteAll(oldTracks);
+    trackRepository.saveAll(newTracks);
+    album.setTracks(newTracks);
+    album = albumRepository.save(album);
 
-    @Override
-    @Transactional
-    public FullAlbumDto changeAlbum(ChangeAlbumDto changeAlbumRequest, Long albumId) throws ClientException {
-        Optional<AlbumEntity> albumOptional = albumRepository.findById(albumId);
-        if (albumOptional.isEmpty()) {
-            throw new ClientException(HttpStatus.NOT_FOUND, "The album is not exists");
-        }
-        AlbumEntity album = albumOptional.get();
+    return translateEntityToDto(album);
+  }
 
-        album.setName(changeAlbumRequest.getName());
-        album.setReleaseDate(changeAlbumRequest.getReleaseDate());
-        album.setSingle(changeAlbumRequest.isSingle());
+  @Override
+  @Transactional
+  public FullAlbumDto getAlbum(Long albumId, Long userId) throws ClientException {
+    AlbumEntity album = albumRepository.findById(albumId)
+            .orElseThrow(() -> new ClientException(HttpStatus.NOT_FOUND,
+                    "The album is not exist"));
+    return translateEntityToDto(album, userId);
+  }
 
-        List<TrackEntity> oldTracks = album.getTracks();
-        List<TrackEntity> newTracks = new ArrayList<>();
-
-        int order = 0;
-        for (ChangeAlbumDto.Track track : changeAlbumRequest.getTracks()) {
-            Long id = track.getId();
-            TrackEntity trackEntity;
-            if (id == null) {
-                trackEntity = new TrackEntity();
-                trackEntity.setPlaysNumber(0);
-            } else {
-                Optional<TrackEntity> trackEntityOptional = trackRepository.findById(id);
-                if (trackEntityOptional.isEmpty()) {
-                    throw new ClientException(HttpStatus.NOT_FOUND, String.format("The track %d is not exist", id));
-                }
-                trackEntity = trackEntityOptional.get();
-                oldTracks.removeIf(oldTrack -> oldTrack.getTrackId().equals(id));
-            }
-            trackEntity.setName(track.getName());
-            trackEntity.setAlbum(album);
-            trackEntity.setOrder(order++);
-            newTracks.add(trackEntity);
-        }
-        trackRepository.deleteAll(oldTracks);
-        trackRepository.saveAll(newTracks);
-        album.setTracks(newTracks);
-        album = albumRepository.save(album);
-
-        return translateEntityToDto(album);
+  @Override
+  @Transactional
+  public void deleteAlbum(Long albumId) throws ClientException {
+    if (!albumRepository.existsById(albumId)) {
+      throw new ClientException(HttpStatus.NOT_FOUND, "The album is not exist");
     }
+    albumRepository.deleteById(albumId);
+  }
 
-    @Override
-    @Transactional
-    public FullAlbumDto getAlbum(Long albumId, Long userId) throws ClientException {
-        AlbumEntity album = albumRepository.findById(albumId)
-                .orElseThrow(() -> new ClientException(HttpStatus.NOT_FOUND, "The album is not exist"));
-        return translateEntityToDto(album, userId);
+  @Override
+  @Transactional
+  public byte[] getCover(Long albumId) throws ClientException {
+    return albumRepository.findById(albumId).
+            orElseThrow(() -> new ClientException(HttpStatus.NOT_FOUND,
+                    "The album is not exists")).
+            getCover();
+  }
+
+  @Override
+  @Transactional
+  public void saveCover(Long albumId, MultipartFile cover) throws ServerException {
+    try {
+      albumRepository.findById(albumId).
+              orElseThrow(() -> new ClientException(HttpStatus.NOT_FOUND,
+                      "The album is not exists")).
+              setCover(cover.getBytes());
+    } catch (IOException ex) {
+      throw new ServerException(ex);
     }
+  }
 
-    @Override
-    @Transactional
-    public void deleteAlbum(Long albumId) throws ClientException {
-        if (!albumRepository.existsById(albumId)) {
-            throw new ClientException(HttpStatus.NOT_FOUND, "The album is not exist");
-        }
-        albumRepository.deleteById(albumId);
+  @Override
+  public List<BriefAlbumDescriptionDto> searchAlbums(String query) {
+    List<AlbumEntity> albums = albumRepository.findAllByNameContainingIgnoreCase(query);
+    return albums.stream().map(this::translateEntityToBriefDto).collect(Collectors.toList());
+  }
+
+  private BriefAlbumDescriptionDto translateEntityToBriefDto(AlbumEntity entity) {
+    BriefAlbumDescriptionDto dto = new BriefAlbumDescriptionDto();
+    dto.setId(entity.getAlbumId());
+    dto.setName(entity.getName());
+    dto.setReleaseDate(entity.getReleaseDate());
+    dto.setSingle(entity.getSingle());
+
+    BriefMusicianDto musician = new BriefMusicianDto();
+    musician.setId(entity.getMusician().getMusicianId());
+    musician.setName(entity.getMusician().getName());
+    dto.setMusician(musician);
+
+    return dto;
+  }
+
+  private FullAlbumDto translateEntityToDto(AlbumEntity entity, Long userId) {
+    FullAlbumDto dto = new FullAlbumDto();
+    dto.setId(entity.getAlbumId());
+    dto.setName(entity.getName());
+    dto.setReleaseDate(entity.getReleaseDate());
+    dto.setSingle(entity.getSingle());
+
+    BriefMusicianDto musician = new BriefMusicianDto();
+    musician.setId(entity.getMusician().getMusicianId());
+    musician.setName(entity.getMusician().getName());
+    dto.setMusician(musician);
+
+    Set<TrackEntity> favourites;
+    if (userId != null) {
+      favourites = favouriteRepository.findAllByUserIdAndTrackIn(userId, entity.getTracks()).
+              stream().
+              map(FavouriteEntity::getTrack).
+              collect(Collectors.toSet());
+    } else {
+      favourites = new HashSet<>();
     }
-
-    @Override
-    @Transactional
-    public byte[] getCover(Long albumId) throws ClientException {
-        return albumRepository.findById(albumId).
-                orElseThrow(() -> new ClientException(HttpStatus.NOT_FOUND, "The album is not exists")).
-                getCover();
+    List<TrackDescriptionDto> tracks = new ArrayList<>();
+    for (TrackEntity trackEntity : entity.getTracks()) {
+      TrackDescriptionDto track = new TrackDescriptionDto();
+      track.setId(trackEntity.getTrackId());
+      track.setPlaysNumber(trackEntity.getPlaysNumber());
+      track.setName(trackEntity.getName());
+      track.setFavourite(favourites.contains(trackEntity));
+      tracks.add(track);
     }
+    dto.setTracks(tracks);
 
-    @Override
-    @Transactional
-    public void saveCover(Long albumId, MultipartFile cover) throws ServerException {
-        try {
-            albumRepository.findById(albumId).
-                    orElseThrow(() -> new ClientException(HttpStatus.NOT_FOUND, "The album is not exists")).
-                    setCover(cover.getBytes());
-        } catch (IOException ex) {
-            throw new ServerException(ex);
-        }
-    }
+    return dto;
+  }
 
-    @Override
-    public List<BriefAlbumDescriptionDto> searchAlbums(String query) {
-        List<AlbumEntity> albums = albumRepository.findAllByNameContainingIgnoreCase(query);
-        return albums.stream().map(this::translateEntityToBriefDto).collect(Collectors.toList());
-    }
+  private FullAlbumDto translateEntityToDto(AlbumEntity entity) {
+    return translateEntityToDto(entity, null);
+  }
 
-    private BriefAlbumDescriptionDto translateEntityToBriefDto(AlbumEntity entity) {
-        BriefAlbumDescriptionDto dto = new BriefAlbumDescriptionDto();
-        dto.setId(entity.getAlbumId());
-        dto.setName(entity.getName());
-        dto.setReleaseDate(entity.getReleaseDate());
-        dto.setSingle(entity.getSingle());
+  @Autowired
+  public void setMusicianRepository(MusicianRepository musicianRepository) {
+    this.musicianRepository = musicianRepository;
+  }
 
-        BriefMusicianDto musician = new BriefMusicianDto();
-        musician.setId(entity.getMusician().getMusicianId());
-        musician.setName(entity.getMusician().getName());
-        dto.setMusician(musician);
+  @Autowired
+  public void setTrackRepository(TrackRepository trackRepository) {
+    this.trackRepository = trackRepository;
+  }
 
-        return dto;
-    }
+  @Autowired
+  public void setAlbumRepository(AlbumRepository albumRepository) {
+    this.albumRepository = albumRepository;
+  }
 
-    private FullAlbumDto translateEntityToDto(AlbumEntity entity, Long userId) {
-        FullAlbumDto dto = new FullAlbumDto();
-        dto.setId(entity.getAlbumId());
-        dto.setName(entity.getName());
-        dto.setReleaseDate(entity.getReleaseDate());
-        dto.setSingle(entity.getSingle());
-
-        BriefMusicianDto musician = new BriefMusicianDto();
-        musician.setId(entity.getMusician().getMusicianId());
-        musician.setName(entity.getMusician().getName());
-        dto.setMusician(musician);
-
-        Set<TrackEntity> favourites;
-        if (userId != null) {
-            favourites = favouriteRepository.findAllByUserIdAndTrackIn(userId, entity.getTracks()).
-                    stream().
-                    map(FavouriteEntity::getTrack).
-                    collect(Collectors.toSet());
-        } else {
-            favourites = new HashSet<>();
-        }
-        List<TrackDescriptionDto> tracks = new ArrayList<>();
-        for (TrackEntity trackEntity : entity.getTracks()) {
-            TrackDescriptionDto track = new TrackDescriptionDto();
-            track.setId(trackEntity.getTrackId());
-            track.setPlaysNumber(trackEntity.getPlaysNumber());
-            track.setName(trackEntity.getName());
-            track.setFavourite(favourites.contains(trackEntity));
-            tracks.add(track);
-        }
-        dto.setTracks(tracks);
-
-        return dto;
-    }
-
-    private FullAlbumDto translateEntityToDto(AlbumEntity entity) {
-        return translateEntityToDto(entity, null);
-    }
-
-    @Autowired
-    public void setMusicianRepository(MusicianRepository musicianRepository) {
-        this.musicianRepository = musicianRepository;
-    }
-
-    @Autowired
-    public void setTrackRepository(TrackRepository trackRepository) {
-        this.trackRepository = trackRepository;
-    }
-
-    @Autowired
-    public void setAlbumRepository(AlbumRepository albumRepository) {
-        this.albumRepository = albumRepository;
-    }
-
-    @Autowired
-    public void setFavouriteRepository(FavouriteRepository favouriteRepository) {
-        this.favouriteRepository = favouriteRepository;
-    }
+  @Autowired
+  public void setFavouriteRepository(FavouriteRepository favouriteRepository) {
+    this.favouriteRepository = favouriteRepository;
+  }
 }

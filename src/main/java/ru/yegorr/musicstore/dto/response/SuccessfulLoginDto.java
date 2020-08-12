@@ -1,43 +1,43 @@
 package ru.yegorr.musicstore.dto.response;
 
 public class SuccessfulLoginDto {
-    private String token;
+  private String token;
 
-    private Long id;
+  private Long id;
 
-    private String nickname;
+  private String nickname;
 
-    private boolean admin;
+  private boolean admin;
 
-    public String getToken() {
-        return token;
-    }
+  public String getToken() {
+    return token;
+  }
 
-    public void setToken(String token) {
-        this.token = token;
-    }
+  public void setToken(String token) {
+    this.token = token;
+  }
 
-    public Long getId() {
-        return id;
-    }
+  public Long getId() {
+    return id;
+  }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-    public String getNickname() {
-        return nickname;
-    }
+  public String getNickname() {
+    return nickname;
+  }
 
-    public void setNickname(String nickname) {
-        this.nickname = nickname;
-    }
+  public void setNickname(String nickname) {
+    this.nickname = nickname;
+  }
 
-    public boolean isAdmin() {
-        return admin;
-    }
+  public boolean isAdmin() {
+    return admin;
+  }
 
-    public void setAdmin(boolean admin) {
-        this.admin = admin;
-    }
+  public void setAdmin(boolean admin) {
+    this.admin = admin;
+  }
 }

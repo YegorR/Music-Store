@@ -8,22 +8,22 @@ import ru.yegorr.musicstore.service.AuthService;
 
 @Component
 public class UserChecker {
-    private final AuthService authService;
+  private final AuthService authService;
 
-    @Autowired
-    public UserChecker(AuthService authService) {
-        this.authService = authService;
-    }
+  @Autowired
+  public UserChecker(AuthService authService) {
+    this.authService = authService;
+  }
 
-    public void checkAdmin(String token) throws ClientException {
-        ActualUserInformation userInformation = authService.check(token);
-        if (!userInformation.getAdmin()) {
-            throw new ClientException(HttpStatus.FORBIDDEN);
-        }
+  public void checkAdmin(String token) throws ClientException {
+    ActualUserInformation userInformation = authService.check(token);
+    if (!userInformation.getAdmin()) {
+      throw new ClientException(HttpStatus.FORBIDDEN);
     }
+  }
 
-    public Long getUserIdOrThrow(String token) throws ClientException {
-        ActualUserInformation userInformation = authService.check(token);
-        return userInformation.getUserId();
-    }
+  public Long getUserIdOrThrow(String token) throws ClientException {
+    ActualUserInformation userInformation = authService.check(token);
+    return userInformation.getUserId();
+  }
 }

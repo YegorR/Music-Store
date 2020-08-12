@@ -6,56 +6,56 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class CreateAlbumDto {
+  private String name;
+
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+  private LocalDate releaseDate;
+
+  private boolean single;
+
+  private List<Track> tracks;
+
+  public static class Track {
     private String name;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
-    private LocalDate releaseDate;
-
-    private boolean single;
-
-    private List<Track> tracks;
-
-    public static class Track {
-        private String name;
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-    }
-
     public String getName() {
-        return name;
+      return name;
     }
 
     public void setName(String name) {
-        this.name = name;
+      this.name = name;
     }
+  }
 
-    public LocalDate getReleaseDate() {
-        return releaseDate;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setReleaseDate(LocalDate releaseDate) {
-        this.releaseDate = releaseDate;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public boolean isSingle() {
-        return single;
-    }
+  public LocalDate getReleaseDate() {
+    return releaseDate;
+  }
 
-    public void setSingle(boolean single) {
-        this.single = single;
-    }
+  public void setReleaseDate(LocalDate releaseDate) {
+    this.releaseDate = releaseDate;
+  }
 
-    public List<Track> getTracks() {
-        return tracks;
-    }
+  public boolean isSingle() {
+    return single;
+  }
 
-    public void setTracks(List<Track> tracks) {
-        this.tracks = tracks;
-    }
+  public void setSingle(boolean single) {
+    this.single = single;
+  }
+
+  public List<Track> getTracks() {
+    return tracks;
+  }
+
+  public void setTracks(List<Track> tracks) {
+    this.tracks = tracks;
+  }
 }

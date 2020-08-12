@@ -1,7 +1,7 @@
 package ru.yegorr.musicstore.repository;
 
 public interface MusicianAbcCount {
-    String getLetter();
+  String getLetter();
 
-    Integer getCount();
+  Integer getCount();
 }

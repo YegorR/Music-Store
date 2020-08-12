@@ -6,9 +6,9 @@ import ru.yegorr.musicstore.entity.UserEntity;
 
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
-    int countAllByEmail(String email);
+  int countAllByEmail(String email);
 
-    int countAllByNickname(String nickname);
+  int countAllByNickname(String nickname);
 
-    UserEntity findByEmail(String email);
+  UserEntity findByEmail(String email);
 }

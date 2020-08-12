@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface AlbumRepository extends JpaRepository<AlbumEntity, Long> {
-    List<AlbumEntity> findAllByNameContainingIgnoreCase(String search);
+  List<AlbumEntity> findAllByNameContainingIgnoreCase(String search);
 }

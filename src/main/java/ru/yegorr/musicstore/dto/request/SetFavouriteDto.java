@@ -1,23 +1,23 @@
 package ru.yegorr.musicstore.dto.request;
 
 public class SetFavouriteDto {
-    private Long id;
+  private Long id;
 
-    private boolean favourite;
+  private boolean favourite;
 
-    public Long getId() {
-        return id;
-    }
+  public Long getId() {
+    return id;
+  }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-    public boolean isFavourite() {
-        return favourite;
-    }
+  public boolean isFavourite() {
+    return favourite;
+  }
 
-    public void setFavourite(boolean favourite) {
-        this.favourite = favourite;
-    }
+  public void setFavourite(boolean favourite) {
+    this.favourite = favourite;
+  }
 }

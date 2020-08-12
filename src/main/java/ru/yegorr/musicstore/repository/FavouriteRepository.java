@@ -11,11 +11,11 @@ import java.util.Set;
 
 @Repository
 public interface FavouriteRepository extends JpaRepository<FavouriteEntity, Long> {
-    Optional<FavouriteEntity> findByUserIdAndTrackId(Long userId, Long trackId);
+  Optional<FavouriteEntity> findByUserIdAndTrackId(Long userId, Long trackId);
 
-    void deleteByUserIdAndTrackId(Long userId, Long trackId);
+  void deleteByUserIdAndTrackId(Long userId, Long trackId);
 
-    List<FavouriteEntity> findAllByUserIdOrderByAddingTimeDesc(Long userId);
+  List<FavouriteEntity> findAllByUserIdOrderByAddingTimeDesc(Long userId);
 
-    Set<FavouriteEntity> findAllByUserIdAndTrackIn(Long userId, List<TrackEntity> tracks);
+  Set<FavouriteEntity> findAllByUserIdAndTrackIn(Long userId, List<TrackEntity> tracks);
 }

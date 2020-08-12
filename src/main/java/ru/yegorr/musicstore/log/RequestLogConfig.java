@@ -8,15 +8,15 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class RequestLogConfig implements WebMvcConfigurer {
 
-    private RequestLogInterceptor requestLogInterceptor;
+  private final RequestLogInterceptor requestLogInterceptor;
 
-    @Autowired
-    public RequestLogConfig(RequestLogInterceptor requestLogInterceptor) {
-        this.requestLogInterceptor = requestLogInterceptor;
-    }
+  @Autowired
+  public RequestLogConfig(RequestLogInterceptor requestLogInterceptor) {
+    this.requestLogInterceptor = requestLogInterceptor;
+  }
 
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(requestLogInterceptor);
-    }
+  @Override
+  public void addInterceptors(InterceptorRegistry registry) {
+    registry.addInterceptor(requestLogInterceptor);
+  }
 }

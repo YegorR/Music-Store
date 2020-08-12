@@ -6,8 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
-import ru.yegorr.musicstore.response.ResponseBuilder;
 import ru.yegorr.musicstore.dto.response.FullTrackDto;
+import ru.yegorr.musicstore.response.ResponseBuilder;
 import ru.yegorr.musicstore.security.UserChecker;
 import ru.yegorr.musicstore.service.HistoryService;
 
@@ -15,22 +15,23 @@ import java.util.List;
 
 @RestController
 public class HistoryController {
-    private final HistoryService historyService;
+  private final HistoryService historyService;
 
-    private final UserChecker userChecker;
+  private final UserChecker userChecker;
 
-    @Autowired
-    public HistoryController(HistoryService historyService, UserChecker userChecker) {
-        this.historyService = historyService;
-        this.userChecker = userChecker;
-    }
+  @Autowired
+  public HistoryController(HistoryService historyService, UserChecker userChecker) {
+    this.historyService = historyService;
+    this.userChecker = userChecker;
+  }
 
-    @GetMapping(path = "/history")
-    public ResponseEntity<?> getHistory(@RequestHeader("Authorization") String token) throws Exception {
-        Long userId = userChecker.getUserIdOrThrow(token);
+  @GetMapping(path = "/history")
+  public ResponseEntity<?> getHistory(@RequestHeader("Authorization") String token)
+          throws Exception {
+    Long userId = userChecker.getUserIdOrThrow(token);
 
-        List<FullTrackDto> result = historyService.getHistory(userId);
+    List<FullTrackDto> result = historyService.getHistory(userId);
 
-        return ResponseBuilder.getBuilder().body(result).code(HttpStatus.OK).getResponseEntity();
-    }
+    return ResponseBuilder.getBuilder().body(result).code(HttpStatus.OK).getResponseEntity();
+  }
 }

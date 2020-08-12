@@ -9,14 +9,14 @@ import java.util.List;
 
 @Repository
 public interface MusicianRepository extends JpaRepository<MusicianEntity, Long> {
-    List<MusicianEntity> findAllByNameContainingIgnoreCase(String search);
+  List<MusicianEntity> findAllByNameContainingIgnoreCase(String search);
 
 
-    @Query("SELECT SUBSTRING(musician.name, 1, 1) as letter, COUNT(musician) as count " +
-            "FROM MusicianEntity musician " +
-            "GROUP BY SUBSTRING(musician.name, 1, 1)" +
-            "ORDER BY SUBSTRING(musician.name, 1, 1)")
-    List<MusicianAbcCount> getMusicianCountByAbc();
+  @Query("SELECT SUBSTRING(musician.name, 1, 1) as letter, COUNT(musician) as count " +
+          "FROM MusicianEntity musician " +
+          "GROUP BY SUBSTRING(musician.name, 1, 1)" +
+          "ORDER BY SUBSTRING(musician.name, 1, 1)")
+  List<MusicianAbcCount> getMusicianCountByAbc();
 
-    List<MusicianEntity> findAllByNameStartingWithIgnoreCase(String letter);
+  List<MusicianEntity> findAllByNameStartingWithIgnoreCase(String letter);
 }
